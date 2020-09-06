@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@{ 
+    bool fill = false;
+    if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        fill = user.Country != null && user.School != null && user.Photo != null;
+    }
+}
+
+
+@if (!SignInManager.IsSignedIn(User))
+{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Создать портфолио</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Вход</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav flex-grow-1">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Certificate" asp-action="Index">Главная</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Rating" asp-action="Index">Рейтинг</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Event" asp-action="Index">Мероприятия</a>
+        </li>
+    </ul>
+}
+else if (User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value.Contains("User"))
+{
+    <partial name="Roles/_UserPartial" model="fill"/>
+}
+else if (User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value.Contains("Moderator"))
+{
+    <partial name="Roles/_ModeratorPartial" model="fill"/>
+}
+else if (User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value.Contains("Admin"))
+{
+    <partial name="Roles/_AdminPartial" model="fill"/>
+}

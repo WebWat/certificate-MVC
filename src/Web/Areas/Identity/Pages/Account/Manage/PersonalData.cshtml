@@ -1,0 +1,30 @@
+﻿@page
+@model PersonalDataModel
+@{
+    ViewData["Title"] = "Персональные данные";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<h4>@ViewData["Title"]</h4>
+<div class="row">
+    <div class="col-md-6">
+        <p>Это страница позволяет скачать или удалить ваши данные на этом сайте.</p>
+        <p>
+            <strong>
+                Удаление данных безвозвратно удалит вашу учетную запись.
+            </strong>
+        </p>
+        <p>
+            <div class="dropdown show">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Скачать
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" asp-controller="Download" asp-action="Zip">Zip</a>
+                    <a class="dropdown-item" asp-controller="Download" asp-action="Excel">Excel</a>
+                </div>
+            </div>
+            <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger mt-3">Удалить</a>
+        </p>
+    </div>
+</div>

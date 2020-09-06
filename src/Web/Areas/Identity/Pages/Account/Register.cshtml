@@ -1,0 +1,58 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+<div id="alert" class="term-alert">
+    <div class="text-center">
+        <p class="mt-2 mb-2 align-items-center">
+            Регистрируясь на этом сайте, вы соглашаетесь с <a asp-controller="Home" asp-action="Privacy">пользовательским соглашением</a>
+        </p>
+    </div>
+</div>
+
+<form class="form-signin" asp-antiforgery="true">
+    <div class="text-center mb-4">
+        <h1 class="h1 mb-3 font-weight-normal">@ViewData["Title"]</h1>
+        <h5>Создайте новый аккаунт</h5>
+    </div>
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger list-style-none"></div>
+    <div class="form-label-group">
+        <label asp-for="Input.UserName"></label>
+        <input asp-for="Input.UserName" class="form-control" autofocus>
+        <span asp-validation-for="Input.UserName" class="text-danger"></span>
+    </div>
+    <div class="form-label-group">
+        <label asp-for="Input.FullName"></label>
+        <input asp-for="Input.FullName" class="form-control">
+        <span asp-validation-for="Input.FullName" class="text-danger"></span>
+    </div>
+    <div class="form-label-group">
+        <label asp-for="Input.Email"></label>
+        <input asp-for="Input.Email" class="form-control">
+        <span asp-validation-for="Input.Email" class="text-danger"></span>
+    </div>
+    <div class="form-label-group">
+        <label asp-for="Input.Password"></label>
+        <input asp-for="Input.Password" class="form-control">
+        <span asp-validation-for="Input.Password" class="text-danger"></span>
+    </div>
+    <div class="form-label-group">
+        <label asp-for="Input.ConfirmPassword"></label>
+        <input asp-for="Input.ConfirmPassword" class="form-control">
+        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+    </div>
+    <div class="checkbox mb-2" data-toggle="tooltip" data-placement="left" title="Ваши данные (Имя и город) будут отображаться в рейтинге">
+        <label asp-for="Input.OpenData">
+            <input asp-for="Input.OpenData"/>
+            @Html.DisplayNameFor(m => m.Input.OpenData)
+        </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">Регистрация</button>
+    <p class="mt-4 mb-3 text-muted text-center">2020 - Certificate</p>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/tooltip.js"></script>
+}

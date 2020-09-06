@@ -1,0 +1,64 @@
+﻿@model CertificateViewModel
+@{
+    ViewData["Title"] = "Изменение";
+
+    List<RatingViewModel> ListRatingViewModel = new List<RatingViewModel>
+    {
+        new RatingViewModel { Id = 1, Name = "Школьный" },
+        new RatingViewModel { Id = 2, Name = "Районный" },
+        new RatingViewModel { Id = 3, Name = "Республиканский" },
+        new RatingViewModel { Id = 4, Name = "Всероссийский" },
+        new RatingViewModel { Id = 5, Name = "Международный" }
+    };
+}
+
+<h1 class="caption">@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-7">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <div class="col-md-12 p-0">
+                    <input asp-for="Title" class="form-control" />
+                </div>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="File" class="control-label"></label>
+                <input asp-for="File" accept="image/jpeg" />
+                <label id="text" for="File" asp-for="File"></label>
+                <p class="text-muted text-note float-right">Минимум  512Кб. Максимум 2 Мб.</p>
+                <span asp-validation-for="File" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rating" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Rating, new SelectList(ListRatingViewModel, "Id", "Name"), new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" />
+            </div>
+            <div class="form-group mt-1">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-primary" asp-controller="Certificate" asp-action="Details" asp-route-id="@Model.Id">Назад</a>
+                    <input type="submit" value="Изменить" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="~/js/inputFile.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/autocomplete.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,50 @@
+﻿@model IEnumerable<AdminViewModel>
+@{
+    ViewData["Title"] = "Пользователи";
+    int i = 1;
+}
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+
+<h1 class="caption">@ViewData["Title"]</h1>
+<table class="table mt-4">
+    <tr>
+        <th>#</th>
+        <th>Логин</th>
+        <th>Email</th>
+        <th>Подтвержденный email</th>
+        <th>Роль</th>
+        <th>Действия</th>
+    </tr>
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td class="num">@i</td>
+            <td>@u.Login</td>
+            <td>@u.Email</td>
+            <td>
+                @if (u.EmailConfirmed)
+                {
+                    <span class="text-success">Подтвержден</span>
+                }
+                else
+                {
+                    <span class="text-danger">Не подтвержден</span>
+                }
+            </td>
+            <td>@u.Role</td>
+            <td>
+                <a asp-controller="Admin" asp-action="Details" asp-route-login="@u.Login">Подробнее</a>
+                | <a asp-controller="Admin" asp-action="Edit" asp-route-login="@u.Login">Изменить роль</a>
+                | <a asp-controller="Admin" asp-action="Delete" asp-route-id="@u.Id" class="delete">Удалить</a>
+            </td>
+        </tr>
+        i++;
+    }
+</table>
+
+@section Scripts
+{
+    <script type="text/javascript" src="~/js/modalWindow.js" asp-append-version="true"></script>
+}

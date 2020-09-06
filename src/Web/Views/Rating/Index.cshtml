@@ -1,0 +1,56 @@
+﻿@model IEnumerable<UserViewModel>
+@{
+    ViewData["Title"] = "Рейтинг";
+    int i = 1;
+}
+<h1 class="caption">@ViewData["Title"]</h1>
+
+<table class="table">
+    <tr>
+        <th scope="col">№</th>
+        <td scope="col">Имя</td>
+        <td scope="col">Город</td>
+        <td scope="col">Рейтинг</td>
+    </tr>
+    @foreach (var u in Model)
+    {
+        if (i == 1)
+        {
+            <tr>
+                <th scope="col"><img src="~/img/1_place.jpg" class="ms-image-rating"/></th>
+                <td scope="col">@u.Name</td>
+                <td scope="col">@u.Country</td>
+                <td scope="col">@u.Rating</td>
+            </tr>
+        }
+        else if (i == 2)
+        {
+            <tr>
+                <th scope="col"><img src="~/img/2_place.jpg" class="ms-image-rating"/></th>
+                <td scope="col">@u.Name</td>
+                <td scope="col">@u.Country</td>
+                <td scope="col">@u.Rating</td>
+            </tr>
+        }
+        else if (i == 3)
+        {
+            <tr>
+                <th scope="col"><img src="~/img/3_place.jpg" class="ms-image-rating"/></th>
+                <td scope="col">@u.Name</td>
+                <td scope="col">@u.Country</td>
+                <td scope="col">@u.Rating</td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <th scope="col">@i</th>
+                <td scope="col">@u.Name</td>
+                <td scope="col">@u.Country</td>
+                <td scope="col">@u.Rating</td>
+            </tr>
+        }
+        i++;
+    }
+</table>
+

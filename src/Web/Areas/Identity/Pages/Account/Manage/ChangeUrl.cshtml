@@ -1,0 +1,21 @@
+﻿@page
+@model ChangeUrlModel
+@{
+    ViewData["Title"] = "Смена url";
+    ViewData["ActivePage"] = ManageNavPages.ChangeUrl;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <p>Если вы потеряли свой url и ваши данные в опастности, вы можете его поменять.</p>
+        <form method="post" class="form-group">
+            <button class="btn btn-primary" type="submit">Сменить</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

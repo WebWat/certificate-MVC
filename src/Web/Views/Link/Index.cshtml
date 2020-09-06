@@ -1,0 +1,45 @@
+﻿@model LinkListViewModel
+@{
+    ViewData["Title"] = "Управление ссылками";
+}
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+
+<h1 class="caption">@ViewData["Title"]</h1>
+<h4 class="caption">Максимальное количество ссылок - 5</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <input asp-for="CertificateId" type="hidden" />
+            <div class="input-group mb-3">
+                <input asp-for="Link.Name" class="form-control">
+                <div class="input-group-prepend">
+                    <input type="submit" class="btn btn-primary" value="Добавить" />
+                </div>
+            </div>
+            <span asp-validation-for="Link.Name" class="text-danger"></span>
+        </form>
+        <ul class="list-group mt-3">
+            @if (Model.Links != null)
+            {
+                @foreach (var a in Model.Links)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="@a.Name" target="_blank">@a.Name</a>
+                        <span class="badge float-right">
+                            <a asp-controller="Link" asp-action="Delete" asp-route-id="@a.Id" class="btn btn-sm btn-danger delete">Удалить</a>
+                        </span>
+                    </li>
+                }
+            }
+        </ul>
+        <p><a class="btn btn-primary mt-3" asp-controller="Certificate" asp-action="Details" asp-route-id="@Model.CertificateId">Назад</a></p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="~/js/modalWindow.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,86 @@
+﻿html,
+body {
+  height: 100%;
+}
+
+body {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.list-style-none ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.f-s{
+    font-size: 1.2em;
+}
+
+.term-alert {
+    top: 0;
+    width: 100%;
+    position: absolute;
+    color: white;
+    background-color: #acacac;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 450px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-label-group > p {
+    margin-bottom: 0.5rem;
+}
+
+.form-label-group > input {
+  height: 3rem;
+  padding: .75rem;
+}
+
+.form-label-group {
+  position: relative;
+  margin-bottom: 1em;
+}
+
+.d-flex > p {
+  margin-bottom: 0.5rem;
+}
+
+/* Test */
+.lds-dual-ring {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+}
+
+    .lds-dual-ring:after {
+        content: " ";
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border-radius: 50%;
+        border: 6px solid black;
+        border-color: black transparent black transparent;
+        animation: lds-dual-ring 1.2s linear infinite;
+    }
+
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+/*<div class="lds-dual-ring"> </div>*/

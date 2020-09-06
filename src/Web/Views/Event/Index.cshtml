@@ -1,0 +1,30 @@
+﻿@model EventListViewModel
+@{
+    ViewData["Title"] = "Мероприятия";
+}
+<h1 class="caption">@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    @if (Model.Events.Any())
+    {
+        @foreach (var e in Model.Events)
+        {
+            <div class="col-md-12 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <h5>@e.Title</h5>
+                        </div>
+                        <div class="card-text">
+                            <p>@e.Description</p>
+                            <a href="@e.Url" target="_blank">@e.Url</a>
+                            <p class="card-text"><small class="text-muted">@e.Date.ToShortDateString()</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<page-link page-model="Model.PageViewModel" page-controller="Event" page-action="Index"></page-link>

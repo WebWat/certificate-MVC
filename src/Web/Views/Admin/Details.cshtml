@@ -1,0 +1,22 @@
+﻿@model AdminViewModel
+@{
+    ViewData["Title"] = "Подробнее";
+}
+<h1 class="caption">@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <h5>Логин</h5>
+        <p>@Html.DisplayFor(model => model.Login)</p>
+        <br />
+        <h5>Email</h5>
+        <p>@Html.DisplayFor(model => model.Email)</p>
+        <br />
+        <h5>Роль</h5>
+        <p>@Html.DisplayFor(model => model.Role)</p>
+        <br />
+        <div class="btn-group mb-3" role="group">
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-primary">Назад к списку</a>
+        </div>
+    </div>
+</div>

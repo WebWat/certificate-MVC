@@ -1,0 +1,14 @@
+﻿@page
+@model AccessDeniedModel
+@{
+    ViewData["Title"] = "Доступ запрещен";
+}
+<form class="form-signin">
+    <div class="text-center mb-4">
+        <h1 class="h1 mb-3 font-weight-normal text-danger" style="font-size:7em;">403</h1>
+        <h5>Вам запрещен доступ к данному ресурсу</h5>
+        <a asp-controller="Home" asp-action="Index" class="mt-3">На главную</a>
+    </div>
+
+    <p class="mt-4 mb-3 text-muted text-center">2020 - APP9 - v2.0</p>
+</form>

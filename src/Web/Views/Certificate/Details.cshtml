@@ -1,0 +1,73 @@
+﻿@model CertificateViewModel
+@{
+    ViewData["Title"] = "Подробнее";
+}
+
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+
+<h1 class="caption">@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6" style="word-wrap: break-word;">
+        <h5>Название</h5>
+        <p>@Html.DisplayFor(model => model.Title)</p>
+        <br />
+        <h5>Описание</h5>
+        <p>@Html.DisplayFor(model => model.Description)</p>
+        <br />
+        <h5>Этап</h5>
+        <p>
+            @switch (Model.Rating)
+            {
+                case 1:
+                    @:Школьный
+                    break;
+                case 2:
+                    @:Районный
+                    break;
+                case 3:
+                    @:Республиканский
+                    break;
+                case 4:
+                    @:Всероссийский
+                    break;
+                case 5:
+                    @:Международный
+                    break;
+            }
+        </p>
+        <br />
+        <h5>Дата</h5>
+        <p>@Html.DisplayFor(model => model.Date)</p>
+        <br />
+        <h5>Ссылки</h5>
+        @if (Model.Links.Count != 0)
+        {
+            <ul class="list-group">
+                @foreach (var a in Model.Links)
+                {
+                    <li class="list-group-item"><a href="@a.Name" target="_blank">@a.Name</a></li>
+                }
+            </ul>
+        }
+        <p><a class="btn btn-info btn-sm mt-2 mb-3" asp-controller="Link" asp-action="Index" asp-route-id="@Model.Id">Управление</a></p>
+        <div class="btn-group mb-3" role="group" aria-label="Basic example">
+            <a asp-controller="Certificate" asp-action="Index" class="btn btn-primary">Назад к списку</a>
+            <a asp-controller="Download" asp-action="Jpg" asp-route-id="@Model.Id" class="btn btn-primary">Скачать</a>
+            <a asp-controller="Certificate" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Изменить</a>
+            <a asp-controller="Certificate" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger delete">Удалить</a>
+        </div>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <p class="float-right">
+            <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" class="img-fluid img-thumbnail ms-image-details" />
+        </p>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript" src="~/js/modalWindow.js" asp-append-version="true"></script>
+}

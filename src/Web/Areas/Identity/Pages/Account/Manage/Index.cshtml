@@ -1,0 +1,69 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Профиль";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="row">
+    <div class="col-md-7">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username"></label>
+                <input asp-for="Username" class="form-control" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Name"></label>
+                <input asp-for="Input.Name" class="form-control" />
+                <span asp-validation-for="Input.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Surname"></label>
+                <input asp-for="Input.Surname" class="form-control" />
+                <span asp-validation-for="Input.Surname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.MiddleName"></label>
+                <input asp-for="Input.MiddleName" class="form-control" />
+                <span asp-validation-for="Input.MiddleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Country"></label>
+                <input asp-for="Input.Country" class="form-control" />
+                <span asp-validation-for="Input.Country" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.School"></label>
+                <input asp-for="Input.School" class="form-control" />
+                <span asp-validation-for="Input.School" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Class"></label>
+                <select asp-for="Input.Class" asp-items="Model.ListClasses" class="form-control"></select>
+                <span asp-validation-for="Input.Class" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.File"></label>
+                <input asp-for="Input.File" id="File" accept="image/jpeg" />
+                <label id="text" for="File">Выберите файл</label>
+                <p class="text-muted text-note float-right">Минимум  512Кб. Максимум 2 Мб.</p>
+                <span asp-validation-for="Input.File" class="text-danger"></span>
+            </div>
+            <div class="checkbox mb-2" data-toggle="tooltip" data-placement="left" title="Ваши данные (Имя и город) будут отображаться в рейтинге">
+                <label asp-for="Input.OpenData">
+                    <input asp-for="Input.OpenData" />
+                    @Html.DisplayNameFor(m => m.Input.OpenData)
+                </label>
+            </div>
+            <button id="update-profile-button" type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="~/js/inputFile.js" asp-append-version="true"></script>
+}
