@@ -29,7 +29,7 @@ namespace Web.Services
 
             if (!string.IsNullOrEmpty(find))
             {
-                items = items.Where(p => p.Title.ToLower().Contains(find));
+                items = items.Where(p => p.Title.ToLower().Contains(find.ToLower()));
             }
 
             var certificates = items.Select(i =>

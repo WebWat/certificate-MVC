@@ -26,7 +26,7 @@ else
         <form method="get">
             <div class="d-flex justify-content-start">
                 <input asp-for="UniqueUrl" type="hidden" />
-                <input asp-for="Find" class="form-control col-md-8 ml-1" placeholder="Введите название награды" />
+                <input asp-for="Find" class="form-control col-md-8 ml-1" placeholder="Введите название награды" autocomplete="off"/>
                 <select asp-for="Year" asp-items="Model.Years" class="form-control ml-1 col-md-3"></select>
                 <input type="submit" value="Поиск" class="btn btn-info ml-2" />
             </div>
