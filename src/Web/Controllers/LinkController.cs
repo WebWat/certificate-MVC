@@ -24,7 +24,7 @@ namespace Web.Controllers
         {
             var _user = await _userManager.GetUserAsync(User);
 
-            return View(await _linkService.GetCreateLinkListViewModelAsync(id, _user.Id));
+            return View(await _linkService.GetLinkListViewModelAsync(id, _user.Id));
         }
 
 

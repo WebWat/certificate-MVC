@@ -18,7 +18,7 @@
         <div class="form-label-group">
             <div class="d-flex justify-content-between">
                 <label asp-for="Input.Password"></label>
-                <a asp-page="./ForgotPassword">Забыли пароль?</a>
+                <a asp-page="./ForgotPassword" tabindex="-1">Забыли пароль?</a>
             </div>
             <input asp-for="Input.Password" class="form-control">
             <span asp-validation-for="Input.Password" class="text-danger"></span>

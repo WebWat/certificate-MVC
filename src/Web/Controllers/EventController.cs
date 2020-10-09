@@ -19,6 +19,5 @@ namespace Web.Controllers
         {
             return View(await _eventService.GetEventListAsync(page));
         }
-
     }
 }

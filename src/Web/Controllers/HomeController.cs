@@ -27,6 +27,7 @@ namespace Web.Controllers
                 var model = new HttpErrorViewModel { Title = "Не найдено", Error = "404", Description = "Страница не найдена" };
                 return View(model);
             }
+
             return NoContent();
         }
 

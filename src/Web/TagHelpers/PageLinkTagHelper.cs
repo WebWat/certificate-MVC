@@ -85,6 +85,7 @@ namespace Web.TagHelpers
 
             link.InnerHtml.Append("«");
             item.InnerHtml.AppendHtml(link);
+
             return item;
         }
 
@@ -119,8 +120,10 @@ namespace Web.TagHelpers
             {
                 link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = pageNumber });
             }
+
             link.InnerHtml.Append(pageNumber.ToString());
             item.InnerHtml.AppendHtml(link);
+
             return item;
         }
     }

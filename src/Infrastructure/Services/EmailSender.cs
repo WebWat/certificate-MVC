@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
+    /// <summary>
+    /// Sends message to email
+    /// </summary>
     public class EmailSender : IEmailSender
     {
         private readonly Email _email;
@@ -47,10 +50,10 @@ namespace Infrastructure.Services
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(_email.Host, 465, true).ConfigureAwait(false);
-                await client.AuthenticateAsync(_email.Name, _email.Password).ConfigureAwait(false);
-                await client.SendAsync(emailMessage).ConfigureAwait(false);
-                await client.DisconnectAsync(true).ConfigureAwait(false);
+                await client.ConnectAsync(_email.Host, 465, true);
+                await client.AuthenticateAsync(_email.Name, _email.Password);
+                await client.SendAsync(emailMessage);
+                await client.DisconnectAsync(true);
             }
         }
     }

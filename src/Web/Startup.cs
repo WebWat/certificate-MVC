@@ -60,6 +60,7 @@ namespace Web
             services.AddAntiforgery(options => options.Cookie.Name = "_antiforgery");
             services.AddHttpClient();
             services.AddControllersWithViews();
+            services.AddMemoryCache();
             services.AddRazorPages();
             services.AddHttpContextAccessor();
         }

@@ -36,16 +36,6 @@
                 <span asp-validation-for="Input.Country" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Input.School"></label>
-                <input asp-for="Input.School" class="form-control" />
-                <span asp-validation-for="Input.School" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Class"></label>
-                <select asp-for="Input.Class" asp-items="Model.ListClasses" class="form-control"></select>
-                <span asp-validation-for="Input.Class" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Input.File"></label>
                 <input asp-for="Input.File" id="File" accept="image/jpeg" />
                 <label id="text" for="File">Выберите файл</label>

@@ -13,7 +13,7 @@ namespace ApplicationCore.Entities
 
         public string Description { get; set; }
 
-        public int Rating { get; set; }
+        public int Stage { get; set; }
 
         public List<Link> Links { get; set; }
 

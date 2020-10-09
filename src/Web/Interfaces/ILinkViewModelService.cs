@@ -7,6 +7,6 @@ namespace Web.Interfaces
     {
         Task CreateLinkAsync(int certificateId, LinkViewModel cvm, string userId);
         Task<int> DeleteLinkAsync(int id, string userId);
-        Task<LinkListViewModel> GetCreateLinkListViewModelAsync(int certificateId, string userId);
+        Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId, string userId);
     }
 }

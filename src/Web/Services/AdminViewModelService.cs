@@ -29,6 +29,7 @@ namespace Web.Services
                 return;
             }
 
+            //Сheck the main user
             if (_user.UserName == "admin")
             {
                 return;
@@ -39,7 +40,8 @@ namespace Web.Services
 
         public async Task EditUserRoleAsync(string login, string role)
         {
-            if(login == "admin")
+            //Сheck the main user
+            if (login == "admin")
             {
                 return;
             }
@@ -75,6 +77,7 @@ namespace Web.Services
 
             return result;
         }
+
 
         public async Task<AdminViewModel> GetUserAsync(string login)
         {

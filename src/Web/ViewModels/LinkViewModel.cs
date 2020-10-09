@@ -9,7 +9,5 @@ namespace Web.ViewModels
         [Required(ErrorMessage = "Это обязательное поле")]
         [Url(ErrorMessage = "Некорректный url")]
         public string Name { get; set; }
-
-        public int CertificateId { get; set; }
     }
 }

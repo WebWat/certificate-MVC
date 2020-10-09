@@ -22,7 +22,7 @@
             <span asp-validation-for="Link.Name" class="text-danger"></span>
         </form>
         <ul class="list-group mt-3">
-            @if (Model.Links != null)
+            @if (Model?.Links != null)
             {
                 @foreach (var a in Model.Links)
                 {

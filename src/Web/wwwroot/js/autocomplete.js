@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-var countries = ['Робофест', 'Шаг в будущее'];
+var events = ['Робофест', 'Шаг в будущее']; //TODO: Add events
 
 function autocomplete(inp, arr) {
     let currentFocus;
@@ -36,13 +36,13 @@ function autocomplete(inp, arr) {
         let elem = document.getElementById(this.id + 'autocomplete-list');
         if (elem) subElem = elem.getElementsByTagName('div');
 
-        if (e.keyCode == 40) { //down
+        if (e.keyCode == 40) { //Down
             currentFocus++;
             addActive(subElem);
-        } else if (e.keyCode == 38) { //up
+        } else if (e.keyCode == 38) { //Up
             currentFocus--;
             addActive(subElem);
-        } else if (e.keyCode == 13) { //enter
+        } else if (e.keyCode == 13) { //Enter
             e.preventDefault();
             if (currentFocus > -1) {
                 if (subElem) subElem[currentFocus].click();
@@ -79,7 +79,7 @@ function autocomplete(inp, arr) {
     });
 }
 
-function scrollParentToChild(parent, child) {
+function scrollParentToChild(parent, child) { //TODO: Fix the scrolling of the drop-down list 
     let parentRect = parent.getBoundingClientRect();
     let parentViewableArea = {
         height: parent.clientHeight,
@@ -92,10 +92,6 @@ function scrollParentToChild(parent, child) {
     }
 }
 
-let elem = document.getElementById('Title');
+let elem = document.getElementsByClassName('autocom')[0];
 
-if (elem === null) {
-    elem = document.getElementById('Find');
-}
-
-autocomplete(elem, countries);
+autocomplete(elem, events);

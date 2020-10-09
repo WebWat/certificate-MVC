@@ -7,6 +7,7 @@ using Web.Interfaces;
 namespace Web.Controllers
 {
     [AllowAnonymous]
+    [Route("[controller]/[action]/{uniqueUrl?}/{id?}")]
     public class PublicController : Controller
     {
         private readonly IPublicViewModelService _service;
@@ -27,10 +28,10 @@ namespace Web.Controllers
                 return NotFound();
             }
 
-            return View(_service.GetPublicViewModel(year, find, _user.Id, _user.Name, _user.MiddleName, _user.Surname, _user.UniqueUrl, _user.Photo));
+            return View(_service.GetPublicViewModel(year, find, _user.Id, _user.Name, _user.MiddleName, _user.Surname, _user.Country, _user.UniqueUrl, _user.Photo));
         }
 
-        public async Task<IActionResult> Details(int id, string uniqueUrl)
+        public async Task<IActionResult> Details(string uniqueUrl, int id)
         {
             var _user = await _repository.GetAsync(i => i.UniqueUrl == uniqueUrl);
 

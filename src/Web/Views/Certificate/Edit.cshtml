@@ -2,13 +2,13 @@
 @{
     ViewData["Title"] = "Изменение";
 
-    List<RatingViewModel> ListRatingViewModel = new List<RatingViewModel>
+    List<StageViewModel> ListRatingViewModel = new List<StageViewModel>
     {
-        new RatingViewModel { Id = 1, Name = "Школьный" },
-        new RatingViewModel { Id = 2, Name = "Районный" },
-        new RatingViewModel { Id = 3, Name = "Республиканский" },
-        new RatingViewModel { Id = 4, Name = "Всероссийский" },
-        new RatingViewModel { Id = 5, Name = "Международный" }
+        new StageViewModel { Id = 1, Name = "Школьный" },
+        new StageViewModel { Id = 2, Name = "Районный" },
+        new StageViewModel { Id = 3, Name = "Республиканский" },
+        new StageViewModel { Id = 4, Name = "Всероссийский" },
+        new StageViewModel { Id = 5, Name = "Международный" }
     };
 }
 
@@ -39,8 +39,8 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                @Html.DropDownListFor(model => model.Rating, new SelectList(ListRatingViewModel, "Id", "Name"), new { @class = "form-control" })
+                <label asp-for="Stage" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Stage, new SelectList(ListRatingViewModel, "Id", "Name"), new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>

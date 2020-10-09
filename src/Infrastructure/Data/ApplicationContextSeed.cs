@@ -25,7 +25,7 @@ namespace Infrastructure.Data
 
             if (!await context.Links.AnyAsync() || await context.Links.FirstOrDefaultAsync(i => i.Name == "Test Link") == null)
             {
-                await context.Links.AddRangeAsync(GetLinks(certificateId));
+                await context.Links.AddRangeAsync(GetLinks(certificateId, _user.Id));
                 await context.SaveChangesAsync();
             }
 
@@ -43,18 +43,18 @@ namespace Infrastructure.Data
                 Title = "Test",
                 Description = "Test Description",
                 Date = DateTime.Now,
-                Rating = 2,
+                Stage = 2,
                 File = new byte[] { 213 },
                 UserId = userId
             };
         }
 
-        private static IEnumerable<Link> GetLinks(int id)
+        private static IEnumerable<Link> GetLinks(int id, string userId)
         {
             return new List<Link>
             {
-                new Link { CertificateId = id, Name = "Test Link" },
-                new Link { CertificateId = id, Name = "Test Link 2" }
+                new Link { CertificateId = id, Name = "http://url.certfcate.ru", UserId = userId},
+                new Link { CertificateId = id, Name = "http://url.certfcate.ru", UserId = userId }
             };
         }
 
@@ -62,8 +62,8 @@ namespace Infrastructure.Data
         {
             return new List<Event>
             {
-                new Event { Title = "Test Event", Description = "Test Event Description", Date = DateTime.Now, Url = "Test Event Link" },
-                new Event { Title = "Test Event 2", Description = "Test Event Description 2", Date = DateTime.Now, Url = "Test Event Link 2" },
+                new Event { Title = "Test Event", Description = "Test Event Description", Date = DateTime.Now, Url = "http://certfcate.ru" },
+                new Event { Title = "Test Event 2", Description = "Test Event Description 2", Date = DateTime.Now, Url = "http://certfcate.ru" },
             };
         }
     }

@@ -21,7 +21,7 @@ namespace FunctionalTests.Controllers
         [Fact]
         public async Task ReturnsIndexWithCertificateListing()
         {
-            var response = await Client.GetAsync("/Public?code=" + url);
+            var response = await Client.GetAsync("/Public/Index/" + url);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
 
@@ -30,18 +30,18 @@ namespace FunctionalTests.Controllers
 
         [Fact]
         public async Task ReturnsDetailsWithCertificateAndLinks()
-        {        
-            var response = await Client.GetAsync("/Public?code=" + url);
+        {
+            var response = await Client.GetAsync("/Public/Index/" + url);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
             string id = GetCertificateId(stringResponse);
 
-            response = await Client.GetAsync($"/Public/Details?id={id}&code=" + url);
+            response = await Client.GetAsync($"/Public/Details/{url}/{id}");
             response.EnsureSuccessStatusCode();
             stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains("Test Description", stringResponse);
-            Assert.Contains("Test Link", stringResponse);
+            Assert.Contains("http://url.certfcate.ru", stringResponse);
         }
 
         private string GetCertificateId(string input)

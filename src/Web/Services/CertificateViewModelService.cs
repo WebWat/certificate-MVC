@@ -1,9 +1,6 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,14 +22,16 @@ namespace Web.Services
         {
             var items = _repository.List(i => i.UserId == userId);
 
+            //Sort by date
             if (year != null && year != "Все")
             {
                 items = items.Where(i => i.Date.Year == int.Parse(year));
             }
 
+            //Sort by title
             if (!string.IsNullOrEmpty(find))
             {
-                items = items.Where(p => p.Title.ToLower().Contains(find.ToLower()));
+                items = items.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower()));
             }
 
             var certificates = items.Select(i =>
@@ -43,19 +42,16 @@ namespace Web.Services
                     Title = i.Title,
                     Description = i.Description,
                     Date = i.Date,
-                    Rating = i.Rating,
+                    Stage = i.Stage,
                     ImageData = i.File
                 };
+
                 return certificateViewModel;
             }).ToList();
-
-            List<string> years = Enumerable.Range(2000, DateTime.Now.Year - 1999).OrderByDescending(i => i).Select(i => i.ToString()).ToList();
-            years.Insert(0, "Все");
 
             IndexViewModel ivm = new IndexViewModel
             {
                 Certificates = certificates,
-                Years = new SelectList(years),
                 Find = find,
                 Year = year
             };
@@ -71,7 +67,7 @@ namespace Web.Services
                 Title = cvm.Title,
                 Description = cvm.Description,
                 Date = cvm.Date,
-                Rating = cvm.Rating,
+                Stage = cvm.Stage,
                 File = cvm.ImageData,
                 UserId = userId
             });
@@ -85,7 +81,7 @@ namespace Web.Services
                 Title = cvm.Title,
                 Description = cvm.Description,
                 Date = cvm.Date,
-                Rating = cvm.Rating,
+                Stage = cvm.Stage,
                 UserId = userId
             };
 
@@ -120,7 +116,7 @@ namespace Web.Services
                 Description = certificate.Description,
                 Links = certificate.Links,
                 Date = certificate.Date,
-                Rating = certificate.Rating,
+                Stage = certificate.Stage,
                 ImageData = certificate.File,
                 UserId = certificate.UserId
             };
@@ -136,7 +132,7 @@ namespace Web.Services
                 Title = certificate.Title,
                 Description = certificate.Description,
                 Date = certificate.Date,
-                Rating = certificate.Rating,
+                Stage = certificate.Stage,
                 File = new FormFile(new MemoryStream(certificate.File), 0, certificate.File.Length, "File", "File"),
                 ImageData = certificate.File
             };

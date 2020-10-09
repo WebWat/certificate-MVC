@@ -10,6 +10,7 @@ namespace Infrastructure.Data
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public DbSet<Certificate> Certificates { get; set; }

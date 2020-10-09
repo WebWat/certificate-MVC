@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace ApplicationCore.Services
 {
+    /// <summary>
+    /// Returns the top 10 users with the highest rating
+    /// </summary>
     public class RatingService : IRatingService
     {
         private readonly IUserRepository _userRepository;
@@ -16,24 +19,13 @@ namespace ApplicationCore.Services
 
         public IEnumerable<User> GetTopTen()
         {
+            //We can easily change our rating logic
+#if DEBUG
+            var users = _userRepository.ListIncludeCertificates(i => i.OpenData).ToList();
+#elif RELEASE
             var users = _userRepository.ListIncludeCertificates(i => i.OpenData && i.EmailConfirmed).ToList();
-            var result = new List<User>();
-            int temp = 0;
-
-            for (int i = 0; i < users.Count(); i++)
-            {
-                users[i].Certificates.ForEach(i =>
-                {
-                    temp += i.Rating;
-                });
-                users[i].Rating = temp;
-
-                result.Add(users[i]);
-
-                temp = 0;
-            }
-
-            return result.OrderByDescending(i => i.Rating).Take(10);
+#endif
+            return users.OrderByDescending(i => i.Rating).Take(10);
         }
     }
 }

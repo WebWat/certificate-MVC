@@ -37,6 +37,6 @@ namespace Web.ViewModels
         public string UserId { get; set; }
 
         [Display(Name = "Этап")]
-        public int Rating { get; set; }
+        public int Stage { get; set; }
     }
 }

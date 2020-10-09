@@ -12,7 +12,7 @@ namespace IntegrationTests.Builders
                 Title = "Test",
                 Description = "Test Description",
                 Date = DateTime.Now,
-                Rating = 2,
+                Stage = 2,
                 File = new byte[] { 213 }
             };
         }

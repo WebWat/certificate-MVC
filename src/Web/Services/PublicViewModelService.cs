@@ -1,7 +1,7 @@
-﻿using ApplicationCore.Interfaces;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using ApplicationCore.Entities;
+using ApplicationCore.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Interfaces;
@@ -12,13 +12,15 @@ namespace Web.Services
     public class PublicViewModelService : IPublicViewModelService
     {
         private readonly ICertificateRepository _repository;
+        private readonly IMemoryCache _memoryCache;
 
-        public PublicViewModelService(ICertificateRepository repository)
+        public PublicViewModelService(ICertificateRepository repository, IMemoryCache memoryCache)
         {
             _repository = repository;
+            _memoryCache = memoryCache;
         }
 
-        public PublicViewModel GetPublicViewModel(string year, string find, string userId, string name, string middleName, string surname, string code, byte[] photo)
+        public PublicViewModel GetPublicViewModel(string year, string find, string userId, string name, string middleName, string surname, string country, string code, byte[] photo)
         {
             var items = _repository.List(i => i.UserId == userId);
 
@@ -29,7 +31,7 @@ namespace Web.Services
 
             if (!string.IsNullOrEmpty(find))
             {
-                items = items.Where(p => p.Title.ToLower().Contains(find.ToLower()));
+                items = items.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower()));
             }
 
             var certificates = items.Select(i =>
@@ -46,17 +48,13 @@ namespace Web.Services
                 return certificateViewModel;
             });
 
-
-            List<string> years = Enumerable.Range(2000, DateTime.Now.Year - 1999).OrderByDescending(i => i).Select(i => i.ToString()).ToList();
-            years.Insert(0, "Все");
-
             PublicViewModel pvm = new PublicViewModel
             {
                 Certificates = certificates,
-                Years = new SelectList(years),
                 Find = find,
                 Year = year,
-                Name = name,              
+                Name = name,
+                Country = country,
                 Surname = surname,
                 UniqueUrl = code,
                 MiddleName = middleName,
@@ -68,7 +66,15 @@ namespace Web.Services
 
         public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int id, string userId, string url)
         {
-            var certificate = await _repository.GetCertificateIncludeLinksAsync(i => i.Id == id && i.UserId == userId);
+            if (!_memoryCache.TryGetValue(id, out Certificate certificate))
+            {
+                certificate = await _repository.GetCertificateIncludeLinksAsync(i => i.Id == id && i.UserId == userId);
+                if (certificate != null)
+                {
+                    _memoryCache.Set(certificate.Id, certificate,
+                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10)));
+                }
+            }
 
             return new CertificateViewModel
             {
@@ -76,7 +82,7 @@ namespace Web.Services
                 Title = certificate.Title,
                 Description = certificate.Description,
                 Links = certificate.Links,
-                Rating = certificate.Rating,
+                Stage = certificate.Stage,
                 Date = certificate.Date,
                 UniqueUrl = url,
                 ImageData = certificate.File,

@@ -10,26 +10,22 @@ namespace Web.Services
     public class LinkViewModelService : ILinkViewModelService
     {
         private readonly IAsyncRepository<Link> _linkRepository;
-        private readonly IUrlShortener _urlShortener;
         private readonly ICertificateRepository _certificateRepository;
+        private readonly IUrlShortener _urlShortener;
 
-        public LinkViewModelService(IAsyncRepository<Link> linkRepository, ICertificateRepository certificateRepository, IUrlShortener urlShortener)
+        public LinkViewModelService(IAsyncRepository<Link> linkRepository, IUrlShortener urlShortener, ICertificateRepository certificateRepository)
         {
             _linkRepository = linkRepository;
-            _certificateRepository = certificateRepository;
             _urlShortener = urlShortener;
+            _certificateRepository = certificateRepository;
         }
 
         public async Task CreateLinkAsync(int certificateId, LinkViewModel cvm, string userId)
         {
-            if (await CheckCertificate(certificateId, userId) || await CheckCertificateIncludeLink(certificateId, userId))
-            {
-                return;
-            }
+            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(i => i.Id == certificateId && i.UserId == userId);
 
-            var certificate = await _certificateRepository.GetCertificateIncludeLinksAsync(i => i.Id == certificateId && i.UserId == userId);
-
-            if (certificate.Links.Count >= 5)
+            //check the number of links
+            if (links.Links.Count() >= 5)
             {
                 return;
             }
@@ -38,28 +34,23 @@ namespace Web.Services
             {
                 Id = cvm.Id,
                 Name = await _urlShortener.GetShortenedUrlAsync(cvm.Name),
-                CertificateId = certificateId
+                CertificateId = certificateId,
+                UserId = userId
             });
         }
 
-        public async Task<LinkListViewModel> GetCreateLinkListViewModelAsync(int certificateId, string userId)
+        public async Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId, string userId)
         {
-            if (await CheckCertificate(certificateId, userId))
-            {
-                return null;
-            }
-
-            var links = _linkRepository.List(i => i.CertificateId == certificateId);
-
+            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(i => i.Id == certificateId && i.UserId == userId);
+           
             return new LinkListViewModel
             {
                 CertificateId = certificateId,
-                Links = links.Select(i =>
+                Links = links.Links.Select(i =>
                 {
                     var link = new LinkViewModel
                     {
                         Id = i.Id,
-                        CertificateId = i.CertificateId,
                         Name = i.Name
                     };
 
@@ -70,40 +61,11 @@ namespace Web.Services
 
         public async Task<int> DeleteLinkAsync(int id, string userId)
         {
-            var link = await _linkRepository.GetByIdAsync(id);
-
-            if (await CheckCertificate(link.CertificateId, userId))
-            {
-                return 0;
-            }
+            var link = await _linkRepository.GetAsync(i => i.Id == id && i.UserId == userId);
 
             await _linkRepository.DeleteAsync(link);
 
             return link.CertificateId;
-        }
-
-        private async Task<bool> CheckCertificate(int certificateId, string userId)
-        {
-            var certificate = await _certificateRepository.GetAsync(i => i.Id == certificateId && i.UserId == userId);
-
-            if (certificate == null)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private async Task<bool> CheckCertificateIncludeLink(int certificateId, string userId)
-        {
-            var certificate = await _certificateRepository.GetCertificateIncludeLinksAsync(i => i.Id == certificateId && i.UserId == userId);
-
-            if (certificate.Links.Count >= 5)
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ApplicationCore.Services
 {
+    /// <summary>
+    /// Generates a unique url for the user
+    /// </summary>
     public class UrlGenerator : IUrlGenerator
     {
         public string Generate()

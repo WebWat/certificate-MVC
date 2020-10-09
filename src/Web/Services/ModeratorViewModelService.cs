@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Interfaces;
@@ -23,7 +24,7 @@ namespace Web.Services
                 Title = evm.Title,
                 Description = evm.Description,
                 Url = evm.Url,
-                Date = evm.Date
+                Date = DateTime.UtcNow
             });
         }
 

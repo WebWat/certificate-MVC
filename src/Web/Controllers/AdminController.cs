@@ -21,11 +21,6 @@ namespace Web.Controllers
             return View(await _adminService.GetIndexAdminViewModelListAsync());
         }
 
-        public async Task<IActionResult> Details(string login)
-        {
-            return View(await _adminService.GetUserAsync(login));
-        }
-
         public async Task<IActionResult> Edit(string login)
         {
             return View(await _adminService.GetUserAsync(login));

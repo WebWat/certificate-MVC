@@ -1,6 +1,6 @@
 ﻿"use strict";
 function start(a, b) {
-    document.location.href = location.origin + "/Public/Details?id=" + a + "&uniqueUrl=" + b;
+    document.location.href = location.origin + "/Public/Details/" + b + "/" + a;
 }
 
 window.onload = () => {

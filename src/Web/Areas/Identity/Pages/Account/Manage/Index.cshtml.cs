@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
@@ -17,24 +15,18 @@ namespace Web.Areas.Identity.Pages.Account.Manage
     public partial class IndexModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
 
-        public IndexModel(UserManager<User> userManager, SignInManager<User> signInManager)
+        public IndexModel(UserManager<User> userManager)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
         }
 
         private readonly long _fileSizeLimit = 2097152;
         private readonly long _fileMinSize = 524288;
         private readonly string _expansion = "image/jpeg";
 
-        private static readonly List<int> list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-
         [Display(Name = "Логин")]
         public string Username { get; set; }
-
-        public SelectList ListClasses = new SelectList(list);
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -64,15 +56,6 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Город")]
             public string Country { get; set; }
 
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [MaxLength(100)]
-            [Display(Name = "Школа")]
-            public string School { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [Display(Name = "Класс")]
-            public int Class { get; set; }
-
             [Display(Name = "Открытые данные")]
             public bool OpenData { get; set; }
 
@@ -92,8 +75,6 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                 Surname = user.Surname,
                 MiddleName = user.MiddleName,
                 Country = user.Country,
-                School = user.School,
-                Class = user.Class,
                 OpenData = user.OpenData
             };
         }
@@ -115,6 +96,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 return NotFound();
@@ -154,8 +136,6 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             user.Name = Input.Name;
             user.MiddleName = Input.MiddleName;
             user.Country = Input.Country;
-            user.School = Input.School;
-            user.Class = Input.Class;
             user.OpenData = Input.OpenData;
 
             await _userManager.UpdateAsync(user);

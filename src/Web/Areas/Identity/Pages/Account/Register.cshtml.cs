@@ -111,6 +111,9 @@ namespace Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "User");
+#if DEBUG
+                    return RedirectToPage("./Login");
+#elif RELEASE
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -122,6 +125,7 @@ namespace Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Подтвердите вашу учетную запись", callbackUrl, "Подтвердить");
 
                     return RedirectToPage("./RegisterConfirmation");
+#endif
                 }
                 foreach (var error in result.Errors)
                 {

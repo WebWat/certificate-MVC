@@ -69,7 +69,7 @@ namespace Web.Controllers
             {
                 if (cvm.File != null)
                 {
-                    if (cvm.File.CheckFileExtension(_expansion))
+                    if (cvm.File.CheckFileExtension(_expansion)) 
                     {
                         ModelState.AddModelError("File", "Недопустимый формат файла");
                         return View();

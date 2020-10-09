@@ -68,7 +68,7 @@ namespace Web.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);
+                var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);               
                 if (user == null)
                 {
                     user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
@@ -76,11 +76,15 @@ namespace Web.Areas.Identity.Pages.Account
 
                 if (user != null)
                 {
+#if DEBUG
+
+#elif RELEASE
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
                         ModelState.AddModelError(string.Empty, "Вы не подтвердили свой email");
                         return Page();
                     }
+#endif
                 }
                 else
                 {
@@ -92,9 +96,19 @@ namespace Web.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    var role = await _userManager.GetRolesAsync(user);
+
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     {
-                        return Redirect(returnUrl);
+                        //Correct http error 403
+                        if ((role[0].Contains("Admin") || role[0].Contains("Moderator")) && returnUrl.Contains("Event"))
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            return Redirect(returnUrl);
+                        }
                     }
                     else
                     {

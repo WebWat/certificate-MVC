@@ -23,12 +23,7 @@ namespace Infrastructure.Identity
         {
             var _user = _context.Users.Include(i => i.Certificates).FirstOrDefault(i => i.Id == id);
 
-            foreach (var c in _user.Certificates)
-            {
-                _context.Certificates.Remove(c);
-            }
-
-            await _context.SaveChangesAsync();
+            _user.ClearCertificates();
 
             _context.Users.Remove(_user);
 
@@ -37,7 +32,7 @@ namespace Infrastructure.Identity
 
         public async Task<int> GetCountAsync()
         {
-            return await _context.Users.CountAsync();
+            return await _context.Users.AsNoTracking().CountAsync();
         }
 
         public async Task<User> GetAsync(Expression<Func<User, bool>> predicate)
@@ -57,7 +52,7 @@ namespace Infrastructure.Identity
 
         public IEnumerable<User> ListIncludeCertificates(Func<User, bool> predicate)
         {
-            return _context.Users.Include(i => i.Certificates).AsNoTracking().Where(predicate);
+            return _context.Users.AsNoTracking().Include(i => i.Certificates).Where(predicate);
         }
     }
 }

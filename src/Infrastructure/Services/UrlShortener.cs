@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
+    /// <summary>
+    /// Reduces user links
+    /// </summary>
     public class UrlShortener : IUrlShortener
     {
         private HttpClient Client { get; }
@@ -30,6 +33,7 @@ namespace Infrastructure.Services
                 return result.Replace("\"", "");
             }
 
+            //If the status code is not successful
             return "Error";
         }
     }

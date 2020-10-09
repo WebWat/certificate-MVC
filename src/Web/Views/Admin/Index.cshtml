@@ -35,8 +35,7 @@
             </td>
             <td>@u.Role</td>
             <td>
-                <a asp-controller="Admin" asp-action="Details" asp-route-login="@u.Login">Подробнее</a>
-                | <a asp-controller="Admin" asp-action="Edit" asp-route-login="@u.Login">Изменить роль</a>
+                <a asp-controller="Admin" asp-action="Edit" asp-route-login="@u.Login">Изменить роль</a>
                 | <a asp-controller="Admin" asp-action="Delete" asp-route-id="@u.Id" class="delete">Удалить</a>
             </td>
         </tr>

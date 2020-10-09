@@ -43,7 +43,7 @@ namespace Web.Controllers
 
             if (list == null)
             {
-                return null;
+                return default;
             }
 
             var compressedFileStream = new MemoryStream();
@@ -55,6 +55,7 @@ namespace Web.Controllers
                     var zipEntry = zipArchive.CreateEntry(item.Title + ".jpg");
 
                     using (var originalFileStream = new MemoryStream(item.File))
+
                     using (var zipEntryStream = zipEntry.Open())
                     {
                         originalFileStream.CopyTo(zipEntryStream);
@@ -74,7 +75,8 @@ namespace Web.Controllers
             int column = 2;
             int count = 1;
 
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; //https://epplussoftware.com/developers/licenseexception
+            //https://epplussoftware.com/developers/licenseexception
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             using (var package = new ExcelPackage())
             {
@@ -90,7 +92,7 @@ namespace Web.Controllers
                     worksheet.Cells[column, 1].Value = count.ToString();
                     worksheet.Cells[column, 2].Value = c.Title;
                     worksheet.Cells[column, 3].Value = c.Description;
-                    worksheet.Cells[column, 4].Value = GetRating(c.Rating);
+                    worksheet.Cells[column, 4].Value = GetRating(c.Stage);
                     worksheet.Cells[column, 5].Value = c.Date.ToShortDateString();
 
                     column++;

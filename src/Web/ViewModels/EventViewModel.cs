@@ -23,10 +23,8 @@ namespace Web.ViewModels
         [MaxLength(300)]
         public string Url { get; set; }
 
-        [Required(ErrorMessage = "Это обязательное поле")]
-        [Display(Name = "Дата")]
         [DataType(DataType.Date)]
-        public DateTime Date { get; set; } 
+        public DateTime Date { get; set; }
 
         public int Page { get; set; }
     }

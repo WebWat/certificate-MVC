@@ -7,7 +7,7 @@
     if (SignInManager.IsSignedIn(User))
     {
         var user = await UserManager.GetUserAsync(User);
-        fill = user.Country != null && user.School != null && user.Photo != null;
+        fill = user.Country != null && user.Photo != null;
     }
 }
 
