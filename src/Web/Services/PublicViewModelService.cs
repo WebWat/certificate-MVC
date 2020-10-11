@@ -2,6 +2,7 @@
 using ApplicationCore.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Interfaces;
@@ -22,16 +23,25 @@ namespace Web.Services
 
         public PublicViewModel GetPublicViewModel(string year, string find, string userId, string name, string middleName, string surname, string country, string code, byte[] photo)
         {
-            var items = _repository.List(i => i.UserId == userId);
+            if (!_memoryCache.TryGetValue("public" + userId.Take(2), out List<Certificate> items))
+            {
+                items = _repository.List(i => i.UserId == userId).ToList();
+
+                if (items != null)
+                {
+                    _memoryCache.Set("public" + userId.Take(2), items,
+                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(15)));
+                }
+            }
 
             if (year != null && year != "Все")
             {
-                items = items.Where(i => i.Date.Year == int.Parse(year));
+                items = items.Where(i => i.Date.Year == int.Parse(year)).ToList();
             }
 
             if (!string.IsNullOrEmpty(find))
             {
-                items = items.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower()));
+                items = items.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower())).ToList();
             }
 
             var certificates = items.Select(i =>

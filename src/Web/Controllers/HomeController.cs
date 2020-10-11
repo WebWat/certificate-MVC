@@ -9,17 +9,20 @@ namespace Web.Controllers
     [AllowAnonymous]
     public class HomeController : Controller
     {
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 600)]
         public IActionResult Index()
         {
             return View();
         }
 
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 600)]
         public IActionResult Privacy()
         {
             return View();
         }
 
         [Route("/HttpError")]
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 600)]
         public IActionResult HttpErrorPage(string code)
         {
             if (code == "404")

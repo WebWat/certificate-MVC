@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Web.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
     public class LogoutModel : PageModel
     {
         private readonly SignInManager<User> _signInManager;
@@ -24,6 +25,7 @@ namespace Web.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();
+
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);

@@ -14,6 +14,7 @@ namespace Web.Controllers
             _ratingService = ratingService;
         }
 
+        [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 600)]
         public IActionResult Index()
         {
             return View(_ratingService.GetTopTenUsers());

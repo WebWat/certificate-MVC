@@ -16,6 +16,7 @@ namespace Web.Controllers
             _adminService = adminService;
         }
 
+        [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 900)]
         public async Task<IActionResult> Index()
         {
             return View(await _adminService.GetIndexAdminViewModelListAsync());
