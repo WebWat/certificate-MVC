@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.Helpers;
 using Web.Interfaces;
 using Web.ViewModels;
 
@@ -23,13 +24,13 @@ namespace Web.Services
 
         public PublicViewModel GetPublicViewModel(string year, string find, string userId, string name, string middleName, string surname, string country, string code, byte[] photo)
         {
-            if (!_memoryCache.TryGetValue("public" + userId.Take(2), out List<Certificate> items))
+            if (!_memoryCache.TryGetValue(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.Take(5).ToString()), out List<Certificate> items))
             {
                 items = _repository.List(i => i.UserId == userId).ToList();
 
                 if (items != null)
                 {
-                    _memoryCache.Set("public" + userId.Take(2), items,
+                    _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.Take(5).ToString()), items,
                     new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(15)));
                 }
             }
@@ -76,12 +77,13 @@ namespace Web.Services
 
         public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int id, string userId, string url)
         {
-            if (!_memoryCache.TryGetValue(id, out Certificate certificate))
+            if (!_memoryCache.TryGetValue(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel), id.ToString()), out Certificate certificate))
             {
                 certificate = await _repository.GetCertificateIncludeLinksAsync(i => i.Id == id && i.UserId == userId);
+
                 if (certificate != null)
                 {
-                    _memoryCache.Set(certificate.Id, certificate,
+                    _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel), id.ToString()), certificate,
                     new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10)));
                 }
             }

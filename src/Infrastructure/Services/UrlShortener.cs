@@ -1,6 +1,5 @@
 ﻿using ApplicationCore.Interfaces;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -13,18 +12,25 @@ namespace Infrastructure.Services
     /// </summary>
     public class UrlShortener : IUrlShortener
     {
-        private HttpClient Client { get; }
+        private readonly IHttpClientFactory _clientFactory;
+        private readonly string _apiKey;
 
-        public UrlShortener(HttpClient client, IConfiguration configuration)
+        public UrlShortener(IHttpClientFactory clientFactory, IConfiguration configuration)
         {
-            client.BaseAddress = new Uri("http://url.certfcate.ru");
-            client.DefaultRequestHeaders.Add("X-API-KEY", configuration["Api:Key"]);
-            Client = client;
+            _clientFactory = clientFactory;
+            _apiKey = configuration["Api:Key"];
         }
 
         public async Task<string> GetShortenedUrlAsync(string url)
         {
-            var response = await Client.PostAsync("", new StringContent(JsonSerializer.Serialize(url), Encoding.UTF8, "application/json"));
+            var client = _clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("X-API-KEY", _apiKey);
+
+            var dataJson = new StringContent(JsonSerializer.Serialize(url),
+                                             Encoding.UTF8,
+                                             "application/json");
+
+            var response = await client.PostAsync("http://url.certfcate.ru", dataJson);
 
             if (response.IsSuccessStatusCode)
             {

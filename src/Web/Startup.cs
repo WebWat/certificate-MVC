@@ -56,7 +56,7 @@ namespace Web
             ConfigureCookieSettings.Configure(services);
 
             //Other services
-            services.AddHttpClient<IUrlShortener, UrlShortener>();
+            services.AddScoped<IUrlShortener, UrlShortener>();
             services.AddAntiforgery(options => options.Cookie.Name = "_antiforgery");
             services.AddHttpClient();
             services.AddControllersWithViews();
