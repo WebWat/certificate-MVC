@@ -12,12 +12,14 @@ namespace Web.Services
         private readonly IAsyncRepository<Link> _linkRepository;
         private readonly ICertificateRepository _certificateRepository;
         private readonly IUrlShortener _urlShortener;
+        private readonly IPublicUpdatingCacheService _cacheService;
 
-        public LinkViewModelService(IAsyncRepository<Link> linkRepository, IUrlShortener urlShortener, ICertificateRepository certificateRepository)
+        public LinkViewModelService(IAsyncRepository<Link> linkRepository, IUrlShortener urlShortener, ICertificateRepository certificateRepository, IPublicUpdatingCacheService cacheService)
         {
             _linkRepository = linkRepository;
             _urlShortener = urlShortener;
             _certificateRepository = certificateRepository;
+            _cacheService = cacheService;
         }
 
         public async Task CreateLinkAsync(int certificateId, LinkViewModel cvm, string userId)
@@ -37,12 +39,14 @@ namespace Web.Services
                 CertificateId = certificateId,
                 UserId = userId
             });
+
+            await _cacheService.SetItemAsync(certificateId, userId);
         }
 
         public async Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId, string userId)
         {
             var links = await _certificateRepository.GetCertificateIncludeLinksAsync(i => i.Id == certificateId && i.UserId == userId);
-           
+
             return new LinkListViewModel
             {
                 CertificateId = certificateId,
@@ -64,6 +68,8 @@ namespace Web.Services
             var link = await _linkRepository.GetAsync(i => i.Id == id && i.UserId == userId);
 
             await _linkRepository.DeleteAsync(link);
+
+            await _cacheService.SetItemAsync(link.CertificateId, userId);
 
             return link.CertificateId;
         }

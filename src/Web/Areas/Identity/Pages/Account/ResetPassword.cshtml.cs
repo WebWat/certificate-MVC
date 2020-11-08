@@ -32,14 +32,14 @@ namespace Web.Areas.Identity.Pages.Account
 
             [Required(ErrorMessage = "Это обязательное поле")]
             [DataType(DataType.Password)]
-            [MaxLength(40, ErrorMessage = "Недопустимая длина")]
+            [MaxLength(40)]
             [Display(Name = "Пароль")]
             public string Password { get; set; }
 
             [Required(ErrorMessage = "Это обязательное поле")]
             [Compare("Password", ErrorMessage = "Пароли не совпадают")]
             [DataType(DataType.Password)]
-            [MaxLength(40, ErrorMessage = "Недопустимая длина")]
+            [MaxLength(40)]
             [Display(Name = "Подтвердить пароль")]
             public string ConfirmPassword { get; set; }
 

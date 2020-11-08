@@ -42,7 +42,7 @@ namespace Web.Areas.Identity.Pages.Account
 
                 if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
                 {
-                    return RedirectToPage("./ForgotPasswordConfirmation");
+                    return Page();
                 }
 
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);

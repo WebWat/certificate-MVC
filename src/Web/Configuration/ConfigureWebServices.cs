@@ -15,6 +15,7 @@ namespace Web.Configuration
             services.AddScoped<IAdminViewModelService, AdminViewModelService>();
             services.AddScoped<IModeratorViewModelService, ModeratorViewModelService>();
             services.AddScoped<IEventViewModelService, EventViewModelService>();
+            services.AddScoped<IPublicUpdatingCacheService, PublicUpdatingCacheService>();
         }
     }
 }

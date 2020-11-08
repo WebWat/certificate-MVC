@@ -82,6 +82,12 @@ namespace Web.Services
         public async Task<AdminViewModel> GetUserAsync(string login)
         {
             var user = await _userRepository.GetAsync(i => i.UserName == login);
+
+            if(user == null)
+            {
+                return null;
+            }
+
             var roles = await _userManager.GetRolesAsync(user);
 
             return new AdminViewModel

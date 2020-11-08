@@ -25,7 +25,6 @@ namespace Web.Controllers
             _userManager = userManager;
         }
 
-        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 600)]
         public async Task<IActionResult> Index(string year, string find)
         {
             var _user = await _userManager.GetUserAsync(User);
@@ -33,7 +32,6 @@ namespace Web.Controllers
             return View(_certificateService.GetIndexViewModel(_user.Id, year, find));
         }
 
-        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 600)]
         public async Task<IActionResult> Details(int id)
         {
             var _user = await _userManager.GetUserAsync(User);

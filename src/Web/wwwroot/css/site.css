@@ -207,13 +207,13 @@ input#File {
 /* Index search engine size */
 @media screen and (max-width: 991px) {
     #Year {
-        -ms-flex: 0 0 27%;
-        flex: 0 0 27%;
-        max-width: 27%;
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
     }
 }
-/***************************/
 
+/*Card image*/
 .ms-image-rating {
     max-width: 35px;
     max-height: 35px;

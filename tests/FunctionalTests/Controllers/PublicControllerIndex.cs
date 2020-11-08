@@ -9,7 +9,7 @@ namespace FunctionalTests.Controllers
     [Collection("Sequential")]
     public class PublicControllerIndex : IClassFixture<WebTestFixture>
     {
-        private readonly string url = "NTE4ZjE2NWMtMTMwOS00MmYwLWFmZTUtMGMyZTBjNmU5NzY5MTkwNzMzYmEtMDE5MS00ZWFkLTlkOWQtZGQ3M2RiMDkxZjMy";
+        private readonly string url = "NTE4ZjE2NWMtMTMwOS00MmYwLWFmZTUtMGMyZTB";
 
         public PublicControllerIndex(WebTestFixture factory)
         {
@@ -21,7 +21,7 @@ namespace FunctionalTests.Controllers
         [Fact]
         public async Task ReturnsIndexWithCertificateListing()
         {
-            var response = await Client.GetAsync("/Public/Index/" + url);
+            var response = await Client.GetAsync("/Public/" + url);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
 
@@ -31,7 +31,7 @@ namespace FunctionalTests.Controllers
         [Fact]
         public async Task ReturnsDetailsWithCertificateAndLinks()
         {
-            var response = await Client.GetAsync("/Public/Index/" + url);
+            var response = await Client.GetAsync("/Public/" + url);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
             string id = GetCertificateId(stringResponse);

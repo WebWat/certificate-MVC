@@ -30,7 +30,7 @@ namespace Infrastructure.Identity
                     OpenData = true,
                     EmailConfirmed = true,
                     LockoutEnabled = false,
-                    UniqueUrl = "NTE4ZjE2NWMtMTMwOS00MmYwLWFmZTUtMGMyZTBjNmU5NzY5MTkwNzMzYmEtMDE5MS00ZWFkLTlkOWQtZGQ3M2RiMDkxZjMy"
+                    UniqueUrl = "NTE4ZjE2NWMtMTMwOS00MmYwLWFmZTUtMGMyZTB"
                 };
 
                 await userManager.CreateAsync(admin, "Password12");

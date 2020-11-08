@@ -11,6 +11,7 @@ async function copy() {
 }
 
 function start(a) {
+    sessionStorage.setItem("current_page", "1");
     document.location.href = location.origin + "/Certificate/Details/" + a;
 }
 

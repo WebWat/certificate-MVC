@@ -16,7 +16,6 @@ namespace Web.Controllers
             _adminService = adminService;
         }
 
-        [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 900)]
         public async Task<IActionResult> Index()
         {
             return View(await _adminService.GetIndexAdminViewModelListAsync());
@@ -24,7 +23,14 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Edit(string login)
         {
-            return View(await _adminService.GetUserAsync(login));
+            var user = await _adminService.GetUserAsync(login);
+
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
         [HttpPost]

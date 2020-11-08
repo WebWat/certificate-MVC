@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
@@ -31,15 +32,17 @@ namespace Web.Services
                 if (items != null)
                 {
                     _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.Take(5).ToString()), items,
-                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(15)));
+                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
                 }
             }
 
+            //Sort by date
             if (year != null && year != "Все")
             {
                 items = items.Where(i => i.Date.Year == int.Parse(year)).ToList();
             }
 
+            //Sort by title
             if (!string.IsNullOrEmpty(find))
             {
                 items = items.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower())).ToList();
@@ -59,10 +62,14 @@ namespace Web.Services
                 return certificateViewModel;
             });
 
+            List<string> years = Enumerable.Range(2000, DateTime.Now.Year - 1999).Reverse().Select(i => i.ToString()).ToList();
+            years.Insert(0, "Все");
+
             PublicViewModel pvm = new PublicViewModel
             {
                 Certificates = certificates,
                 Find = find,
+                Years = new SelectList(years),
                 Year = year,
                 Name = name,
                 Country = country,
@@ -84,7 +91,7 @@ namespace Web.Services
                 if (certificate != null)
                 {
                     _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel), id.ToString()), certificate,
-                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10)));
+                                     new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
                 }
             }
 

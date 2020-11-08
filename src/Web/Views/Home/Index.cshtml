@@ -127,7 +127,9 @@
 </section>
 
 <section>
-    <vc:users-count></vc:users-count>
+    <cache expires-after="@TimeSpan.FromMinutes(10)">
+        <vc:users-count></vc:users-count>
+    </cache>
 </section>
 
 
