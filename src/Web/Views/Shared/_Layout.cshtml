@@ -33,8 +33,11 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            2020 - Certificate - <a asp-controller="Home" asp-action="Privacy">Пользовательское соглашение</a>
+        <div class="container d-flex justify-content-between">
+            <div>2020 - Certificate - <a asp-controller="Home" asp-action="Term">@Localizer["Term"]</a></div>
+            <div>
+                <partial name="_SelectLanguagePartial" />
+            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

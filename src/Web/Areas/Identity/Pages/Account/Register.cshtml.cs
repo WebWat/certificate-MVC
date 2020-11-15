@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
+using Web.Areas.Identity.Pages.Account.Models;
 
 namespace Areas.Identity.Pages.Account
 {
@@ -26,45 +27,9 @@ namespace Areas.Identity.Pages.Account
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public RegisterInput Input { get; set; }
 
         public string ReturnUrl { get; set; }
-
-        public class InputModel
-        {
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [MaxLength(100)]
-            [Display(Name = "Логин")]
-            public string UserName { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [MaxLength(100)]
-            [RegularExpression(@"(?i:[а-я]*\s[а-я]*\s[а-я]*)", ErrorMessage = "Неверный ввод")]
-            [Display(Name = "ФИО")]
-            public string FullName { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [EmailAddress(ErrorMessage = "Некорректный Email адрес")]
-            [MaxLength(100)]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [DataType(DataType.Password)]
-            [MaxLength(100)]
-            [Display(Name = "Пароль")]
-            public string Password { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [Compare("Password", ErrorMessage = "Пароли не совпадают")]
-            [DataType(DataType.Password)]
-            [MaxLength(100)]
-            [Display(Name = "Подтвердить пароль")]
-            public string ConfirmPassword { get; set; }
-
-            [Display(Name = "Открытые данные")]
-            public bool OpenData { get; set; }
-        }
 
         public void OnGet(string returnUrl = null)
         {

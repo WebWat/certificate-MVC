@@ -1,14 +1,14 @@
 ﻿@model CertificateViewModel
 @{
-    ViewData["Title"] = "Добавление";
+    ViewData["Title"] = Localizer["Title"];
 
     List<StageViewModel> ListRatingViewModel = new List<StageViewModel>
     {
-        new StageViewModel { Id = 1, Name = "Школьный" },
-        new StageViewModel { Id = 2, Name = "Районный" },
-        new StageViewModel { Id = 3, Name = "Республиканский" },
-        new StageViewModel { Id = 4, Name = "Всероссийский" },
-        new StageViewModel { Id = 5, Name = "Международный" }
+        new StageViewModel { Id = 1, Name = Localizer["School"].Value },
+        new StageViewModel { Id = 2, Name = Localizer["District"].Value },
+        new StageViewModel { Id = 3, Name = Localizer["Republican"].Value },
+        new StageViewModel { Id = 4, Name = Localizer["All-Russian"].Value },
+        new StageViewModel { Id = 5, Name = Localizer["International"].Value }
     };
 }
 
@@ -28,8 +28,8 @@
             <div class="form-group">
                 <label asp-for="File" class="control-label"></label>
                 <input asp-for="File" id="File" accept="image/jpeg" />
-                <label id="text" for="File">Выберите файл</label>
-                <p class="text-muted text-note float-right">Минимум  512Кб. Максимум 2 Мб.</p>
+                <label id="text" for="File" asp-for="File"></label>
+                <p class="text-muted text-note float-right">@Localizer["Note"]</p>
                 <span asp-validation-for="File" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -47,8 +47,8 @@
             </div>
             <div class="form-group mt-1">
                 <div class="btn-group" role="group">
-                    <a class="btn btn-primary" asp-controller="Certificate" asp-action="Index">Назад к списку</a>
-                    <input type="submit" value="Создать" class="btn btn-success" />
+                    <a class="btn btn-primary" asp-controller="Certificate" asp-action="Index">@Localizer["Back"]</a>
+                    <input type="submit" value="@Localizer["Create"]" class="btn btn-success" />
                 </div>
             </div>
         </form>

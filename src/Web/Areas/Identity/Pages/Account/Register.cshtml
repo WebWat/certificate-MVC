@@ -1,21 +1,21 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Регистрация";
+    ViewData["Title"] = Localizer["Title"];
 }
 
 <div id="alert" class="term-alert">
     <div class="text-center">
         <p class="mt-2 mb-2 align-items-center">
-            Регистрируясь на этом сайте, вы соглашаетесь с <a asp-controller="Home" asp-action="Privacy">пользовательским соглашением</a>
+            @Localizer["AgreementOne"] <a asp-controller="Home" asp-action="Term">@Localizer["AgreementTwo"]</a>
         </p>
     </div>
 </div>
 
 <form class="form-signin" asp-antiforgery="true">
     <div class="text-center mb-4">
-        <h1 class="h1 mb-3 font-weight-normal">@ViewData["Title"]</h1>
-        <h5>Создайте новый аккаунт</h5>
+        <h1 class="h1 mb-3 font-weight-normal">@Localizer["Title"]</h1>
+        <h5>@Localizer["Description"]</h5>
     </div>
     <div asp-validation-summary="ModelOnly" class="alert alert-danger list-style-none"></div>
     <div class="form-label-group">
@@ -43,13 +43,13 @@
         <input asp-for="Input.ConfirmPassword" class="form-control">
         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
     </div>
-    <div class="checkbox mb-2" data-toggle="tooltip" data-placement="left" title="Ваши данные (Имя и город) будут отображаться в рейтинге">
+    <div class="checkbox mb-2" data-toggle="tooltip" data-placement="left" title="@Localizer["Info"]">
         <label asp-for="Input.OpenData">
             <input asp-for="Input.OpenData"/>
             @Html.DisplayNameFor(m => m.Input.OpenData)
         </label>
     </div>
-    <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">Регистрация</button>
+    <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">@Localizer["SignUp"]</button>
     <p class="mt-4 mb-3 text-muted text-center">2020 - Certificate</p>
 </form>
 

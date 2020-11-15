@@ -1,48 +1,48 @@
 ﻿@model CertificateViewModel
 @{
-    ViewData["Title"] = "Подробнее";
+    ViewData["Title"] = Localizer["Title"];
 }
 
 <div id="modDialog" class="modal fade">
     <div id="dialogContent" class="modal-dialog"></div>
 </div>
 
-<h1 class="caption">@ViewData["Title"]</h1>
+<h1 class="caption">@Localizer["Title"]</h1>
 <hr />
 <div class="row">
     <div class="col-md-6" style="word-wrap: break-word;">
-        <h5>Название</h5>
+        <h5>@Localizer["AwardTitle"]</h5>
         <p>@Html.DisplayFor(model => model.Title)</p>
         <br />
-        <h5>Описание</h5>
+        <h5>@Localizer["Description"]</h5>
         <p>@Html.DisplayFor(model => model.Description)</p>
         <br />
-        <h5>Этап</h5>
+        <h5>@Localizer["Stage"]</h5>
         <p>
             @switch (Model.Stage)
             {
                 case 1:
-                    @:Школьный
+                    @Localizer["School"]
                     break;
                 case 2:
-                    @:Районный
+                    @Localizer["District"]
                     break;
                 case 3:
-                    @:Республиканский
+                    @Localizer["Republican"]
                     break;
                 case 4:
-                    @:Всероссийский
+                    @Localizer["All-Russian"]
                     break;
                 case 5:
-                    @:Международный
+                    @Localizer["International"]
                     break;
             }
         </p>
         <br />
-        <h5>Дата</h5>
+        <h5>@Localizer["Date"]</h5>
         <p>@Html.DisplayFor(model => model.Date)</p>
         <br />
-        <h5>Ссылки</h5>
+        <h5>@Localizer["Links"]</h5>
         @if (Model.Links.Count != 0)
         {
             <ul class="list-group">
@@ -52,12 +52,12 @@
                 }
             </ul>
         }
-        <p><a class="btn btn-info btn-sm mt-2 mb-3" asp-controller="Link" asp-action="Index" asp-route-id="@Model.Id">Управление</a></p>
+        <p><a class="btn btn-info btn-sm mt-2 mb-3" asp-controller="Link" asp-action="Index" asp-route-id="@Model.Id">@Localizer["Manage"]</a></p>
         <div class="btn-group mb-3" role="group" aria-label="Basic example">
-            <a asp-controller="Certificate" asp-action="Index" class="btn btn-primary">Назад к списку</a>
-            <a asp-controller="Download" asp-action="Jpg" asp-route-id="@Model.Id" class="btn btn-primary">Скачать</a>
-            <a asp-controller="Certificate" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Изменить</a>
-            <a asp-controller="Certificate" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger delete">Удалить</a>
+            <a asp-controller="Certificate" asp-action="Index" class="btn btn-primary">@Localizer["Back"]</a>
+            <a asp-controller="Download" asp-action="Jpg" asp-route-id="@Model.Id" class="btn btn-primary">@Localizer["Download"]</a>
+            <a asp-controller="Certificate" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">@Localizer["Change"]</a>
+            <a asp-controller="Certificate" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger delete">@Localizer["Delete"]</a>
         </div>
     </div>
     <div class="col-md-6 col-md-offset-2">

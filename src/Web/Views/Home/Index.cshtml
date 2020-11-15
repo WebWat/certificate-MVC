@@ -1,35 +1,32 @@
 ﻿@{
     ViewData["Title"] = "Certificate";
 }
+
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">              
-                <h5 class="modal-title" id="exampleModalLongTitle">Подробнее</h5>
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">@Localizer["ReadMore"]</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <h5>О сайте</h5>
+                <h5>@Localizer["About"]</h5>
                 <p>
-                    Рады приветствовать вас на нашем сайте! Этот сайт предназначен для
-                    хранения и публикаций ваших достижений(сертификаты, грамоты и т.п).
-                    Также вы можете добавлять ссылки к вашим достижениям. Стоит отметить,
-                    что сайт использует свой сервис сокращения ссылок.
+                    @Localizer["AboutMore"]
                 </p>
                 <hr />
-                <h5>Ограничения</h5>
-                <p>Максимальное количество ссылок(к каждому достижению) - 5.</p>
+                <h5>@Localizer["Restrictions"]</h5>
+                <p>@Localizer["RestrictionsMore"]</p>
                 <hr />
-                <h5>Примечание</h5>
+                <h5>@Localizer["Note"]</h5>
                 <p>
-                    Чтобы авторизоваться вам надо будет подтвердить свою электронную почту,
-                    в противном случае вы не сможете войти!
+                    @Localizer["NoteMore"]
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" style="width:7em;" data-dismiss="modal">Ок</button>
+                <button type="button" class="btn btn-primary" style="width:7em;" data-dismiss="modal">Ok</button>
             </div>
         </div>
     </div>
@@ -38,16 +35,16 @@
 <section class="jumbotron text-center">
     <div class="container">
         <img src="~/img/logo.jpg" />
-        <h1>Добро пожаловать!</h1>
-        <p class="lead mt-2">Управляйте и делитесь вашими достижениями</p>
+        <h1>@Localizer["Title"]</h1>
+        <p class="lead mt-2">@Localizer["Description"]</p>
         <p>
-            <button href="#" class="btn btn-lg btn-outline-primary my-2" data-toggle="modal" data-target=".bd-example-modal-lg">Подробнее</button>
+            <button href="#" class="btn btn-lg btn-outline-primary my-2" data-toggle="modal" data-target=".bd-example-modal-lg">@Localizer["ReadMore"]</button>
         </p>
     </div>
 </section>
 
 <section>
-    <h1 class="text-center mt-5 main">Наши преимущества</h1>
+    <h1 class="text-center mt-5 main">@Localizer["Advantages"]</h1>
     <div class="container marketing mt-5">
         <div class="row">
             <div class="col-lg-4">
@@ -55,7 +52,7 @@
                      width="130" height="130"
                      viewBox="0 0 172 172"
                      style=" fill:#000000;">
-                    <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                    <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-size="none">
                         <path d="M0,172v-172h172v172z" fill="none"></path>
                         <g fill="#007bff">
                             <path d="M86.08399,10.95996c-1.25977,0 -2.56153,0.46192 -3.61133,1.38575l-12.97558,11.75781l-17.1748,-3.69531c-2.77149,-0.54591 -5.375,1.00781 -6.21484,3.61132l-5.375,16.7129l-16.7129,5.375c-2.60351,0.83984 -4.15723,3.52734 -3.61132,6.21484l0.33594,1.42773h14.61328l11.2959,-3.65332c1.6377,-0.5459 2.89746,-1.80566 3.44335,-3.44335l4.74513,-14.65527l15.07519,3.19141c1.67969,0.37793 3.44336,
@@ -70,15 +67,15 @@
                     </g>
                 </svg>
 
-                <h2>Бесплатно</h2>
-                <p>Вам дан доступ ко всем функциям этого сайта</p>
+                <h2>@Localizer["Free"]</h2>
+                <p>@Localizer["FreeMore"]</p>
             </div>
             <div class="col-lg-4">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                      width="130" height="130"
                      viewBox="0 0 172 172"
                      style=" fill:#000000;">
-                    <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                    <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-size="none">
                         <path d="M0,172v-172h172v172z" fill="none"></path>
                         <g fill="#007bff">
                             <path d="M17.14625,17.2c-5.63043,0 -10.26625,4.63582 -10.26625,10.26625v117.0675c0,5.63043 4.63582,10.26625 10.26625,10.26625h137.7075c5.63043,0 10.26625,-4.63582 10.26625,-10.26625v-117.0675c0,-5.63043 -4.63582,-10.26625 -10.26625,-10.26625zM17.14625,24.08h137.7075c1.91005,0 3.38625,1.4762 3.38625,3.38625v10.37375h-144.48v-10.37375c0,-1.91005 1.4762,-3.38625 3.38625,
@@ -100,15 +97,15 @@
                     </g>
                 </svg>
 
-                <h2>Без рекламы</h2>
-                <p>На нашем сайте нет ни единой рекламы</p>
+                <h2>@Localizer["Advertising"]</h2>
+                <p>@Localizer["AdvertisingMore"]</p>
             </div>
             <div class="col-lg-4">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                      width="130" height="130"
                      viewBox="0 0 172 172"
                      style=" fill:#000000;">
-                    <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                    <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-size="none">
                         <path d="M0,172v-172h172v172z" fill="none"></path>
                         <g id="original-icon" fill="#007bff">
                             <path d="M17.2,13.76c-1.89978,0.00019 -3.43981,1.54022 -3.44,3.44v34.4c0.00019,1.89978 1.54022,3.43981 3.44,3.44h137.6c1.89978,-0.00019 3.43981,-1.54022 3.44,-3.44v-34.4c-0.00019,-1.89978 -1.54022,-3.43981 -3.44,-3.44zM20.64,20.64h130.72v27.52h-130.72zM34.4,30.96c-1.89986,0 -3.44,1.54014 -3.44,3.44c0,1.89986 1.54014,3.44 3.44,3.44c1.89986,0 3.44,-1.54014 3.44,-3.44c0,-1.89986 -1.54014,-3.44 -3.44,-3.44zM48.16,30.96c-1.89986,0
@@ -119,8 +116,8 @@
                     </g>
                 </svg>
 
-                <h2>Дизайн</h2>
-                <p>Удобный и интуитивно понятный интерфейс</p>
+                <h2>@Localizer["Design"]</h2>
+                <p>@Localizer["DesignMore"]</p>
             </div>
         </div>
     </div>

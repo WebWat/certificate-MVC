@@ -6,8 +6,8 @@ namespace Web.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Это обязательное поле")]
-        [Url(ErrorMessage = "Некорректный url")]
+        [Required(ErrorMessage = "Required")]
+        [Url(ErrorMessage = "IncorrectUrl")]
         public string Name { get; set; }
     }
 }

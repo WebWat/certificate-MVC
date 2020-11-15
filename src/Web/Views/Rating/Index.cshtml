@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<UserViewModel>
 @{
-    ViewData["Title"] = "Рейтинг";
+    ViewData["Title"] = Localizer["Title"];
     int i = 1;
 }
-<h1 class="caption">@ViewData["Title"]</h1>
+<h1 class="caption">@Localizer["Title"]</h1>
 
 <table class="table">
     <tr>
         <th scope="col">№</th>
-        <td scope="col">Имя</td>
-        <td scope="col">Город</td>
-        <td scope="col">Рейтинг</td>
+        <td scope="col">@Localizer["Name"]</td>
+        <td scope="col">@Localizer["Country"]</td>
+        <td scope="col">@Localizer["Rating"]</td>
     </tr>
     @foreach (var u in Model)
     {

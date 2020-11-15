@@ -1,8 +1,8 @@
 ﻿@model EventListViewModel
 @{
-    ViewData["Title"] = "Мероприятия";
+    ViewData["Title"] = Localizer["Title"];
 }
-<h1 class="caption">@ViewData["Title"]</h1>
+<h1 class="caption">@Localizer["Title"]</h1>
 <hr />
 <div class="row">
     @if (Model.Events.Any())

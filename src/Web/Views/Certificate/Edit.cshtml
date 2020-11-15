@@ -1,18 +1,18 @@
 ﻿@model CertificateViewModel
 @{
-    ViewData["Title"] = "Изменение";
+    ViewData["Title"] = Localizer["Title"];
 
     List<StageViewModel> ListRatingViewModel = new List<StageViewModel>
     {
-        new StageViewModel { Id = 1, Name = "Школьный" },
-        new StageViewModel { Id = 2, Name = "Районный" },
-        new StageViewModel { Id = 3, Name = "Республиканский" },
-        new StageViewModel { Id = 4, Name = "Всероссийский" },
-        new StageViewModel { Id = 5, Name = "Международный" }
+        new StageViewModel { Id = 1, Name = Localizer["School"].Value },
+        new StageViewModel { Id = 2, Name = Localizer["District"].Value },
+        new StageViewModel { Id = 3, Name = Localizer["Republican"].Value },
+        new StageViewModel { Id = 4, Name = Localizer["All-Russian"].Value },
+        new StageViewModel { Id = 5, Name = Localizer["International"].Value }
     };
 }
 
-<h1 class="caption">@ViewData["Title"]</h1>
+<h1 class="caption">@Localizer["Title"]</h1>
 <hr />
 <div class="row">
     <div class="col-md-7">
@@ -30,7 +30,7 @@
                 <label asp-for="File" class="control-label"></label>
                 <input asp-for="File" accept="image/jpeg" />
                 <label id="text" for="File" asp-for="File"></label>
-                <p class="text-muted text-note float-right">Минимум  512Кб. Максимум 2 Мб.</p>
+                <p class="text-muted text-note float-right">@Localizer["Note"]</p>
                 <span asp-validation-for="File" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -48,8 +48,8 @@
             </div>
             <div class="form-group mt-1">
                 <div class="btn-group" role="group">
-                    <a class="btn btn-primary" asp-controller="Certificate" asp-action="Details" asp-route-id="@Model.Id">Назад</a>
-                    <input type="submit" value="Изменить" class="btn btn-primary" />
+                    <a class="btn btn-primary" asp-controller="Certificate" asp-action="Details" asp-route-id="@Model.Id">@Localizer["Back"]</a>
+                    <input type="submit" value="@Localizer["Change"]" class="btn btn-primary" />
                 </div>
             </div>
         </form>

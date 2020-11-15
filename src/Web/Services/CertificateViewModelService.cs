@@ -2,6 +2,7 @@
 using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,11 +17,13 @@ namespace Web.Services
     {
         private readonly ICertificateRepository _repository;
         private readonly IPublicUpdatingCacheService _cacheService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public CertificateViewModelService(ICertificateRepository repository, IPublicUpdatingCacheService cacheService)
+        public CertificateViewModelService(ICertificateRepository repository, IPublicUpdatingCacheService cacheService, IStringLocalizer<SharedResource> localizer)
         {
             _repository = repository;
             _cacheService = cacheService;
+            _localizer = localizer;
         }
 
         public IndexViewModel GetIndexViewModel(string userId, string year, string find)
@@ -55,7 +58,7 @@ namespace Web.Services
             }).ToList();
 
             List<string> years = Enumerable.Range(2000, DateTime.Now.Year - 1999).Reverse().Select(i => i.ToString()).ToList();
-            years.Insert(0, "Все");
+            years.Insert(0, _localizer["All"].Value);
 
             IndexViewModel ivm = new IndexViewModel
             {

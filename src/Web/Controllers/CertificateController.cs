@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.IO;
 using System.Threading.Tasks;
 using Web.Extensions;
@@ -14,15 +15,17 @@ namespace Web.Controllers
     public class CertificateController : Controller
     {
         private readonly ICertificateViewModelService _certificateService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly UserManager<User> _userManager;
         private readonly long _fileSizeLimit = 2097152;
         private readonly long _fileMinSize = 524288;
         private readonly string _expansion = "image/jpeg";
 
-        public CertificateController(ICertificateViewModelService certificateService, UserManager<User> userManager)
+        public CertificateController(ICertificateViewModelService certificateService, UserManager<User> userManager, IStringLocalizer<SharedResource> localizer)
         {
             _certificateService = certificateService;
             _userManager = userManager;
+            _localizer = localizer;
         }
 
         public async Task<IActionResult> Index(string year, string find)
@@ -61,7 +64,7 @@ namespace Web.Controllers
 
             if (cvm.File == null)
             {
-                ModelState.AddModelError("File", "Это обязательное поле");
+                ModelState.AddModelError("File", _localizer["Required"]);
             }
 
             if (ModelState.IsValid)
@@ -70,7 +73,7 @@ namespace Web.Controllers
                 {
                     if (cvm.File.CheckFileExtension(_expansion)) 
                     {
-                        ModelState.AddModelError("File", "Недопустимый формат файла");
+                        ModelState.AddModelError("File", _localizer["FileExtensionError"]);
                         return View();
                     }
 
@@ -81,7 +84,7 @@ namespace Web.Controllers
 
                         if (cvm.File.CheckFileSize(_fileMinSize, _fileSizeLimit))
                         {
-                            ModelState.AddModelError("File", "Недопустимый размер файла");
+                            ModelState.AddModelError("File", _localizer["FileSizeError"]);
                             return View();
                         }
                         imageData = binaryReader.ReadBytes((int)cvm.File.Length);
@@ -126,7 +129,7 @@ namespace Web.Controllers
                 {
                     if (cvm.File.CheckFileExtension(_expansion))
                     {
-                        ModelState.AddModelError("File", "Недопустимый формат файла");
+                        ModelState.AddModelError("File", _localizer["FileExtensionError"]);
                         return View(cvm);
                     }
 
@@ -136,7 +139,7 @@ namespace Web.Controllers
                     {
                         if (cvm.File.CheckFileSize(_fileMinSize, _fileSizeLimit))
                         {
-                            ModelState.AddModelError("File", "Недопустимый размер файла");
+                            ModelState.AddModelError("File", _localizer["FileSizeError"]);
                             return View(cvm);
                         }
                         imageData = binaryReader.ReadBytes((int)cvm.File.Length);

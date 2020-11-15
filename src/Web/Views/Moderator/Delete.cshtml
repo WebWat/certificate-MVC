@@ -1,17 +1,17 @@
 ﻿<form method="post" asp-controller="Moderator" asp-action="Delete">
     <div id="myModalBox" class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Внимание</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">@Localizer["Info"]</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
-            Удалить событие?
+            @Localizer["Message"]
         </div>
         <div class="modal-footer">
-            <input type="submit" value="Да" style="width:100px" class="btn btn-danger" />
-            <button data-dismiss="modal" style="width:100px" class="btn btn-primary">Отмена</button>
+            <input type="submit" value="@Localizer["Yes"]" style="width:100px" class="btn btn-danger" />
+            <button data-dismiss="modal" style="width:100px" class="btn btn-primary">@Localizer["Cancel"]</button>
         </div>
     </div>
 </form>

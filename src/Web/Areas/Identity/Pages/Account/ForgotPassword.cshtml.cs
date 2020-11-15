@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
+using Web.Areas.Identity.Pages.Account.Models;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -25,14 +26,7 @@ namespace Web.Areas.Identity.Pages.Account
 
 
         [BindProperty]
-        public InputModel Input { get; set; }
-
-        public class InputModel
-        {
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [EmailAddress(ErrorMessage = "Некорректный Email адрес")]
-            public string Email { get; set; }
-        }
+        public EmailInput Input { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -53,10 +47,13 @@ namespace Web.Areas.Identity.Pages.Account
                         pageHandler: null,
                         values: new { area = "Identity", code = code },
                         protocol: HttpContext.Request.Scheme);
-
+#if RELEASE
                 await _emailSender.SendEmailAsync(Input.Email, "Сброс пароля", callbackUrl, "Сбросить пароль");
-
                 return RedirectToPage("./ForgotPasswordConfirmation");
+#elif DEBUG
+                return Redirect(callbackUrl);
+#endif
+
             }
             return Page();
         }

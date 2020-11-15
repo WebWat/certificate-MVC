@@ -2,7 +2,8 @@
 @using System.Security.Claims
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
-@{ 
+@inject IHtmlLocalizer<SharedResource> SharedLocalizer
+@{
     bool fill = false;
     if (SignInManager.IsSignedIn(User))
     {
@@ -16,33 +17,33 @@
 {
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Создать портфолио</a>
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">@SharedLocalizer["Create"]</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Вход</a>
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">@SharedLocalizer["Login"]</a>
         </li>
     </ul>
     <ul class="navbar-nav flex-grow-1">
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Certificate" asp-action="Index">Главная</a>
+            <a class="nav-link text-dark" asp-controller="Certificate" asp-action="Index">@SharedLocalizer["Certificate"]</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Rating" asp-action="Index">Рейтинг</a>
+            <a class="nav-link text-dark" asp-controller="Rating" asp-action="Index">@SharedLocalizer["Rating"]</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Event" asp-action="Index">Мероприятия</a>
+            <a class="nav-link text-dark" asp-controller="Event" asp-action="Index">@SharedLocalizer["Events"]</a>
         </li>
     </ul>
 }
 else if (User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value.Contains("User"))
 {
-    <partial name="Roles/_UserPartial" model="fill"/>
+    <partial name="Roles/_UserPartial" model="fill" />
 }
 else if (User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value.Contains("Moderator"))
 {
-    <partial name="Roles/_ModeratorPartial" model="fill"/>
+    <partial name="Roles/_ModeratorPartial" model="fill" />
 }
 else if (User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value.Contains("Admin"))
 {
-    <partial name="Roles/_AdminPartial" model="fill"/>
+    <partial name="Roles/_AdminPartial" model="fill" />
 }

@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Web.Areas.Identity.Pages.Account.Manage.Models;
 
 namespace Web.Areas.Identity.Pages.Account.Manage
 {
@@ -17,27 +18,22 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         private readonly ApplicationContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IStringLocalizer<DeletePersonalData> _localizer;
 
         public DeletePersonalDataModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            ApplicationContext context)
+            ApplicationContext context,
+            IStringLocalizer<DeletePersonalData> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _localizer = localizer;
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
-
-        public class InputModel
-        {
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [Display(Name = "Пароль")]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-        }
+        public DeletePersonalDataInput Input { get; set; }
 
         public bool RequirePassword { get; set; }
 
@@ -65,11 +61,12 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             }
 
             RequirePassword = await _userManager.HasPasswordAsync(user);
+
             if (RequirePassword)
             {
                 if (!await _userManager.CheckPasswordAsync(user, Input.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Неверный пароль");
+                    ModelState.AddModelError(string.Empty, _localizer["Error"]);
                     return Page();
                 }
             }
@@ -93,4 +90,6 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             return Redirect("~/");
         }
     }
+
+    public class DeletePersonalData { }
 }

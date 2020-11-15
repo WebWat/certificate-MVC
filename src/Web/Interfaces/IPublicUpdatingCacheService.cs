@@ -4,7 +4,7 @@ namespace Web.Interfaces
 {
     public interface IPublicUpdatingCacheService
     {
-        public Task SetItemAsync(int id, string userId);
-        public void SetList(string userId);
+        Task SetItemAsync(int id, string userId);
+        void SetList(string userId);
     }
 }

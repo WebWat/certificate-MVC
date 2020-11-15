@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Localization;
 using System.Threading.Tasks;
+using Web.Areas.Identity.Pages.Account.Manage.Models;
 
 namespace Web.Areas.Identity.Pages.Account.Manage
 {
@@ -13,42 +14,23 @@ namespace Web.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IStringLocalizer<ChangePassword> _localizer;
 
         public ChangePasswordModel(
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            IStringLocalizer<ChangePassword> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _localizer = localizer;
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public ChangePasswordInput Input { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
-
-        public class InputModel
-        {
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [DataType(DataType.Password)]
-            [MaxLength(100)]
-            [Display(Name = "Старый пароль")]
-            public string OldPassword { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [DataType(DataType.Password)]
-            [MaxLength(100)]
-            [Display(Name = "Новый пароль")]
-            public string NewPassword { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [Compare("NewPassword", ErrorMessage = "Пароли не совпадают")]
-            [DataType(DataType.Password)]
-            [MaxLength(100)]
-            [Display(Name = "Подтвердить пароль")]
-            public string ConfirmPassword { get; set; }
-        }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -96,9 +78,11 @@ namespace Web.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.RefreshSignInAsync(user);
 
-            StatusMessage = "Ваш пароль был изменен";
+            StatusMessage = _localizer["StatusMessage"];
 
             return RedirectToPage();
         }
     }
+
+    public class ChangePassword { }
 }

@@ -1,13 +1,13 @@
 ﻿@page
 @model RegisterConfirmationModel
 @{
-    ViewData["Title"] = "Подтверждение регистрации";
+    ViewData["Title"] = Localizer["Title"];
 }
 
 <form class="form-signin">
     <div class="text-center mb-4">
-        <h1 class="h1 mb-3 font-weight-normal">@ViewData["Title"]</h1>
-        <h5>Проверьте Вашу почту чтобы подтвердить аккаунт</h5>
+        <h1 class="h1 mb-3 font-weight-normal">@Localizer["Title"]</h1>
+        <h5>@Localizer["Description"]</h5>
     </div>
     <p class="mt-4 mb-3 text-muted text-center">2020 - APP9 - v2.0</p>
 </form>

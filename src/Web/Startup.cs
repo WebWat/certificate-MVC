@@ -6,13 +6,16 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Globalization;
 using Web.Configuration;
 using Web.Models;
+
 namespace Web
 {
     public class Startup
@@ -55,11 +58,30 @@ namespace Web
             //Cookie
             ConfigureCookieSettings.Configure(services);
 
+            //Localization
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("ru")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("ru");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+
             //Other services
             services.AddScoped<IUrlShortener, UrlShortener>();
             services.AddAntiforgery(options => options.Cookie.Name = "_antiforgery");
             services.AddHttpClient();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddDataAnnotationsLocalization(options => {
+                options.DataAnnotationLocalizerProvider = (type, factory) =>
+                    factory.Create(typeof(SharedResource));
+            }).AddViewLocalization();
             services.AddMemoryCache();
             services.AddRazorPages();
             services.AddHttpContextAccessor();
@@ -80,6 +102,7 @@ namespace Web
             app.UseStatusCodePagesWithReExecute("/HttpError", "?code={0}");
 
             app.UseHttpsRedirection();
+            app.UseRequestLocalization();
             app.UseStaticFiles();
 
             app.UseRouting();

@@ -7,19 +7,19 @@ namespace Web.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Это обязательное поле")]
-        [Display(Name = "Название")]
+        [Required(ErrorMessage = "Required")]
+        [Display(Name = "EventTitle")]
         [MaxLength(150)]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "Это обязательное поле")]
-        [Display(Name = "Описание")]
+        [Required(ErrorMessage = "Required")]
+        [Display(Name = "EventDescription")]
         [MaxLength(1000)]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Это обязательное поле")]
-        [Url(ErrorMessage = "Некорректный url")]
-        [Display(Name = "Ссылка")]
+        [Required(ErrorMessage = "Required")]
+        [Url(ErrorMessage = "IncorrectUrl")]
+        [Display(Name = "Url")]
         [MaxLength(300)]
         public string Url { get; set; }
 

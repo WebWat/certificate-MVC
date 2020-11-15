@@ -1,9 +1,9 @@
 ﻿@model PublicViewModel
 @{
-    ViewData["Title"] = "Достижения";
+    ViewData["Title"] = Localizer["Title"];
 }
 
-<h1 class="caption">@ViewData["Title"]</h1>
+<h1 class="caption">@Localizer["Title"]</h1>
 @if (Model.ImageData != null)
 {
     <div class="row mb-3">
@@ -28,10 +28,10 @@ else
             <div class="d-flex justify-content-start">
                 <input asp-for="UniqueUrl" type="hidden" />
                 <div class="col-md-8 p-0">
-                    <input asp-for="Find" class="form-control autocom" placeholder="Введите название награды" maxlength="30" autocomplete="off" />
+                    <input asp-for="Find" class="form-control autocom" placeholder="@Localizer["Info"]" maxlength="30" autocomplete="off" />
                 </div>
                 <select asp-for="Year" asp-items="Model.Years" class="form-control ml-1 col-md-3"></select>
-                <input type="submit" value="Поиск" class="btn btn-info ml-2" />
+                <input type="submit" value="@Localizer["Search"]" class="btn btn-info ml-2" />
             </div>
         </form>
     </div>
@@ -63,7 +63,7 @@ else
 else
 {
     <div class="text-center mt-5">
-        <h2 class="font-weight-normal op-6">Ничего не найдено</h2>
+        <h2 class="font-weight-normal op-6">@Localizer["NotFound"]</h2>
     </div>
 }
 

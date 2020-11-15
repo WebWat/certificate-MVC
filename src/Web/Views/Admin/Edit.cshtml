@@ -1,6 +1,6 @@
 ﻿@model AdminViewModel
 @{
-    ViewData["Title"] = "Смена роли";
+    ViewData["Title"] = Localizer["Title"];
     List<string> Roles = new List<string>
     {
         "User",
@@ -8,20 +8,20 @@
     };
 }
 
-<h1 class="caption">@ViewData["Title"]</h1>
+<h1 class="caption">@Localizer["Title"]</h1>
 <hr />
 <div class="row">
     <div class="col-md-7">
         <form asp-action="Edit">
             <input asp-for="Login" type="hidden" />
             <div class="form-group">
-                <label>Роль</label>
+                <label>@Localizer["Role"]</label>
                 <p>@Html.DropDownListFor(model => model.Role, new SelectList(Roles), new { @class = "form-control" })</p>
             </div>
             <div class="form-group mt-1">
                 <div class="btn-group" role="group">
-                    <a class="btn btn-primary" asp-controller="Admin" asp-action="Index">Назад к списку</a>
-                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                    <a class="btn btn-primary" asp-controller="Admin" asp-action="Index">@Localizer["Back"]</a>
+                    <input type="submit" class="btn btn-success" value="@Localizer["Save"]" />
                 </div>
             </div>
         </form>

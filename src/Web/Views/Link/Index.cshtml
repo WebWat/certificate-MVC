@@ -1,13 +1,13 @@
 ﻿@model LinkListViewModel
 @{
-    ViewData["Title"] = "Управление ссылками";
+    ViewData["Title"] = Localizer["Title"];
 }
 <div id="modDialog" class="modal fade">
     <div id="dialogContent" class="modal-dialog"></div>
 </div>
 
-<h1 class="caption">@ViewData["Title"]</h1>
-<h4 class="caption">Максимальное количество ссылок - 5</h4>
+<h1 class="caption">@Localizer["Title"]</h1>
+<h4 class="caption">@Localizer["Description"]</h4>
 <hr />
 <div class="row">
     <div class="col-md-8">
@@ -16,7 +16,7 @@
             <div class="input-group mb-3">
                 <input asp-for="Link.Name" class="form-control">
                 <div class="input-group-prepend">
-                    <input type="submit" class="btn btn-primary" value="Добавить" />
+                    <input type="submit" class="btn btn-primary" value="@Localizer["Add"]" />
                 </div>
             </div>
             <span asp-validation-for="Link.Name" class="text-danger"></span>
@@ -29,13 +29,13 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <a href="@a.Name" target="_blank">@a.Name</a>
                         <span class="badge float-right">
-                            <a asp-controller="Link" asp-action="Delete" asp-route-id="@a.Id" class="btn btn-sm btn-danger delete">Удалить</a>
+                            <a asp-controller="Link" asp-action="Delete" asp-route-id="@a.Id" class="btn btn-sm btn-danger delete">@Localizer["Delete"]</a>
                         </span>
                     </li>
                 }
             }
         </ul>
-        <p><a class="btn btn-primary mt-3" asp-controller="Certificate" asp-action="Details" asp-route-id="@Model.CertificateId">Назад</a></p>
+        <p><a class="btn btn-primary mt-3" asp-controller="Certificate" asp-action="Details" asp-route-id="@Model.CertificateId">@Localizer["Back"]</a></p>
     </div>
 </div>
 

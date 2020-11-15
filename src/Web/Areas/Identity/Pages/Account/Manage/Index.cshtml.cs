@@ -1,76 +1,45 @@
 ﻿using ApplicationCore.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Localization;
 using System.IO;
 using System.Threading.Tasks;
+using Web.Areas.Identity.Pages.Account.Manage.Models;
 using Web.Extensions;
 
 namespace Web.Areas.Identity.Pages.Account.Manage
 {
     [Authorize]
     public partial class IndexModel : PageModel
-    {
+    {      
         private readonly UserManager<User> _userManager;
+        private readonly IStringLocalizer<Index> _localizer;
 
-        public IndexModel(UserManager<User> userManager)
+        public IndexModel(UserManager<User> userManager, IStringLocalizer<Index> localizer)
         {
             _userManager = userManager;
+            _localizer = localizer;
         }
 
         private readonly long _fileSizeLimit = 2097152;
         private readonly long _fileMinSize = 524288;
         private readonly string _expansion = "image/jpeg";
 
-        [Display(Name = "Логин")]
-        public string Username { get; set; }
-
         [TempData]
         public string StatusMessage { get; set; }
 
         [BindProperty]
-        public InputModel Input { get; set; }
-
-        public class InputModel
-        {
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [MaxLength(100)]
-            [Display(Name = "Имя")]
-            public string Name { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [MaxLength(100)]
-            [Display(Name = "Фамилия")]
-            public string Surname { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [MaxLength(100)]
-            [Display(Name = "Отчество")]
-            public string MiddleName { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [MaxLength(100)]
-            [Display(Name = "Город")]
-            public string Country { get; set; }
-
-            [Display(Name = "Открытые данные")]
-            public bool OpenData { get; set; }
-
-            [Display(Name = "Фото")]
-            public IFormFile File { get; set; }
-        }
+        public IndexInput Input { get; set; }
 
         private async Task LoadAsync(User user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
 
-            Username = userName;
-
-            Input = new InputModel
+            Input = new IndexInput
             {
+                Username = userName,
                 Name = user.Name,
                 Surname = user.Surname,
                 MiddleName = user.MiddleName,
@@ -112,7 +81,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             {
                 if (Input.File.CheckFileExtension(_expansion))
                 {
-                    ModelState.AddModelError("Input.File", "Недопустимый формат файла");
+                    ModelState.AddModelError("Input.File", _localizer["FileExtensionError"]);
                     return Page();
                 }
 
@@ -123,7 +92,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
 
                     if (Input.File.CheckFileSize(_fileMinSize, _fileSizeLimit))
                     {
-                        ModelState.AddModelError("Input.File", "Слишком большой размер файла");
+                        ModelState.AddModelError("Input.File", _localizer["FileSizeError"]);
                         return Page();
                     }
                     imageData = binaryReader.ReadBytes((int)Input.File.Length);
@@ -140,9 +109,11 @@ namespace Web.Areas.Identity.Pages.Account.Manage
 
             await _userManager.UpdateAsync(user);
 
-            StatusMessage = "Ваш профиль обновлен";
+            StatusMessage = _localizer["StatusMessage"];
 
             return RedirectToPage();
         }
     }
+
+    public class Index { }
 }

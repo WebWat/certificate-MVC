@@ -2,6 +2,7 @@
 using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace Web.Services
     {
         private readonly ICertificateRepository _repository;
         private readonly IMemoryCache _memoryCache;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public PublicViewModelService(ICertificateRepository repository, IMemoryCache memoryCache)
+        public PublicViewModelService(ICertificateRepository repository, IMemoryCache memoryCache, IStringLocalizer<SharedResource> localizer)
         {
             _repository = repository;
             _memoryCache = memoryCache;
+            _localizer = localizer;
         }
 
         public PublicViewModel GetPublicViewModel(string year, string find, string userId, string name, string middleName, string surname, string country, string code, byte[] photo)
@@ -63,7 +66,7 @@ namespace Web.Services
             });
 
             List<string> years = Enumerable.Range(2000, DateTime.Now.Year - 1999).Reverse().Select(i => i.ToString()).ToList();
-            years.Insert(0, "Все");
+            years.Insert(0, _localizer["All"].Value);
 
             PublicViewModel pvm = new PublicViewModel
             {

@@ -1,21 +1,21 @@
 ﻿@model IEnumerable<AdminViewModel>
 @{
-    ViewData["Title"] = "Пользователи";
+    ViewData["Title"] = Localizer["Title"];
     int i = 1;
 }
 <div id="modDialog" class="modal fade">
     <div id="dialogContent" class="modal-dialog"></div>
 </div>
 
-<h1 class="caption">@ViewData["Title"]</h1>
+<h1 class="caption">@Localizer["Title"]</h1>
 <table class="table mt-4">
     <tr>
         <th>#</th>
-        <th>Логин</th>
+        <th>@Localizer["Login"]</th>
         <th>Email</th>
-        <th>Подтвержденный email</th>
-        <th>Роль</th>
-        <th>Действия</th>
+        <th>@Localizer["Confirmed"]</th>
+        <th>@Localizer["Role"]</th>
+        <th>@Localizer["Actions"]</th>
     </tr>
     @foreach (var u in Model)
     {
@@ -26,17 +26,17 @@
             <td>
                 @if (u.EmailConfirmed)
                 {
-                    <span class="text-success">Подтвержден</span>
+                    <span class="text-success">@Localizer["Confirm"]</span>
                 }
                 else
                 {
-                    <span class="text-danger">Не подтвержден</span>
+                    <span class="text-danger">@Localizer["NotConfirm"]</span>
                 }
             </td>
             <td>@u.Role</td>
             <td>
-                <a asp-controller="Admin" asp-action="Edit" asp-route-login="@u.Login">Изменить роль</a>
-                | <a asp-controller="Admin" asp-action="Delete" asp-route-id="@u.Id" class="delete">Удалить</a>
+                <a asp-controller="Admin" asp-action="Edit" asp-route-login="@u.Login">@Localizer["ChangeRole"]</a>
+                | <a asp-controller="Admin" asp-action="Delete" asp-route-id="@u.Id" class="delete">@Localizer["Delete"]</a>
             </td>
         </tr>
         i++;

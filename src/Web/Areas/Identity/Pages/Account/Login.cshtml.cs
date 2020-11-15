@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Web.Areas.Identity.Pages.Account.Models;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -22,29 +22,12 @@ namespace Web.Areas.Identity.Pages.Account
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public LoginInput Input { get; set; }
 
         public string ReturnUrl { get; set; }
 
         [TempData]
         public string ErrorMessage { get; set; }
-
-        public class InputModel
-        {
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [MaxLength(100)]
-            [Display(Name = "Логин или email")]
-            public string UserNameOrEmail { get; set; }
-
-            [Required(ErrorMessage = "Это обязательное поле")]
-            [DataType(DataType.Password)]
-            [MaxLength(100)]
-            [Display(Name = "Пароль")]
-            public string Password { get; set; }
-
-            [Display(Name = "Запомнить?")]
-            public bool RememberMe { get; set; }
-        }
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
@@ -68,7 +51,7 @@ namespace Web.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);               
+                var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);
                 if (user == null)
                 {
                     user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
