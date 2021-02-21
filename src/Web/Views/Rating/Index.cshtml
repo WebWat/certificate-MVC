@@ -14,41 +14,40 @@
     </tr>
     @foreach (var u in Model)
     {
-        if (i == 1)
+        @switch (i)
         {
-            <tr>
-                <th scope="col"><img src="~/img/1_place.jpg" class="ms-image-rating"/></th>
-                <td scope="col">@u.Name</td>
-                <td scope="col">@u.Country</td>
-                <td scope="col">@u.Rating</td>
-            </tr>
-        }
-        else if (i == 2)
-        {
-            <tr>
-                <th scope="col"><img src="~/img/2_place.jpg" class="ms-image-rating"/></th>
-                <td scope="col">@u.Name</td>
-                <td scope="col">@u.Country</td>
-                <td scope="col">@u.Rating</td>
-            </tr>
-        }
-        else if (i == 3)
-        {
-            <tr>
-                <th scope="col"><img src="~/img/3_place.jpg" class="ms-image-rating"/></th>
-                <td scope="col">@u.Name</td>
-                <td scope="col">@u.Country</td>
-                <td scope="col">@u.Rating</td>
-            </tr>
-        }
-        else
-        {
-            <tr>
-                <th scope="col">@i</th>
-                <td scope="col">@u.Name</td>
-                <td scope="col">@u.Country</td>
-                <td scope="col">@u.Rating</td>
-            </tr>
+            case 1:
+                <tr>
+                    <th scope="col"><img src="~/img/1_place.jpg" class="ms-image-rating" /></th>
+                    <td scope="col">@u.Name</td>
+                    <td scope="col">@u.Country</td>
+                    <td scope="col">@u.Rating</td>
+                </tr>
+                break;
+            case 2:
+                <tr>
+                    <th scope="col"><img src="~/img/2_place.jpg" class="ms-image-rating" /></th>
+                    <td scope="col">@u.Name</td>
+                    <td scope="col">@u.Country</td>
+                    <td scope="col">@u.Rating</td>
+                </tr>
+                break;
+            case 3:
+                <tr>
+                    <th scope="col"><img src="~/img/3_place.jpg" class="ms-image-rating" /></th>
+                    <td scope="col">@u.Name</td>
+                    <td scope="col">@u.Country</td>
+                    <td scope="col">@u.Rating</td>
+                </tr>
+                break;
+            default:
+                <tr>
+                    <th scope="col">@i</th>
+                    <td scope="col">@u.Name</td>
+                    <td scope="col">@u.Country</td>
+                    <td scope="col">@u.Rating</td>
+                </tr>
+                break;
         }
         i++;
     }

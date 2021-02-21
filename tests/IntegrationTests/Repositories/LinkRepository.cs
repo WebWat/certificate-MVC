@@ -17,7 +17,7 @@ namespace IntegrationTests.Repositories
         public LinkRepository()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "Usernewdb")
+                .UseInMemoryDatabase(databaseName: "CertificateDB")
                 .Options;
 
             _context = new ApplicationContext(dbOptions);
@@ -31,10 +31,11 @@ namespace IntegrationTests.Repositories
         [Fact]
         public async Task GetLinkById()
         {
-            var link = await _context.Links.AsNoTracking().FirstOrDefaultAsync();
-            var repositoryResult = await repository.GetByIdAsync(link.Id);
-            var contextResult = await _context.Links.AsNoTracking().FirstOrDefaultAsync(i => i.Id == link.Id);
+            // Arrange & Act
+            var repositoryResult = await repository.GetByIdAsync(1);
+            var contextResult = await _context.Links.AsNoTracking().FirstOrDefaultAsync(i => i.Id == 1);
 
+            // Assert
             Assert.Equal(repositoryResult.Id, contextResult.Id);
         }
     }

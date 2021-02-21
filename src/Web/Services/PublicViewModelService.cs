@@ -1,13 +1,9 @@
-﻿using ApplicationCore.Entities;
-using ApplicationCore.Interfaces;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Helpers;
 using Web.Interfaces;
 using Web.ViewModels;
 
@@ -15,32 +11,21 @@ namespace Web.Services
 {
     public class PublicViewModelService : IPublicViewModelService
     {
-        private readonly ICertificateRepository _repository;
-        private readonly IMemoryCache _memoryCache;
         private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly ICachedPublicViewModelService _cacheService;
 
-        public PublicViewModelService(ICertificateRepository repository, IMemoryCache memoryCache, IStringLocalizer<SharedResource> localizer)
+        public PublicViewModelService(ICachedPublicViewModelService cacheService, IStringLocalizer<SharedResource> localizer)
         {
-            _repository = repository;
-            _memoryCache = memoryCache;
+            _cacheService = cacheService;
             _localizer = localizer;
         }
 
-        public PublicViewModel GetPublicViewModel(string year, string find, string userId, string name, string middleName, string surname, string country, string code, byte[] photo)
+        public PublicViewModel GetPublicViewModel(string year, string find, string userId, string name, string middleName, string surname, string code, byte[] photo)
         {
-            if (!_memoryCache.TryGetValue(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.Take(5).ToString()), out List<Certificate> items))
-            {
-                items = _repository.List(i => i.UserId == userId).ToList();
-
-                if (items != null)
-                {
-                    _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.Take(5).ToString()), items,
-                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
-                }
-            }
+            var items = _cacheService.GetList(userId);
 
             //Sort by date
-            if (year != null && year != "Все")
+            if (year != null && year != _localizer["All"])
             {
                 items = items.Where(i => i.Date.Year == int.Parse(year)).ToList();
             }
@@ -75,7 +60,6 @@ namespace Web.Services
                 Years = new SelectList(years),
                 Year = year,
                 Name = name,
-                Country = country,
                 Surname = surname,
                 UniqueUrl = code,
                 MiddleName = middleName,
@@ -87,16 +71,7 @@ namespace Web.Services
 
         public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int id, string userId, string url)
         {
-            if (!_memoryCache.TryGetValue(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel), id.ToString()), out Certificate certificate))
-            {
-                certificate = await _repository.GetCertificateIncludeLinksAsync(i => i.Id == id && i.UserId == userId);
-
-                if (certificate != null)
-                {
-                    _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel), id.ToString()), certificate,
-                                     new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
-                }
-            }
+            var certificate = await _cacheService.GetItemAsync(id, userId);
 
             return new CertificateViewModel
             {

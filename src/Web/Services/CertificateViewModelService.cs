@@ -16,30 +16,32 @@ namespace Web.Services
     public class CertificateViewModelService : ICertificateViewModelService
     {
         private readonly ICertificateRepository _repository;
-        private readonly IPublicUpdatingCacheService _cacheService;
         private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly ICachedPublicViewModelService _cacheService;
 
-        public CertificateViewModelService(ICertificateRepository repository, IPublicUpdatingCacheService cacheService, IStringLocalizer<SharedResource> localizer)
+        public CertificateViewModelService(ICertificateRepository repository,
+                                           IStringLocalizer<SharedResource> localizer,
+                                           ICachedPublicViewModelService cacheService)
         {
             _repository = repository;
-            _cacheService = cacheService;
             _localizer = localizer;
+            _cacheService = cacheService;
         }
 
         public IndexViewModel GetIndexViewModel(string userId, string year, string find)
         {
-            var items = _repository.List(i => i.UserId == userId).ToList();
+            var items = _repository.ListByUserId(userId);
 
             //Sort by date
-            if (year != null && year != "Все")
+            if (year != null && year != _localizer["All"])
             {
-                items = items.Where(i => i.Date.Year == int.Parse(year)).ToList();
+                items = items.Where(i => i.Date.Year == int.Parse(year));
             }
 
             //Sort by title
             if (!string.IsNullOrEmpty(find))
             {
-                items = items.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower())).ToList();
+                items = items.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower()));
             }
 
             var certificates = items.Select(i =>
@@ -55,7 +57,7 @@ namespace Web.Services
                 };
 
                 return certificateViewModel;
-            }).ToList();
+            });
 
             List<string> years = Enumerable.Range(2000, DateTime.Now.Year - 1999).Reverse().Select(i => i.ToString()).ToList();
             years.Insert(0, _localizer["All"].Value);
@@ -111,14 +113,13 @@ namespace Web.Services
                 await _repository.UpdateAsync(certificate);
             }
 
-            await _cacheService.SetItemAsync(cvm.Id, userId);
-
+            await _cacheService.SetItemAsync(certificate.Id, userId);
             _cacheService.SetList(userId);
         }
 
         public async Task DeleteCertificateAsync(int id, string userId)
         {
-            var certificate = await _repository.GetAsync(i => i.Id == id && i.UserId == userId);
+            var certificate = await _repository.GetByUserIdAsync(id, userId);
 
             await _repository.DeleteAsync(certificate);
 
@@ -127,7 +128,7 @@ namespace Web.Services
 
         public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int id, string userId)
         {
-            var certificate = await _repository.GetCertificateIncludeLinksAsync(i => i.Id == id && i.UserId == userId);
+            var certificate = await _repository.GetCertificateIncludeLinksAsync(id, userId);
 
             if (certificate == null)
             {
@@ -149,7 +150,7 @@ namespace Web.Services
 
         public async Task<CertificateViewModel> GetCertificateByIdAsync(int id, string userId)
         {
-            var certificate = await _repository.GetAsync(i => i.Id == id && i.UserId == userId);
+            var certificate = await _repository.GetByUserIdAsync(id, userId);
 
             if (certificate == null)
             {

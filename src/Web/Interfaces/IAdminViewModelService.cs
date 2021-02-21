@@ -8,7 +8,6 @@ namespace Web.Interfaces
     {
         Task<IEnumerable<AdminViewModel>> GetIndexAdminViewModelListAsync();
         Task EditUserRoleAsync(string login, string role);
-        Task DeleteUserAsync(string id);
         Task<AdminViewModel> GetUserAsync(string login);
     }
 }

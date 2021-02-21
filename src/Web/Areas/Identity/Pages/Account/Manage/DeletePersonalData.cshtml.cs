@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Manage.Models;
@@ -16,20 +17,23 @@ namespace Web.Areas.Identity.Pages.Account.Manage
     public class DeletePersonalDataModel : PageModel
     {
         private readonly ApplicationContext _context;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IStringLocalizer<DeletePersonalData> _localizer;
+        private readonly ILogger<DeletePersonalDataModel> _logger;
 
         public DeletePersonalDataModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             ApplicationContext context,
-            IStringLocalizer<DeletePersonalData> localizer)
+            IStringLocalizer<DeletePersonalData> localizer,
+            ILogger<DeletePersonalDataModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
             _localizer = localizer;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -40,25 +44,15 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnGet()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound();
-            }
 
             RequirePassword = await _userManager.HasPasswordAsync(user);
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            var user2 = await _context.Users.Include(i => i.Certificates).FirstOrDefaultAsync(i => i.UserName == user.UserName);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
 
             RequirePassword = await _userManager.HasPasswordAsync(user);
 
@@ -71,10 +65,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            foreach (var c in user2.Certificates)
-            {
-                _context.Certificates.Remove(c);
-            }
+            user.ClearCertificates();
 
             await _context.SaveChangesAsync();
 
@@ -84,6 +75,8 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             {
                 throw new InvalidOperationException();
             }
+
+            _logger.LogInformation($"User {user.Id} has been deleted");
 
             await _signInManager.SignOutAsync();
 

@@ -24,14 +24,14 @@ namespace Web.Services
 
         public async Task<EventListViewModel> GetEventListAsync(int page)
         {
-            if (!_memoryCache.TryGetValue(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), "0"), out IEnumerable<Event> items))
+            if (!_memoryCache.TryGetValue(CacheHelper.GenerateCacheKey(nameof(PublicViewModel)), out IEnumerable<Event> items))
             {
                 items = await _repository.ListAllAsync();
 
                 if (items != null)
                 {
-                    _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), "0"), items,
-                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10)));
+                    _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(PublicViewModel)), items,
+                                     new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(10)));
                 }
             }
 

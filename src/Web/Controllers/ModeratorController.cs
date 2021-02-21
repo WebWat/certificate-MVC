@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ApplicationCore.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Web.Interfaces;
 using Web.ViewModels;
 
 namespace Web.Controllers
 {
-    [Authorize(Roles = "Admin, Moderator")]
+    [Authorize(Roles = Roles.AdminAndModerator)]
     public class ModeratorController : Controller
     {
         private readonly IModeratorViewModelService _moderatorService;
+        private readonly ILogger<LinkController> _logger;
 
-        public ModeratorController(IModeratorViewModelService moderatorService)
+        public ModeratorController(IModeratorViewModelService moderatorService, ILogger<LinkController> logger)
         {
             _moderatorService = moderatorService;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index(int page = 1)
@@ -32,6 +36,8 @@ namespace Web.Controllers
         {
             await _moderatorService.CreateEventAsync(evm);
 
+            _logger.LogInformation("New event created");
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -46,6 +52,8 @@ namespace Web.Controllers
         {
             await _moderatorService.UpdateEventAsync(evm);
 
+            _logger.LogInformation($"Event {evm.Id} changed");
+
             return RedirectToAction(nameof(Index), new { page = evm.Page });
         }
 
@@ -59,6 +67,8 @@ namespace Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             await _moderatorService.DeleteEventAsync(id);
+
+            _logger.LogInformation($"Event {id} deleted");
 
             return RedirectToAction(nameof(Index));
         }

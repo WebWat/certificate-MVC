@@ -1,4 +1,5 @@
 ﻿@model CertificateViewModel
+@inject IStageService Service
 @{
     ViewData["Title"] = Localizer["Title"];
 }
@@ -15,26 +16,7 @@
         <p>@Html.DisplayFor(model => model.Description)</p>
         <br />
         <h5>@Localizer["Stage"]</h5>
-        <p>
-            @switch (Model.Stage)
-            {
-                case 1:
-                    @Localizer["School"]
-                    break;
-                case 2:
-                    @Localizer["District"]
-                    break;
-                case 3:
-                    @Localizer["Republican"]
-                    break;
-                case 4:
-                    @Localizer["All-Russian"]
-                    break;
-                case 5:
-                    @Localizer["International"]
-                    break;
-            }
-        </p>
+        <p>@Service.GetNameOfStage(Model.Stage)</p>
         <br />
         <h5>@Localizer["Date"]</h5>
         <p>@Html.DisplayFor(model => model.Date)</p>
@@ -51,15 +33,12 @@
         }
         else
         {
-            <p>Отсутствуют</p>
+            <p>@Localizer["None"]</p>
         }
-        <a asp-controller="Public" asp-action="Index" asp-route-uniqueUrl="@Model.UniqueUrl" class="btn btn-primary mt-3">@Localizer["Back"]</a>
+       <a asp-controller="Public" asp-action="Index" asp-route-uniqueUrl="@Model.UniqueUrl" class="btn btn-primary mt-3">@Localizer["Back"]</a>
     </div>
     <div class="col-md-6 col-md-offset-2">
-        @if (Model.ImageData != null && Model.ImageData.Length > 0)
-        {
-        <p><img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" class="img-fluid img-thumbnail ms-image-details"></p>
-        }
+        <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" class="img-fluid img-thumbnail ms-image-details" />
     </div>
 </div>
 

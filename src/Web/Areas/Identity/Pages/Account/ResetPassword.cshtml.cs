@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Models;
@@ -13,11 +14,13 @@ namespace Web.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ResetPasswordModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<ResetPasswordModel> _logger;
 
-        public ResetPasswordModel(UserManager<User> userManager)
+        public ResetPasswordModel(UserManager<ApplicationUser> userManager, ILogger<ResetPasswordModel> logger)
         {
             _userManager = userManager;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -58,6 +61,8 @@ namespace Web.Areas.Identity.Pages.Account
 
             if (result.Succeeded)
             {
+                _logger.LogInformation($"User {user.Id} has reset his password");
+
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
 

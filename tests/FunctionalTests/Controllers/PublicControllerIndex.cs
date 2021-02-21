@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using ApplicationCore.Constants;
+using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -9,8 +10,6 @@ namespace FunctionalTests.Controllers
     [Collection("Sequential")]
     public class PublicControllerIndex : IClassFixture<WebTestFixture>
     {
-        private readonly string url = "NTE4ZjE2NWMtMTMwOS00MmYwLWFmZTUtMGMyZTB";
-
         public PublicControllerIndex(WebTestFixture factory)
         {
             Client = factory.CreateClient();
@@ -21,27 +20,27 @@ namespace FunctionalTests.Controllers
         [Fact]
         public async Task ReturnsIndexWithCertificateListing()
         {
-            var response = await Client.GetAsync("/Public/" + url);
+            var response = await Client.GetAsync("/Public/" + AuthorizationConstants.UniqueUrl);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains("Test Description", stringResponse);
+            Assert.Contains("Robofest", stringResponse);
         }
 
         [Fact]
         public async Task ReturnsDetailsWithCertificateAndLinks()
         {
-            var response = await Client.GetAsync("/Public/" + url);
+            var response = await Client.GetAsync("/Public/" + AuthorizationConstants.UniqueUrl);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
             string id = GetCertificateId(stringResponse);
 
-            response = await Client.GetAsync($"/Public/Details/{url}/{id}");
+            response = await Client.GetAsync($"/Public/Details/{AuthorizationConstants.UniqueUrl}/{id}");
             response.EnsureSuccessStatusCode();
             stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains("Test Description", stringResponse);
-            Assert.Contains("http://url.certfcate.ru", stringResponse);
+            Assert.Contains("Robofest", stringResponse);
+            Assert.Contains("http://url.certfcate.ru/examplelink1", stringResponse);
         }
 
         private string GetCertificateId(string input)

@@ -20,7 +20,7 @@
     <div asp-validation-summary="ModelOnly" class="alert alert-danger list-style-none"></div>
     <div class="form-label-group">
         <label asp-for="Input.UserName"></label>
-        <input asp-for="Input.UserName" class="form-control" autofocus>
+        <input asp-for="Input.UserName" class="form-control" readonly onfocus="$(this).removeAttr('readonly');">
         <span asp-validation-for="Input.UserName" class="text-danger"></span>
     </div>
     <div class="form-label-group">
@@ -35,7 +35,7 @@
     </div>
     <div class="form-label-group">
         <label asp-for="Input.Password"></label>
-        <input asp-for="Input.Password" class="form-control">
+        <input asp-for="Input.Password" class="form-control" readonly onfocus="$(this).removeAttr('readonly');">
         <span asp-validation-for="Input.Password" class="text-danger"></span>
     </div>
     <div class="form-label-group">
@@ -50,7 +50,7 @@
         </label>
     </div>
     <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">@Localizer["SignUp"]</button>
-    <p class="mt-4 mb-3 text-muted text-center">2020 - Certificate</p>
+    <partial name="_ApplicationNamePartial" />
 </form>
 
 @section Scripts {

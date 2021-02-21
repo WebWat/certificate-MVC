@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using Web;
 
 namespace FunctionalTests
@@ -28,7 +29,7 @@ namespace FunctionalTests
 
                 services.AddDbContext<ApplicationContext>(options =>
                 {
-                    options.UseInMemoryDatabase("Usernewdb");
+                    options.UseInMemoryDatabase("CertificateDB");
                     options.UseInternalServiceProvider(provider);
                 });
 
@@ -43,15 +44,17 @@ namespace FunctionalTests
 
                     var logger = scopedServices.GetRequiredService<ILogger<WebTestFixture>>();
 
+                    var hostingEnviroment = scopedServices.GetRequiredService<IWebHostEnvironment>();
+
                     db.Database.EnsureCreated();
 
                     try
                     {
-                        var userManager = scopedServices.GetRequiredService<UserManager<User>>();
+                        var userManager = scopedServices.GetRequiredService<UserManager<ApplicationUser>>();
                         var roleManager = scopedServices.GetRequiredService<RoleManager<IdentityRole>>();
 
                         IdentityContextSeed.SeedAsync(userManager, roleManager).Wait();
-                        ApplicationContextSeed.SeedAsync(db, userManager).Wait();
+                        ApplicationContextSeed.SeedAsync(db, userManager, Path.Combine(hostingEnviroment.WebRootPath, "img/example_image.jpg")).Wait();
                     }
                     catch (Exception ex)
                     {

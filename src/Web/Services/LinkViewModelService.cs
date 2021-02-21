@@ -12,9 +12,12 @@ namespace Web.Services
         private readonly IAsyncRepository<Link> _linkRepository;
         private readonly ICertificateRepository _certificateRepository;
         private readonly IUrlShortener _urlShortener;
-        private readonly IPublicUpdatingCacheService _cacheService;
+        private readonly ICachedPublicViewModelService _cacheService;
 
-        public LinkViewModelService(IAsyncRepository<Link> linkRepository, IUrlShortener urlShortener, ICertificateRepository certificateRepository, IPublicUpdatingCacheService cacheService)
+        public LinkViewModelService(IAsyncRepository<Link> linkRepository, 
+                                    IUrlShortener urlShortener, 
+                                    ICertificateRepository certificateRepository, 
+                                    ICachedPublicViewModelService cacheService)
         {
             _linkRepository = linkRepository;
             _urlShortener = urlShortener;
@@ -24,10 +27,10 @@ namespace Web.Services
 
         public async Task CreateLinkAsync(int certificateId, LinkViewModel cvm, string userId)
         {
-            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(i => i.Id == certificateId && i.UserId == userId);
+            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId, userId);
 
             //check the number of links
-            if (links.Links.Count() >= 5)
+            if (links.Links.Count >= 5)
             {
                 return;
             }
@@ -45,7 +48,7 @@ namespace Web.Services
 
         public async Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId, string userId)
         {
-            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(i => i.Id == certificateId && i.UserId == userId);
+            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId, userId);
 
             return new LinkListViewModel
             {

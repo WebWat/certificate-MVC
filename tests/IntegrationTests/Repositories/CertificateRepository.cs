@@ -16,7 +16,7 @@ namespace IntegrationTests.Repositories
         public CertificateRepository()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "Usernewdb")
+                .UseInMemoryDatabase(databaseName: "CertificateDB")
                 .Options;
 
             _context = new ApplicationContext(dbOptions);
@@ -24,31 +24,23 @@ namespace IntegrationTests.Repositories
             repository = new Infrastructure.Repositories.CertificateRepository(_context);
 
             _context.Certificates.Add(CertificateBuilder.GetDefaultValue());
-            _context.Links.AddRange(LinkBuilder.GetDefaultValues());
+            _context.SaveChanges();
+
+            var certificate = _context.Certificates.AsNoTracking().FirstOrDefault();
+            _context.Links.AddRange(LinkBuilder.GetDefaultValues(certificate.Id));
             _context.SaveChanges();
         }
 
         [Fact]
         public async Task GetCertificateById()
         {
+            // Arrange & Act
             var certificate = await _context.Certificates.AsNoTracking().FirstOrDefaultAsync();
             var repositoryResult = await repository.GetByIdAsync(certificate.Id);
             var contextResult = await _context.Certificates.AsNoTracking().FirstOrDefaultAsync(i => i.Id == certificate.Id);
 
+            // Assert
             Assert.Equal(repositoryResult.Id, contextResult.Id);
-        }
-
-        [Fact]
-        public async Task GetCertificateIncludeLinks()
-        {
-            var repositoryResult = await repository.GetCertificateIncludeLinksAsync(i => i.Title == "Test");
-            var contextResult = await _context.Certificates.Include(i => i.Links).AsNoTracking().FirstOrDefaultAsync(i => i.Title == "Test");
-
-            Assert.NotNull(repositoryResult.Links);
-            Assert.NotNull(contextResult.Links);
-            Assert.Equal(repositoryResult.Id, contextResult.Id);
-            Assert.Equal(repositoryResult.Links.Count, contextResult.Links.Count);
-            Assert.Equal(repositoryResult.Links.Count(x => x.CertificateId == repositoryResult.Id), contextResult.Links.Count(x => x.CertificateId == contextResult.Id));
         }
     }
 }

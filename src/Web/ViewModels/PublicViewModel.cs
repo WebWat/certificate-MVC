@@ -18,7 +18,6 @@ namespace Web.ViewModels
         public string MiddleName { get; set; }
         public string Surname { get; set; }
         public string UniqueUrl { get; set; }
-        public string Country { get; set; }
         public byte[] ImageData { get; set; }
     }
 }

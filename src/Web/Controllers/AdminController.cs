@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ApplicationCore.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Web.Interfaces;
 using Web.ViewModels;
 
 namespace Web.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Roles.Admin)]
     public class AdminController : Controller
     {
         private readonly IAdminViewModelService _adminService;
+        private readonly ILogger<AdminController> _logger;
 
-        public AdminController(IAdminViewModelService adminService)
+        public AdminController(IAdminViewModelService adminService, ILogger<AdminController> logger)
         {
             _adminService = adminService;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -38,19 +42,8 @@ namespace Web.Controllers
         public async Task<IActionResult> Edit(AdminViewModel avm)
         {
             await _adminService.EditUserRoleAsync(avm.Login, avm.Role);
-            return RedirectToAction(nameof(Index));
-        }
 
-        public IActionResult Delete()
-        {
-            return PartialView("Delete");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(string id)
-        {
-            await _adminService.DeleteUserAsync(id);
+            _logger.LogInformation($"Changed {avm.Login} role to {avm.Role}");
 
             return RedirectToAction(nameof(Index));
         }

@@ -19,45 +19,45 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public virtual async Task<IEnumerable<T>> ListAllAsync()
+        public async Task<IEnumerable<T>> ListAllAsync()
         {
             return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public virtual IEnumerable<T> List(Func<T, bool> predicate)
+        public IEnumerable<T> List(Func<T, bool> predicate)
         {
            return _context.Set<T>().AsNoTracking().Where(predicate);
         }
 
-        public virtual async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        public virtual async Task<T> GetAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T> GetAsync(Expression<Func<T, bool>> predicate)
         {
             return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(predicate);
         }
 
-        public virtual async Task CreateAsync(T entity)
+        public async Task CreateAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity)
         {
             _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task<int> GetCountAsync()
+        public async Task<int> GetCountAsync()
         {
             return await _context.Set<T>().AsNoTracking().CountAsync();
         }

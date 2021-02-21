@@ -10,9 +10,9 @@ namespace Web.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<User> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public LogoutModel(SignInManager<User> signInManager)
+        public LogoutModel(SignInManager<ApplicationUser> signInManager)
         {
             _signInManager = signInManager;
         }
@@ -21,18 +21,11 @@ namespace Web.Areas.Identity.Pages.Account
         {
         }
 
-        public async Task<IActionResult> OnPost(string returnUrl = null)
+        public async Task<IActionResult> OnPost()
         {
             await _signInManager.SignOutAsync();
 
-            if (returnUrl != null)
-            {
-                return LocalRedirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToPage();
-            }
+            return RedirectToPage("./Login");
         }
     }
 }

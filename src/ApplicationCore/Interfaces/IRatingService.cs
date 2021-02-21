@@ -5,6 +5,6 @@ namespace ApplicationCore.Interfaces
 {
     public interface IRatingService
     {
-        IEnumerable<User> GetTopTen();
+        IEnumerable<ApplicationUser> GetTopTen();
     }
 }

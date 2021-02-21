@@ -1,14 +1,22 @@
 ﻿using ApplicationCore.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Web.Models
 {
-    public class CustomPasswordPolicy : IPasswordValidator<User>
+    public class CustomPasswordPolicy : IPasswordValidator<ApplicationUser>
     {
-        public Task<IdentityResult> ValidateAsync(UserManager<User> manager, User user, string password)
+        private readonly IStringLocalizer<SharedResource> _localizer;
+
+        public CustomPasswordPolicy(IStringLocalizer<SharedResource> localizer)
+        {
+            _localizer = localizer;
+        }
+
+        public Task<IdentityResult> ValidateAsync(UserManager<ApplicationUser> manager, ApplicationUser user, string password)
         {
             List<IdentityError> errors = new List<IdentityError>();
 
@@ -16,7 +24,7 @@ namespace Web.Models
             {
                 errors.Add(new IdentityError
                 {
-                    Description = "Пароль не должен содержать слово admin или user"
+                    Description = _localizer["AdminUserValidation"]
                 });
             }
 
@@ -24,15 +32,7 @@ namespace Web.Models
             {
                 errors.Add(new IdentityError
                 {
-                    Description = "Пароль не должен содержать логин"
-                });
-            }
-
-            if (password.Contains("123") || password.Contains("321"))
-            {
-                errors.Add(new IdentityError
-                {
-                    Description = "Пароль не должен содержать последовательность в виде 123 или 321"
+                    Description = _localizer["LoginValidation"]
                 });
             }
 
@@ -40,7 +40,7 @@ namespace Web.Models
             {
                 errors.Add(new IdentityError
                 {
-                    Description = "Пароль должен быть больше 8 символов"
+                    Description = _localizer["LengthValidation"]
                 });
             }
 
@@ -49,7 +49,7 @@ namespace Web.Models
             {
                 errors.Add(new IdentityError
                 {
-                    Description = "Пароль должен содержать десятичные числа"
+                    Description = _localizer["NumbersValidation"]
                 });
             }
 
@@ -58,12 +58,12 @@ namespace Web.Models
             {
                 errors.Add(new IdentityError
                 {
-                    Description = "Пароль должен содержать алфавитные символы"
+                    Description = _localizer["AlphabetValidation"]
                 });
             }
 
             return Task.FromResult(errors.Count == 0 ?
-            IdentityResult.Success : IdentityResult.Failed(errors.ToArray()));
+                                   IdentityResult.Success : IdentityResult.Failed(errors.ToArray()));
         }
     }
 }

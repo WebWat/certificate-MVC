@@ -12,9 +12,9 @@ namespace Web.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ConfirmEmailModel(UserManager<User> userManager)
+        public ConfirmEmailModel(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
@@ -37,9 +37,13 @@ namespace Web.Areas.Identity.Pages.Account
             var result = await _userManager.ConfirmEmailAsync(user, code);
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+            {
+                return RedirectToPage("./EmailConfirmed");
+            }
             else
+            {
                 return NotFound();
+            }
         }
     }
 }

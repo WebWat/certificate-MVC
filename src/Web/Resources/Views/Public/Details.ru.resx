@@ -141,6 +141,9 @@
   <data name="Links" xml:space="preserve">
     <value>Ссылки</value>
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Отсутствуют</value>
+  </data>
   <data name="Republican" xml:space="preserve">
     <value>Республиканский</value>
   </data>

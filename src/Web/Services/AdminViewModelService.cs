@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Entities.Identity;
+﻿using ApplicationCore.Constants;
+using ApplicationCore.Entities.Identity;
 using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
@@ -12,40 +13,16 @@ namespace Web.Services
     public class AdminViewModelService : IAdminViewModelService
     {
         private readonly IUserRepository _userRepository;
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AdminViewModelService(IUserRepository userRepository, UserManager<User> userManager)
+        public AdminViewModelService(IUserRepository userRepository, UserManager<ApplicationUser> userManager)
         {
             _userRepository = userRepository;
             _userManager = userManager;
         }
 
-        public async Task DeleteUserAsync(string id)
-        {
-            var _user = await _userManager.FindByIdAsync(id);
-
-            if(_user == null)
-            {
-                return;
-            }
-
-            //Сheck the main user
-            if (_user.UserName == "admin")
-            {
-                return;
-            }
-
-            await _userRepository.DeleteUserAsync(id);
-        }
-
         public async Task EditUserRoleAsync(string login, string role)
         {
-            //Сheck the main user
-            if (login == "admin")
-            {
-                return;
-            }
-
             var user = await _userManager.FindByNameAsync(login);
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -57,7 +34,7 @@ namespace Web.Services
 
         public async Task<IEnumerable<AdminViewModel>> GetIndexAdminViewModelListAsync()
         {
-            var users = _userRepository.List(i => i.UserName != "admin");
+            var users = _userRepository.List(i => i.UserName != AuthorizationConstants.UserName);
 
             List<AdminViewModel> result = new List<AdminViewModel>();
 
@@ -67,17 +44,16 @@ namespace Web.Services
 
                 result.Add(new AdminViewModel
                 {
-                    Id = u.Id,
                     Login = u.UserName,
                     Email = u.Email,
                     EmailConfirmed = u.EmailConfirmed,
+                    RegistrationDate = u.RegistrationDate,
                     Role = roles.First()
                 });
             }
 
             return result;
         }
-
 
         public async Task<AdminViewModel> GetUserAsync(string login)
         {
@@ -92,9 +68,6 @@ namespace Web.Services
 
             return new AdminViewModel
             {
-                Login = user.UserName,
-                Email = user.Email,
-                EmailConfirmed = user.EmailConfirmed,
                 Role = roles.First()
             };
         }

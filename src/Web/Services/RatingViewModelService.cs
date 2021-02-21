@@ -29,7 +29,7 @@ namespace Web.Services
                     var user = new UserViewModel
                     {
                         Name = i.Name,
-                        Country = i.Country,
+                        Country = i.Town,
                         Rating = i.Rating
                     };
 
@@ -39,7 +39,7 @@ namespace Web.Services
                 if (items != null)
                 {
                     _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(UserViewModel)), items,
-                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(30)));
+                                     new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(30)));
                 }
             }
 

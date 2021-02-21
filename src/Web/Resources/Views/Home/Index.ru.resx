@@ -153,6 +153,9 @@
   <data name="NoteMore" xml:space="preserve">
     <value>Чтобы авторизоваться вам надо будет подтвердить свою электронную почту, в противном случае вы не сможете войти!</value>
   </data>
+  <data name="NumberOfUsers" xml:space="preserve">
+    <value>Нас уже</value>
+  </data>
   <data name="ReadMore" xml:space="preserve">
     <value>Подробнее</value>
   </data>

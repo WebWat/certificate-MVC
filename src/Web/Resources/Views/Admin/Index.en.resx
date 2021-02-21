@@ -138,6 +138,9 @@
   <data name="NotConfirm" xml:space="preserve">
     <value>Not confirm</value>
   </data>
+  <data name="RegistrationDate" xml:space="preserve">
+    <value>RegistrationDate</value>
+  </data>
   <data name="Role" xml:space="preserve">
     <value>Role</value>
   </data>

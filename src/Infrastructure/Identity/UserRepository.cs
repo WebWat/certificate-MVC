@@ -35,22 +35,17 @@ namespace Infrastructure.Identity
             return await _context.Users.AsNoTracking().CountAsync();
         }
 
-        public async Task<User> GetAsync(Expression<Func<User, bool>> predicate)
+        public async Task<ApplicationUser> GetAsync(Expression<Func<ApplicationUser, bool>> predicate)
         {
             return await _context.Users.AsNoTracking().FirstOrDefaultAsync(predicate);
         }
 
-        public async Task<User> GetUserIncludeCertificatesAsync(Expression<Func<User, bool>> predicate)
-        {
-            return await _context.Users.AsNoTracking().Include(i => i.Certificates).FirstOrDefaultAsync(predicate);
-        }
-
-        public IEnumerable<User> List(Func<User, bool> predicate)
+        public IEnumerable<ApplicationUser> List(Func<ApplicationUser, bool> predicate)
         {
             return _context.Users.AsNoTracking().Where(predicate);
         }
 
-        public IEnumerable<User> ListIncludeCertificates(Func<User, bool> predicate)
+        public IEnumerable<ApplicationUser> ListIncludeCertificates(Func<ApplicationUser, bool> predicate)
         {
             return _context.Users.AsNoTracking().Include(i => i.Certificates).Where(predicate);
         }

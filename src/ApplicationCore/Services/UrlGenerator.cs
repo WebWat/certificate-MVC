@@ -12,7 +12,7 @@ namespace ApplicationCore.Services
     {
         public string Generate()
         {
-            return WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()));
+            return WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()))[0..15];
         }
     }
 }

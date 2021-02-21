@@ -5,7 +5,7 @@ namespace Web.Areas.Identity.Pages.Account.Models
     public class ResetInput
     {
         [Required(ErrorMessage = "Required")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "RegularExpression")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 

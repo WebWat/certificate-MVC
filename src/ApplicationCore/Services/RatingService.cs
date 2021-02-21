@@ -17,7 +17,7 @@ namespace ApplicationCore.Services
             _userRepository = userRepository;
         }
 
-        public IEnumerable<User> GetTopTen()
+        public IEnumerable<ApplicationUser> GetTopTen()
         {
             //We can easily change our rating logic
 #if DEBUG

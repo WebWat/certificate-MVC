@@ -19,7 +19,7 @@ namespace Web.Controllers
             _repository = repository;
         }
 
-        [Route("{uniqueUrl?}")]
+        [Route("{uniqueUrl}")]
         public async Task<IActionResult> Index(string uniqueUrl, string year, string find)
         {
             var _user = await _repository.GetAsync(i => i.UniqueUrl == uniqueUrl);
@@ -29,10 +29,10 @@ namespace Web.Controllers
                 return NotFound();
             }
 
-            return View(_service.GetPublicViewModel(year, find, _user.Id, _user.Name, _user.MiddleName, _user.Surname, _user.Country, _user.UniqueUrl, _user.Photo));
+            return View(_service.GetPublicViewModel(year, find, _user.Id, _user.Name, _user.MiddleName, _user.Surname, _user.UniqueUrl, _user.Photo));
         }
 
-        [Route("[action]/{uniqueUrl?}/{id?}")]
+        [Route("[action]/{uniqueUrl}/{id?}")]
         public async Task<IActionResult> Details(string uniqueUrl, int id)
         {
             var _user = await _repository.GetAsync(i => i.UniqueUrl == uniqueUrl);

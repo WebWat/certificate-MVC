@@ -1,4 +1,5 @@
 ﻿@model CertificateViewModel
+@inject IStageService Service 
 @{
     ViewData["Title"] = Localizer["Title"];
 }
@@ -18,26 +19,7 @@
         <p>@Html.DisplayFor(model => model.Description)</p>
         <br />
         <h5>@Localizer["Stage"]</h5>
-        <p>
-            @switch (Model.Stage)
-            {
-                case 1:
-                    @Localizer["School"]
-                    break;
-                case 2:
-                    @Localizer["District"]
-                    break;
-                case 3:
-                    @Localizer["Republican"]
-                    break;
-                case 4:
-                    @Localizer["All-Russian"]
-                    break;
-                case 5:
-                    @Localizer["International"]
-                    break;
-            }
-        </p>
+        <p>@Service.GetNameOfStage(Model.Stage)</p>
         <br />
         <h5>@Localizer["Date"]</h5>
         <p>@Html.DisplayFor(model => model.Date)</p>
@@ -53,17 +35,15 @@
             </ul>
         }
         <p><a class="btn btn-info btn-sm mt-2 mb-3" asp-controller="Link" asp-action="Index" asp-route-id="@Model.Id">@Localizer["Manage"]</a></p>
-        <div class="btn-group mb-3" role="group" aria-label="Basic example">
-            <a asp-controller="Certificate" asp-action="Index" class="btn btn-primary">@Localizer["Back"]</a>
+        <div class="btn-group mb-3" role="group">
+            <a asp-controller="Certificate" asp-action="Index" style="word-break: normal" class="btn btn-primary">@Localizer["Back"]</a>
             <a asp-controller="Download" asp-action="Jpg" asp-route-id="@Model.Id" class="btn btn-primary">@Localizer["Download"]</a>
             <a asp-controller="Certificate" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">@Localizer["Change"]</a>
             <a asp-controller="Certificate" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger delete">@Localizer["Delete"]</a>
         </div>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <p class="float-right">
-            <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" class="img-fluid img-thumbnail ms-image-details" />
-        </p>
+    <div class="col-md-6">
+        <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" class="img-fluid img-thumbnail ms-image-details" />
     </div>
 </div>
 

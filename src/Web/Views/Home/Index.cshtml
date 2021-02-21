@@ -124,9 +124,14 @@
 </section>
 
 <section>
-    <cache expires-after="@TimeSpan.FromMinutes(10)">
-        <vc:users-count></vc:users-count>
-    </cache>
+    <div class="text-center">
+        <div class="container">
+            <h1 class="caption">@Localizer["NumberOfUsers"]</h1>
+            <cache expires-sliding="@TimeSpan.FromMinutes(10)">
+                <vc:users-count></vc:users-count>
+            </cache>
+        </div>
+    </div>
 </section>
 
 

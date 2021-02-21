@@ -14,6 +14,7 @@
         <th>@Localizer["Login"]</th>
         <th>Email</th>
         <th>@Localizer["Confirmed"]</th>
+        <th>@Localizer["RegistrationDate"]</th>
         <th>@Localizer["Role"]</th>
         <th>@Localizer["Actions"]</th>
     </tr>
@@ -33,10 +34,10 @@
                     <span class="text-danger">@Localizer["NotConfirm"]</span>
                 }
             </td>
+            <td>@u.RegistrationDate.ToString("HH:mm dd.MM.yyyy") (UTC)</td>
             <td>@u.Role</td>
             <td>
                 <a asp-controller="Admin" asp-action="Edit" asp-route-login="@u.Login">@Localizer["ChangeRole"]</a>
-                | <a asp-controller="Admin" asp-action="Delete" asp-route-id="@u.Id" class="delete">@Localizer["Delete"]</a>
             </td>
         </tr>
         i++;

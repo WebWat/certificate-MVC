@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Achievements" xml:space="preserve">
+    <value>Achievements</value>
+  </data>
+  <data name="AdminUserValidation" xml:space="preserve">
+    <value>The password must not contain the word "admin" or "user"</value>
+  </data>
   <data name="All" xml:space="preserve">
     <value>All</value>
+  </data>
+  <data name="All-Russian" xml:space="preserve">
+    <value>All-Russian</value>
+  </data>
+  <data name="AlphabetValidation" xml:space="preserve">
+    <value>The password must contain alphabetic characters</value>
   </data>
   <data name="AwardDescription" xml:space="preserve">
     <value>Description</value>
@@ -129,11 +141,14 @@
   <data name="Certificate" xml:space="preserve">
     <value>Home</value>
   </data>
+  <data name="ConfirmEmailSend" xml:space="preserve">
+    <value>Confirm your account</value>
+  </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirm password</value>
   </data>
-  <data name="Country" xml:space="preserve">
-    <value>Country</value>
+  <data name="ConfirmSend" xml:space="preserve">
+    <value>Confirm</value>
   </data>
   <data name="Create" xml:space="preserve">
     <value>Create a portfolio</value>
@@ -141,8 +156,17 @@
   <data name="Date" xml:space="preserve">
     <value>Date</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="District" xml:space="preserve">
+    <value>District</value>
+  </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
+  </data>
+  <data name="EmailExist" xml:space="preserve">
+    <value>This email is already available</value>
   </data>
   <data name="EventDescription" xml:space="preserve">
     <value>Description</value>
@@ -162,6 +186,12 @@
   <data name="FileSizeError" xml:space="preserve">
     <value>The file size is too large</value>
   </data>
+  <data name="ForgotConfirmSend" xml:space="preserve">
+    <value>Reset the password</value>
+  </data>
+  <data name="ForgotEmailSend" xml:space="preserve">
+    <value>Resetting the password</value>
+  </data>
   <data name="FullName" xml:space="preserve">
     <value>Full name</value>
   </data>
@@ -171,11 +201,23 @@
   <data name="Info" xml:space="preserve">
     <value>Fill in your profile!</value>
   </data>
+  <data name="International" xml:space="preserve">
+    <value>International</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
+  <data name="LengthValidation" xml:space="preserve">
+    <value>The password must be longer than 8 characters</value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Sign in</value>
+  </data>
+  <data name="LoginExist" xml:space="preserve">
+    <value>This login already exists</value>
+  </data>
+  <data name="LoginValidation" xml:space="preserve">
+    <value>The password must not contain a login</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>Logout</value>
@@ -188,6 +230,9 @@
   </data>
   <data name="NewPassword" xml:space="preserve">
     <value>New password</value>
+  </data>
+  <data name="NumbersValidation" xml:space="preserve">
+    <value>The password must contain decimal numbers</value>
   </data>
   <data name="OldPassword" xml:space="preserve">
     <value>Old password</value>
@@ -207,17 +252,32 @@
   <data name="Rating" xml:space="preserve">
     <value>Rating</value>
   </data>
+  <data name="RegularExpression" xml:space="preserve">
+    <value>Incorrect input</value>
+  </data>
   <data name="RememberMe" xml:space="preserve">
     <value>Remember me?</value>
   </data>
+  <data name="Republican" xml:space="preserve">
+    <value>Republican</value>
+  </data>
   <data name="Required" xml:space="preserve">
     <value>This field is required</value>
+  </data>
+  <data name="School" xml:space="preserve">
+    <value>School</value>
   </data>
   <data name="Stage" xml:space="preserve">
     <value>Stage</value>
   </data>
   <data name="Surname" xml:space="preserve">
     <value>Surname</value>
+  </data>
+  <data name="Town" xml:space="preserve">
+    <value>Town</value>
+  </data>
+  <data name="UnconfirmedEmailError" xml:space="preserve">
+    <value>You have not confirmed your email</value>
   </data>
   <data name="Url" xml:space="preserve">
     <value>Link</value>
@@ -230,5 +290,8 @@
   </data>
   <data name="Users" xml:space="preserve">
     <value>Users</value>
+  </data>
+  <data name="WrongPasswordError" xml:space="preserve">
+    <value>Wrong login or password</value>
   </data>
 </root>

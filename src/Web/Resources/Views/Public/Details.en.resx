@@ -141,6 +141,9 @@
   <data name="Links" xml:space="preserve">
     <value>Links</value>
   </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
   <data name="Republican" xml:space="preserve">
     <value>Republican</value>
   </data>

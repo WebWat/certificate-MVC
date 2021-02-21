@@ -17,7 +17,7 @@ namespace IntegrationTests.Repositories
         public EventRepository()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "Usernewdb")
+                .UseInMemoryDatabase(databaseName: "CertificateDB")
                 .Options;
 
             _context = new ApplicationContext(dbOptions);
@@ -31,10 +31,11 @@ namespace IntegrationTests.Repositories
         [Fact]
         public async Task GetEventById()
         {
-            var _event = await _context.Events.AsNoTracking().FirstOrDefaultAsync();
-            var repositoryResult = await repository.GetByIdAsync(_event.Id);
-            var contextResult = await _context.Events.AsNoTracking().FirstOrDefaultAsync(i => i.Id == _event.Id);
+            // Arrange & Act
+            var repositoryResult = await repository.GetByIdAsync(1);
+            var contextResult = await _context.Events.AsNoTracking().FirstOrDefaultAsync(i => i.Id == 1);
 
+            // Assert
             Assert.Equal(repositoryResult.Id, contextResult.Id);
         }
     }

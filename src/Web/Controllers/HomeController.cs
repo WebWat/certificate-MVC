@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Diagnostics;
 using Web.Models;
@@ -12,6 +13,13 @@ namespace Web.Controllers
     [AllowAnonymous]
     public class HomeController : Controller
     {
+        private readonly IStringLocalizer<HomeController> _localizer;
+
+        public HomeController(IStringLocalizer<HomeController> localizer)
+        {
+            _localizer = localizer;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -37,13 +45,14 @@ namespace Web.Controllers
         [Route("/HttpError")]
         public IActionResult HttpErrorPage(string code)
         {
-            if (code == "404")
+            switch (code)
             {
-                var model = new HttpErrorViewModel { Title = "Не найдено", Error = "404", Description = "Страница не найдена" };
-                return View(model);
+                case "404":
+                    var model = new HttpErrorViewModel { Title = _localizer["Title"], Error = "404", Description = _localizer["Description"], Back = _localizer["Back"] };
+                    return View(model);
+                default:
+                    return NoContent();
             }
-
-            return NoContent();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -18,7 +18,7 @@ namespace ApplicationCore.Entities
         public List<Link> Links { get; set; }
 
         public string UserId { get; set; }
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }

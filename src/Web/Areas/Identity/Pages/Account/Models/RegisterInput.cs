@@ -7,16 +7,17 @@ namespace Web.Areas.Identity.Pages.Account.Models
         [Required(ErrorMessage = "Required")]
         [MaxLength(100)]
         [Display(Name = "Username")]
+        [RegularExpression(@"[^&<>\""'/]*$", ErrorMessage = "RegularExpression")]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "Required")]
         [MaxLength(100)]
-        [RegularExpression(@"(?i:[а-я]*\s[а-я]*\s[а-я]*)", ErrorMessage = "FullNameRegularExpression")]
+        [RegularExpression(@"(?i:[аa-яz]*\s[аa-яz]*\s[аa-яz]*)", ErrorMessage = "RegularExpression")]
         [Display(Name = "FullName")]
         public string FullName { get; set; }
 
         [Required(ErrorMessage = "Required")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "RegularExpression")]
         [MaxLength(100)]
         [Display(Name = "Email")]
         public string Email { get; set; }

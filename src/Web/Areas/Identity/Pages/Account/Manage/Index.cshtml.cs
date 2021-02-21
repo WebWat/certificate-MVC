@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Manage.Models;
@@ -14,13 +15,17 @@ namespace Web.Areas.Identity.Pages.Account.Manage
     [Authorize]
     public partial class IndexModel : PageModel
     {      
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStringLocalizer<Index> _localizer;
+        private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(UserManager<User> userManager, IStringLocalizer<Index> localizer)
+        public IndexModel(UserManager<ApplicationUser> userManager, 
+                          IStringLocalizer<Index> localizer, 
+                          ILogger<IndexModel> logger)
         {
             _userManager = userManager;
             _localizer = localizer;
+            _logger = logger;
         }
 
         private readonly long _fileSizeLimit = 2097152;
@@ -33,7 +38,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         [BindProperty]
         public IndexInput Input { get; set; }
 
-        private async Task LoadAsync(User user)
+        private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
 
@@ -43,7 +48,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                 Name = user.Name,
                 Surname = user.Surname,
                 MiddleName = user.MiddleName,
-                Country = user.Country,
+                Town = user.Town,
                 OpenData = user.OpenData
             };
         }
@@ -51,11 +56,6 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
 
             await LoadAsync(user);
 
@@ -65,11 +65,6 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
 
             if (!ModelState.IsValid)
             {
@@ -104,10 +99,12 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             user.Surname = Input.Surname;
             user.Name = Input.Name;
             user.MiddleName = Input.MiddleName;
-            user.Country = Input.Country;
+            user.Town = Input.Town;
             user.OpenData = Input.OpenData;
 
             await _userManager.UpdateAsync(user);
+
+            _logger.LogInformation($"User {user.Id} updated his profile");
 
             StatusMessage = _localizer["StatusMessage"];
 

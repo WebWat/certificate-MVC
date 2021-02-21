@@ -1,15 +1,7 @@
 ﻿@model CertificateViewModel
+@inject IStageService Service
 @{
     ViewData["Title"] = Localizer["Title"];
-
-    List<StageViewModel> ListRatingViewModel = new List<StageViewModel>
-    {
-        new StageViewModel { Id = 1, Name = Localizer["School"].Value },
-        new StageViewModel { Id = 2, Name = Localizer["District"].Value },
-        new StageViewModel { Id = 3, Name = Localizer["Republican"].Value },
-        new StageViewModel { Id = 4, Name = Localizer["All-Russian"].Value },
-        new StageViewModel { Id = 5, Name = Localizer["International"].Value }
-    };
 }
 
 <h1 class="caption">@Localizer["Title"]</h1>
@@ -40,7 +32,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Stage" class="control-label"></label>
-                @Html.DropDownListFor(model => model.Stage, new SelectList(ListRatingViewModel, "Id", "Name"), new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.Stage, new SelectList(Service.GetStages(), "Id", "Name"), new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>

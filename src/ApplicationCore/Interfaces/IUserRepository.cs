@@ -8,11 +8,10 @@ namespace ApplicationCore.Interfaces
 {
     public interface IUserRepository
     {
-        Task<User> GetAsync(Expression<Func<User, bool>> predicate);
-        Task<User> GetUserIncludeCertificatesAsync(Expression<Func<User, bool>> predicate);
+        Task<ApplicationUser> GetAsync(Expression<Func<ApplicationUser, bool>> predicate);
         Task DeleteUserAsync(string id);
-        IEnumerable<User> List(Func<User, bool> predicate);
-        IEnumerable<User> ListIncludeCertificates(Func<User, bool> predicate);
+        IEnumerable<ApplicationUser> List(Func<ApplicationUser, bool> predicate);
+        IEnumerable<ApplicationUser> ListIncludeCertificates(Func<ApplicationUser, bool> predicate);
         Task<int> GetCountAsync();
     }
 }

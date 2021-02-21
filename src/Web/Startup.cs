@@ -43,9 +43,9 @@ namespace Web
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             //Identity
-            services.AddTransient<IPasswordValidator<User>, CustomPasswordPolicy>();
+            services.AddTransient<IPasswordValidator<ApplicationUser>, CustomPasswordPolicy>();
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
@@ -76,7 +76,7 @@ namespace Web
 
             //Other services
             services.AddScoped<IUrlShortener, UrlShortener>();
-            services.AddAntiforgery(options => options.Cookie.Name = "_antiforgery");
+            services.AddAntiforgery();
             services.AddHttpClient();
             services.AddControllersWithViews().AddDataAnnotationsLocalization(options => {
                 options.DataAnnotationLocalizerProvider = (type, factory) =>
@@ -101,7 +101,6 @@ namespace Web
 
             app.UseStatusCodePagesWithReExecute("/HttpError", "?code={0}");
 
-            app.UseHttpsRedirection();
             app.UseRequestLocalization();
             app.UseStaticFiles();
 

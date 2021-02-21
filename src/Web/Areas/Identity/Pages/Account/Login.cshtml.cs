@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Models;
 
@@ -12,13 +14,20 @@ namespace Web.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<User> signInManager, UserManager<User> userManager)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, 
+                          UserManager<ApplicationUser> userManager, 
+                          IStringLocalizer<SharedResource> localizer, 
+                          ILogger<LoginModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _localizer = localizer;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -51,11 +60,8 @@ namespace Web.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);
-                if (user == null)
-                {
-                    user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
-                }
+                var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail) ??
+                           await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
 
                 if (user != null)
                 {
@@ -64,14 +70,14 @@ namespace Web.Areas.Identity.Pages.Account
 #elif RELEASE
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
-                        ModelState.AddModelError(string.Empty, "Вы не подтвердили свой email");
+                        ModelState.AddModelError(string.Empty, _localizer["UnconfirmedEmailError"]);
                         return Page();
                     }
 #endif
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Неверный логин или пароль");
+                    ModelState.AddModelError(string.Empty, _localizer["WrongPasswordError"]);
                     return Page();
                 }
 
@@ -79,6 +85,8 @@ namespace Web.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"User {user.Id} is logged in");
+
                     var role = await _userManager.GetRolesAsync(user);
 
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -104,7 +112,7 @@ namespace Web.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Неверный логин или пароль");
+                    ModelState.AddModelError(string.Empty, _localizer["WrongPasswordError"]);
                     return Page();
                 }
             }

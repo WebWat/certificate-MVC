@@ -14,7 +14,6 @@
             <h4 class="caption">@Model.Surname</h4>
             <h4 class="caption">@Model.Name </h4>
             <h4 class="caption">@Model.MiddleName</h4>
-            <h4 class="caption">@Model.Country</h4>
         </div>
     </div>
 }
@@ -26,7 +25,6 @@ else
     <div class="card-body">
         <form method="get">
             <div class="d-flex justify-content-start">
-                <input asp-for="UniqueUrl" type="hidden" />
                 <div class="col-md-8 p-0">
                     <input asp-for="Find" class="form-control autocom" placeholder="@Localizer["Info"]" maxlength="30" autocomplete="off" />
                 </div>
@@ -44,7 +42,7 @@ else
             <div class="col-sm-6">
                 <div class="card mb-3 anim" onclick="start('@item.Id','@Model.UniqueUrl')">
                     <div class="row no-gutters">
-                        <div class="col-md-4">
+                        <div class="col-md-4 ms-image">
                             <img src="data:image/jpeg;base64,@(Convert.ToBase64String(item.ImageData))" class="card-img">
                         </div>
                         <div class="col-md-8">
@@ -71,7 +69,6 @@ else
 @section Scripts
 {
     <script type="text/javascript" src="~/js/public.js" asp-append-version="true"></script>
-    <script type="text/javascript" src="~/js/autocomplete.js" asp-append-version="true"></script>
 }
 
 

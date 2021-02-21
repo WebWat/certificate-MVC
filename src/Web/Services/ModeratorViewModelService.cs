@@ -1,6 +1,5 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,12 +11,10 @@ namespace Web.Services
     public class ModeratorViewModelService : IModeratorViewModelService
     {
         private readonly IAsyncRepository<Event> _repository;
-        private readonly IMemoryCache _memoryCache;
 
-        public ModeratorViewModelService(IAsyncRepository<Event> repository, IMemoryCache memoryCache)
+        public ModeratorViewModelService(IAsyncRepository<Event> repository)
         {
             _repository = repository;
-            _memoryCache = memoryCache;
         }
 
         public async Task CreateEventAsync(EventViewModel evm)

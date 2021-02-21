@@ -10,6 +10,7 @@ namespace Web.TagHelpers
     public class PageLinkTagHelper : TagHelper
     {
         private readonly IUrlHelperFactory urlHelperFactory;
+
         public PageLinkTagHelper(IUrlHelperFactory helperFactory)
         {
             urlHelperFactory = helperFactory;

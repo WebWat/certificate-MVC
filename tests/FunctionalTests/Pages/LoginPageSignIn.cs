@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ApplicationCore.Constants;
 using Xunit;
 
 namespace FunctionalTests.Pages
@@ -33,8 +34,8 @@ namespace FunctionalTests.Pages
 
             var keyValues = new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("UserNameOrEmail", "admin"),
-                new KeyValuePair<string, string>("Password", "Password12"),
+                new KeyValuePair<string, string>("UserNameOrEmail", AuthorizationConstants.UserName),
+                new KeyValuePair<string, string>("Password", AuthorizationConstants.Password),
                 new KeyValuePair<string, string>("__RequestVerificationToken", token)
             };
             var formContent = new FormUrlEncodedContent(keyValues);

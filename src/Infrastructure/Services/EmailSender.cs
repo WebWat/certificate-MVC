@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System.Threading.Tasks;
@@ -13,10 +14,12 @@ namespace Infrastructure.Services
     public class EmailSender : IEmailSender
     {
         private readonly Email _email;
+        private readonly ILogger<EmailSender> _logger;
 
-        public EmailSender(IOptions<Email> options)
+        public EmailSender(IOptions<Email> options, ILogger<EmailSender> logger)
         {
             _email = options.Value;
+            _logger = logger;
         }
 
         public async Task SendEmailAsync(string email, string subject, string callbackUrl, string action)
@@ -55,6 +58,8 @@ namespace Infrastructure.Services
                 await client.SendAsync(emailMessage);
                 await client.DisconnectAsync(true);
             }
+
+            _logger.LogInformation("The email was sent to " + email);
         }
     }
 }

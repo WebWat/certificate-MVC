@@ -6,7 +6,7 @@ async function copy() {
     });
     if (response.ok) {
         const text = await response.json();
-        window.prompt("Ваша ссылка: ", text);
+        window.prompt("URL: ", text);
     }
 }
 
@@ -23,3 +23,9 @@ window.onload = () => {
 window.addEventListener("scroll", () => {
     sessionStorage.setItem("scroll", pageYOffset);
 });
+
+let form = document.getElementsByName('search');
+document.addEventListener('keypress', (e) => {
+    if (e.code === 13)
+        form.submit();
+})

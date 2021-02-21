@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Web.Interfaces;
 using Web.ViewModels;
@@ -12,12 +13,16 @@ namespace Web.Controllers
     public class LinkController : Controller
     {
         private readonly ILinkViewModelService _linkService;
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<LinkController> _logger;
 
-        public LinkController(ILinkViewModelService linkService, UserManager<User> userManager)
+        public LinkController(ILinkViewModelService linkService, 
+                              UserManager<ApplicationUser> userManager,
+                              ILogger<LinkController> logger)
         {
             _linkService = linkService;
             _userManager = userManager;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index(int id)
@@ -37,6 +42,8 @@ namespace Web.Controllers
             if (ModelState.IsValid)
             {
                 await _linkService.CreateLinkAsync(lvm.CertificateId, lvm.Link, _user.Id);
+
+                _logger.LogInformation($"Link for the certificate {lvm.CertificateId} is created by User {_user.Id}");
             }
 
             return RedirectToAction("Index", new { id = lvm.CertificateId });
@@ -54,6 +61,8 @@ namespace Web.Controllers
             var _user = await _userManager.GetUserAsync(User);
 
             int certificateId = await _linkService.DeleteLinkAsync(id, _user.Id);
+
+            _logger.LogInformation($"Link for the certificate {certificateId} is deleted by User {_user.Id}");
 
             return RedirectToAction("Index", new { id = certificateId });
         }

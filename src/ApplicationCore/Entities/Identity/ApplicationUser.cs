@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace ApplicationCore.Entities.Identity
 {
-    /// <summary>
-    /// Application User
-    /// </summary>
-    public class User : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public string Name { get; set; }
 
@@ -14,7 +12,7 @@ namespace ApplicationCore.Entities.Identity
 
         public string MiddleName { get; set; }
 
-        public string Country { get; set; }
+        public string Town { get; set; }
 
         public int Rating { get; set; }
 
@@ -23,6 +21,8 @@ namespace ApplicationCore.Entities.Identity
         public bool OpenData { get; set; }
 
         public string UniqueUrl { get; set; }
+
+        public DateTime RegistrationDate { get; set; }
 
         public List<Certificate> Certificates { get; set; } = new List<Certificate>();
 

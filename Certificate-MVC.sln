@@ -7,17 +7,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0383A41D-EFA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{901220EA-7332-43CB-B15D-A8580E969AA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "src\Web\Web.csproj", "{CB16DCCE-D4BC-4AC0-913C-5262EE7A654B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "src\Web\Web.csproj", "{CB16DCCE-D4BC-4AC0-913C-5262EE7A654B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationCore", "src\ApplicationCore\ApplicationCore.csproj", "{53BF2589-1BB7-416A-A8DD-9322102FD6FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationCore", "src\ApplicationCore\ApplicationCore.csproj", "{53BF2589-1BB7-416A-A8DD-9322102FD6FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{1B27BA1B-9097-471A-85D8-A82285AB5EC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{1B27BA1B-9097-471A-85D8-A82285AB5EC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalTests", "tests\FunctionalTests\FunctionalTests.csproj", "{212E4920-24E2-4F49-A37F-8F14AC60F1C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests", "tests\FunctionalTests\FunctionalTests.csproj", "{212E4920-24E2-4F49-A37F-8F14AC60F1C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{45647BC5-B9E3-4EE9-83FE-9C87B1F99E43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{45647BC5-B9E3-4EE9-83FE-9C87B1F99E43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{6FC7824B-0AD7-4479-84B0-E32E006FFC6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{6FC7824B-0AD7-4479-84B0-E32E006FFC6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

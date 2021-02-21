@@ -20,7 +20,6 @@ namespace Web.Configuration
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                 options.LoginPath = "/Identity/Account/Login";
-                options.Cookie.Name = "_session";
                 options.Cookie.HttpOnly = true;
             });
         }

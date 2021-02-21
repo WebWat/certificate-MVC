@@ -9,11 +9,7 @@ namespace IntegrationTests.Builders
         {
             return new Certificate
             {
-                Title = "Test",
-                Description = "Test Description",
-                Date = DateTime.Now,
-                Stage = 2,
-                File = new byte[] { 213 }
+                Title = "Robofest"
             };
         }
     }

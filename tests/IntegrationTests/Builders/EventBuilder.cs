@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.Entities;
-using System;
 using System.Collections.Generic;
 
 namespace IntegrationTests.Builders
@@ -10,8 +9,14 @@ namespace IntegrationTests.Builders
         {
             return new List<Event>
             {
-                new Event { Title = "Test Event", Description = "Test Event Description", Date = DateTime.Now, Url = "Test Event Link" },
-                new Event { Title = "Test Event 2", Description = "Test Event Description 2", Date = DateTime.Now, Url = "Test Event Link 2" },
+                new Event
+                {
+                    Title = "Selection for November's chemistry programme has started"
+                },
+                new Event
+                {
+                    Title = "MIPT invites teachers for courses"
+                }
             };
         }
     }

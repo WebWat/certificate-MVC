@@ -5,9 +5,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Text;
 using System.Threading.Tasks;
+using Web;
 using Web.Areas.Identity.Pages.Account.Models;
 
 namespace Areas.Identity.Pages.Account
@@ -15,15 +18,23 @@ namespace Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly IUrlGenerator _urlGenerator;
+        private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly ILogger<RegisterModel> _logger;
 
-        public RegisterModel(UserManager<User> userManager, IEmailSender emailSender, IUrlGenerator urlGenerator)
+        public RegisterModel(UserManager<ApplicationUser> userManager, 
+                             IEmailSender emailSender, 
+                             IUrlGenerator urlGenerator, 
+                             IStringLocalizer<SharedResource> localizer,
+                             ILogger<RegisterModel> logger)
         {
             _userManager = userManager;
             _emailSender = emailSender;
             _urlGenerator = urlGenerator;
+            _localizer = localizer;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -46,7 +57,7 @@ namespace Areas.Identity.Pages.Account
 
                 if (_user != null)
                 {
-                    ModelState.AddModelError("Input.UserName", "Такой логин уже существует");
+                    ModelState.AddModelError("Input.UserName", _localizer["LoginExist"]);
                     return Page();
                 }
 
@@ -54,13 +65,13 @@ namespace Areas.Identity.Pages.Account
 
                 if (_user != null)
                 {
-                    ModelState.AddModelError(string.Empty, "Данный email уже имеется");
+                    ModelState.AddModelError(string.Empty, _localizer["EmailExist"]);
                     return Page();
                 }
 
                 string[] fullName = Input.FullName.Split(' ');
 
-                User user = new User
+                ApplicationUser user = new ApplicationUser
                 {
                     Email = Input.Email,
                     UserName = Input.UserName,
@@ -68,13 +79,16 @@ namespace Areas.Identity.Pages.Account
                     Surname = fullName[0],
                     MiddleName = fullName[2],
                     UniqueUrl = _urlGenerator.Generate(),
-                    OpenData = Input.OpenData
+                    OpenData = Input.OpenData,
+                    RegistrationDate = DateTime.UtcNow          
                 };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"New User {user.Id} registered");
+
                     await _userManager.AddToRoleAsync(user, "User");
 #if DEBUG
                     return RedirectToPage("./Login");
@@ -87,7 +101,7 @@ namespace Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Подтвердите вашу учетную запись", callbackUrl, "Подтвердить");
+                    await _emailSender.SendEmailAsync(Input.Email, _localizer["ConfirmEmailSend"], callbackUrl, _localizer["ConfirmSend"]);
 
                     return RedirectToPage("./RegisterConfirmation");
 #endif

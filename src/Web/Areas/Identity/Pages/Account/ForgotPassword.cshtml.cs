@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Localization;
 using System.Text;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Models;
@@ -15,13 +15,15 @@ namespace Web.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ForgotPasswordModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public ForgotPasswordModel(UserManager<User> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, IStringLocalizer<SharedResource> localizer)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _localizer = localizer;
         }
 
 
@@ -48,12 +50,11 @@ namespace Web.Areas.Identity.Pages.Account
                         values: new { area = "Identity", code = code },
                         protocol: HttpContext.Request.Scheme);
 #if RELEASE
-                await _emailSender.SendEmailAsync(Input.Email, "Сброс пароля", callbackUrl, "Сбросить пароль");
+                await _emailSender.SendEmailAsync(Input.Email, _localizer["ForgotEmailSend"], callbackUrl, _localizer["ForgotConfirmSend"]);
                 return RedirectToPage("./ForgotPasswordConfirmation");
 #elif DEBUG
                 return Redirect(callbackUrl);
 #endif
-
             }
             return Page();
         }

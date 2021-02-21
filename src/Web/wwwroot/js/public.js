@@ -11,3 +11,9 @@ window.onload = () => {
 window.addEventListener("scroll", () => {
     sessionStorage.setItem("scroll", pageYOffset);
 });
+
+let form = document.getElementsByName('search');
+document.addEventListener('keypress', (e) => {
+    if (e.code === 13)
+        form.submit();
+})

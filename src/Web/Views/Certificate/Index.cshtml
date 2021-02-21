@@ -18,7 +18,7 @@
 </div>
 <div class="card mb-3">
     <div class="card-body">
-        <form method="get">
+        <form method="get" name="search">
             <div class="d-flex justify-content-between">
                 <div class="col-md-8 p-0">
                     <input asp-for="Find" class="form-control mw-100 autocom" placeholder="@Localizer["Info"]" maxlength="30" autocomplete="off" />
@@ -63,7 +63,6 @@ else
 @section Scripts
 {
     <script type="text/javascript" src="~/js/certificate.js" asp-append-version="true"></script>
-    <script type="text/javascript" src="~/js/autocomplete.js" asp-append-version="true"></script>
 }
 
 

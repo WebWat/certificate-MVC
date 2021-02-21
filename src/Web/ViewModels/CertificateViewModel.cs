@@ -10,14 +10,16 @@ namespace Web.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "AwardTitleRequired")]
+        [Required(ErrorMessage = "Required")]
         [Display(Name = "AwardTitle")]
         [MaxLength(100)]
+        [RegularExpression(@"[^&<>\""'/]*$", ErrorMessage = "RegularExpression")]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "AwardDescriptionRequired")]
+        [Required(ErrorMessage = "Required")]
         [Display(Name = "AwardDescription")]
         [MaxLength(200)]
+        [RegularExpression(@"[^&<>\""'/]*$", ErrorMessage = "RegularExpression")]
         public string Description { get; set; }
 
         [Display(Name = "Date")]

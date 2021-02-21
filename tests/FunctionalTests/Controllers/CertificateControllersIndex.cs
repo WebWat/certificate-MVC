@@ -17,7 +17,7 @@ namespace FunctionalTests.Controllers
         [Fact]
         public async Task RedirectsToLoginIfNotAuthenticated()
         {
-            var response = await Client.GetAsync("/Certificate");
+            var response = await Client.GetAsync("/certificate");
 
             Assert.Contains("/Identity/Account/Login", response.RequestMessage.RequestUri.ToString());
         }

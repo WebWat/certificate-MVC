@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ApplicationCore.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Web.Interfaces;
 
 namespace Web.Controllers
 {
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = Roles.User)]
     public class EventController : Controller
     {
         private readonly IEventViewModelService _eventService;

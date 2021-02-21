@@ -5,12 +5,12 @@ namespace IntegrationTests.Builders
 {
     public class LinkBuilder
     {
-        public static List<Link> GetDefaultValues()
+        public static List<Link> GetDefaultValues(int certificateId = 0)
         {
             return new List<Link>
             {
-                new Link { CertificateId = 1, Name = "Test Link" },
-                new Link { CertificateId = 1, Name = "Test Link 2" }
+                new Link { CertificateId = certificateId, Name = "http://url.certfcate.ru/examplelink1" },
+                new Link { CertificateId = certificateId, Name = "http://url.certfcate.ru/examplelinl2" }
             };
         }
     }

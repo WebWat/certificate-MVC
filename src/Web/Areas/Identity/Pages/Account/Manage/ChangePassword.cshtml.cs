@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Manage.Models;
 
@@ -12,18 +13,20 @@ namespace Web.Areas.Identity.Pages.Account.Manage
     [Authorize]
     public class ChangePasswordModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IStringLocalizer<ChangePassword> _localizer;
+        private readonly ILogger<ChangePasswordModel> _logger;
 
-        public ChangePasswordModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            IStringLocalizer<ChangePassword> localizer)
+        public ChangePasswordModel(UserManager<ApplicationUser> userManager,
+                                   SignInManager<ApplicationUser> signInManager,
+                                   IStringLocalizer<ChangePassword> localizer,
+                                   ILogger<ChangePasswordModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _localizer = localizer;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -35,11 +38,6 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
 
             var hasPassword = await _userManager.HasPasswordAsync(user);
 
@@ -60,11 +58,6 @@ namespace Web.Areas.Identity.Pages.Account.Manage
 
             var user = await _userManager.GetUserAsync(User);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
-
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
 
             if (!changePasswordResult.Succeeded)
@@ -77,6 +70,8 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
+
+            _logger.LogInformation($"User {user.Id} changed his password");
 
             StatusMessage = _localizer["StatusMessage"];
 

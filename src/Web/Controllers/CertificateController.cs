@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Threading.Tasks;
 using Web.Extensions;
@@ -15,18 +16,24 @@ namespace Web.Controllers
     public class CertificateController : Controller
     {
         private readonly ICertificateViewModelService _certificateService;
+        private readonly ILogger<CertificateController> _logger;
         private readonly IStringLocalizer<SharedResource> _localizer;
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly long _fileSizeLimit = 2097152;
         private readonly long _fileMinSize = 524288;
         private readonly string _expansion = "image/jpeg";
 
-        public CertificateController(ICertificateViewModelService certificateService, UserManager<User> userManager, IStringLocalizer<SharedResource> localizer)
+        public CertificateController(ICertificateViewModelService certificateService, 
+                                     UserManager<ApplicationUser> userManager, 
+                                     IStringLocalizer<SharedResource> localizer,
+                                     ILogger<CertificateController> logger)
         {
             _certificateService = certificateService;
             _userManager = userManager;
             _localizer = localizer;
+            _logger = logger;
         }
+
 
         public async Task<IActionResult> Index(string year, string find)
         {
@@ -34,6 +41,7 @@ namespace Web.Controllers
 
             return View(_certificateService.GetIndexViewModel(_user.Id, year, find));
         }
+
 
         public async Task<IActionResult> Details(int id)
         {
@@ -95,13 +103,14 @@ namespace Web.Controllers
 
                 await _certificateService.CreateCertificateAsync(cvm, _user.Id);
 
+                _logger.LogInformation($"New certificate created by User {_user.Id}");
+
                 return RedirectToAction(nameof(Index));
             }
             return View();
         }
 
 
-        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var _user = await _userManager.GetUserAsync(User);
@@ -150,6 +159,8 @@ namespace Web.Controllers
 
                 await _certificateService.UpdateCertificateAsync(cvm, _user.Id);
 
+                _logger.LogInformation($"Certificate {cvm.Id} changed by User {_user.Id}");
+
                 return RedirectToAction("Details", new { id = cvm.Id });
             }
             return View(cvm);
@@ -169,6 +180,8 @@ namespace Web.Controllers
             var _user = await _userManager.GetUserAsync(User);
 
             await _certificateService.DeleteCertificateAsync(id, _user.Id);
+
+            _logger.LogInformation($"Certificate {id} deleted by User {_user.Id}");
 
             return RedirectToAction(nameof(Index));
         }

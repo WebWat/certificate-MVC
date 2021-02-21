@@ -8,6 +8,7 @@ namespace Web.Configuration
     {
         public static void Configure(IServiceCollection services)
         {
+            services.AddScoped<IStageService, StageService>();
             services.AddScoped<ICertificateViewModelService, CertificateViewModelService>();
             services.AddScoped<ILinkViewModelService, LinkViewModelService>();
             services.AddScoped<IPublicViewModelService, PublicViewModelService>();
@@ -15,7 +16,7 @@ namespace Web.Configuration
             services.AddScoped<IAdminViewModelService, AdminViewModelService>();
             services.AddScoped<IModeratorViewModelService, ModeratorViewModelService>();
             services.AddScoped<IEventViewModelService, EventViewModelService>();
-            services.AddScoped<IPublicUpdatingCacheService, PublicUpdatingCacheService>();
+            services.AddScoped<ICachedPublicViewModelService, CachedPublicViewModelService>();
         }
     }
 }
