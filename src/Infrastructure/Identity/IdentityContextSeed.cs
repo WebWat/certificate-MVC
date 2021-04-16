@@ -23,7 +23,6 @@ namespace Infrastructure.Identity
                 {
                     UserName = AuthorizationConstants.UserName,
                     Email = AuthorizationConstants.EmailAddress,
-                    OpenData = false,
                     EmailConfirmed = true,
                     LockoutEnabled = false,
                     UniqueUrl = AuthorizationConstants.UniqueUrl

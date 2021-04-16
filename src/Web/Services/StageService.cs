@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using ApplicationCore.Entities;
+using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using Web.Interfaces;
 using Web.ViewModels;
@@ -18,21 +19,21 @@ namespace Web.Services
         {
             return new List<StageViewModel>
             {
-                new StageViewModel { Id = 1, Name = _localizer["School"].Value },
-                new StageViewModel { Id = 2, Name = _localizer["District"].Value },
-                new StageViewModel { Id = 3, Name = _localizer["Republican"].Value },
-                new StageViewModel { Id = 4, Name = _localizer["All-Russian"].Value },
-                new StageViewModel { Id = 5, Name = _localizer["International"].Value }
+                new StageViewModel { EnumName = nameof(Stage.School), Name = _localizer["School"].Value },
+                new StageViewModel { EnumName = nameof(Stage.District), Name = _localizer["District"].Value },
+                new StageViewModel { EnumName = nameof(Stage.Republican), Name = _localizer["Republican"].Value },
+                new StageViewModel { EnumName = nameof(Stage.AllRussian), Name = _localizer["All-Russian"].Value },
+                new StageViewModel { EnumName = nameof(Stage.International), Name = _localizer["International"].Value }
             };
         }
 
-        public string GetNameOfStage(int stage) => stage switch
+        public string GetNameOfStage(Stage stage) => stage switch
         {
-            1 => _localizer["School"],
-            2 => _localizer["District"],
-            3 => _localizer["Republican"],
-            4 => _localizer["All-Russian"],
-            5 => _localizer["International"],
+            Stage.School => _localizer["School"],
+            Stage.District => _localizer["District"],
+            Stage.Republican => _localizer["Republican"],
+            Stage.AllRussian => _localizer["All-Russian"],
+            Stage.International => _localizer["International"],
             _ => string.Empty
         };
     }

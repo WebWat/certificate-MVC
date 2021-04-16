@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System;
 using System.Diagnostics;
+using ApplicationCore.Constants;
 using Web.Models;
 using Web.ViewModels;
 
@@ -34,7 +35,7 @@ namespace Web.Controllers
         public IActionResult SetLanguage(string culture, string returnUrl)
         {
             Response.Cookies.Append(
-                CookieRequestCultureProvider.DefaultCookieName,
+                CookieNamesConstants.Culture,
                 CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
             );

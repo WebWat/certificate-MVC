@@ -9,6 +9,7 @@ using Web.ViewModels;
 namespace Web.Controllers
 {
     [Authorize(Roles = Roles.AdminAndModerator)]
+    [IgnoreAntiforgeryToken]
     public class ModeratorController : Controller
     {
         private readonly IModeratorViewModelService _moderatorService;

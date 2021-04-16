@@ -10,13 +10,13 @@ namespace Web.ViewModels
         [Required(ErrorMessage = "Required")]
         [Display(Name = "EventTitle")]
         [MaxLength(150)]
-        [RegularExpression(@"[^&<>\""'/]*$", ErrorMessage = "RegularExpression")]
+        [RegularExpression(@"[^&<>\/]*$", ErrorMessage = "RegularExpression")]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Required")]
         [Display(Name = "EventDescription")]
         [MaxLength(1000)]
-        [RegularExpression(@"[^&<>\""'/]*$", ErrorMessage = "RegularExpression")]
+        [RegularExpression(@"[^&<>\/]*$", ErrorMessage = "RegularExpression")]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Required")]

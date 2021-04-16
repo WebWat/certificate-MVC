@@ -46,7 +46,7 @@ namespace Infrastructure.Data
                     Title = "Robofest",
                     Description = "2nd place in the Robo-racing category",
                     Date = DateTime.UtcNow,
-                    Stage = 2,
+                    Stage = Stage.AllRussian,
                     File = File.ReadAllBytes(path),
                     UserId = userId
                 },
@@ -55,7 +55,7 @@ namespace Infrastructure.Data
                     Title = "Robofest",
                     Description = "3rd place in the RoboFootball category",
                     Date = DateTime.UtcNow,
-                    Stage = 2,
+                    Stage = Stage.AllRussian,
                     File = File.ReadAllBytes(path),
                     UserId = userId
                 }

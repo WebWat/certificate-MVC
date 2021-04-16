@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.IO;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Manage.Models;
 using Web.Extensions;
+using Web.Models;
 
 namespace Web.Areas.Identity.Pages.Account.Manage
 {
@@ -18,19 +20,18 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStringLocalizer<Index> _localizer;
         private readonly ILogger<IndexModel> _logger;
+        private readonly FileSettings _fileSettings;
 
         public IndexModel(UserManager<ApplicationUser> userManager, 
                           IStringLocalizer<Index> localizer, 
-                          ILogger<IndexModel> logger)
+                          ILogger<IndexModel> logger,
+                          IOptions<FileSettings> options)
         {
             _userManager = userManager;
             _localizer = localizer;
             _logger = logger;
+            _fileSettings = options.Value;
         }
-
-        private readonly long _fileSizeLimit = 2097152;
-        private readonly long _fileMinSize = 524288;
-        private readonly string _expansion = "image/jpeg";
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -48,8 +49,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                 Name = user.Name,
                 Surname = user.Surname,
                 MiddleName = user.MiddleName,
-                Town = user.Town,
-                OpenData = user.OpenData
+                Town = user.Town
             };
         }
 
@@ -74,7 +74,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
 
             if (Input.File != null)
             {
-                if (Input.File.CheckFileExtension(_expansion))
+                if (Input.File.CheckFileExtension(_fileSettings.Expansion))
                 {
                     ModelState.AddModelError("Input.File", _localizer["FileExtensionError"]);
                     return Page();
@@ -85,7 +85,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                 using (var binaryReader = new BinaryReader(Input.File.OpenReadStream()))
                 {
 
-                    if (Input.File.CheckFileSize(_fileMinSize, _fileSizeLimit))
+                    if (Input.File.CheckFileSize(_fileSettings.MinSize, _fileSettings.SizeLimit))
                     {
                         ModelState.AddModelError("Input.File", _localizer["FileSizeError"]);
                         return Page();
@@ -100,7 +100,6 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             user.Name = Input.Name;
             user.MiddleName = Input.MiddleName;
             user.Town = Input.Town;
-            user.OpenData = Input.OpenData;
 
             await _userManager.UpdateAsync(user);
 

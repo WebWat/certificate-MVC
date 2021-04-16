@@ -42,12 +42,6 @@
                 <p class="text-muted text-note float-right">@Localizer["Note"]</p>
                 <span asp-validation-for="Input.File" class="text-danger"></span>
             </div>
-            <div class="checkbox mb-2" data-toggle="tooltip" data-placement="left" title="@Localizer["Info"]">
-                <label asp-for="Input.OpenData">
-                    <input asp-for="Input.OpenData" />
-                    @Html.DisplayNameFor(m => m.Input.OpenData)
-                </label>
-            </div>
             <button id="update-profile-button" type="submit" class="btn btn-primary">@Localizer["Save"]</button>
         </form>
     </div>

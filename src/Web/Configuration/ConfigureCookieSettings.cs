@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using ApplicationCore.Constants;
 
 namespace Web.Configuration
 {
-    public class ConfigureCookieSettings
+    public static class CookieSettings
     {
-        public static void Configure(IServiceCollection services)
+        public static IServiceCollection ConfigureCookieSettings(this IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -18,10 +19,13 @@ namespace Web.Configuration
             services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.Cookie.Name = CookieNamesConstants.Identity;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                 options.LoginPath = "/Identity/Account/Login";
                 options.Cookie.HttpOnly = true;
             });
+
+            return services;
         }
     }
 }

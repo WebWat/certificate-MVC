@@ -11,7 +11,9 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using Web;
+using Web.Models;
 using Web.Areas.Identity.Pages.Account.Models;
+using Web.Interfaces;
 
 namespace Areas.Identity.Pages.Account
 {
@@ -23,18 +25,21 @@ namespace Areas.Identity.Pages.Account
         private readonly IUrlGenerator _urlGenerator;
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly ILogger<RegisterModel> _logger;
+        private readonly IEmailTemplate _emailTemplate;
 
         public RegisterModel(UserManager<ApplicationUser> userManager, 
                              IEmailSender emailSender, 
                              IUrlGenerator urlGenerator, 
                              IStringLocalizer<SharedResource> localizer,
-                             ILogger<RegisterModel> logger)
+                             ILogger<RegisterModel> logger,
+                             IEmailTemplate emailTemplate)
         {
             _userManager = userManager;
             _emailSender = emailSender;
             _urlGenerator = urlGenerator;
             _localizer = localizer;
             _logger = logger;
+            _emailTemplate = emailTemplate;
         }
 
         [BindProperty]
@@ -79,7 +84,6 @@ namespace Areas.Identity.Pages.Account
                     Surname = fullName[0],
                     MiddleName = fullName[2],
                     UniqueUrl = _urlGenerator.Generate(),
-                    OpenData = Input.OpenData,
                     RegistrationDate = DateTime.UtcNow          
                 };
 
@@ -101,7 +105,9 @@ namespace Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, _localizer["ConfirmEmailSend"], callbackUrl, _localizer["ConfirmSend"]);
+                    var email = _emailTemplate.GetTemplate(EmailMessageType.RegisterConfirmation, callbackUrl);
+
+                    await _emailSender.SendEmailAsync(Input.Email, email.subject, email.template);
 
                     return RedirectToPage("./RegisterConfirmation");
 #endif

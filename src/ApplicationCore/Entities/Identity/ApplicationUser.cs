@@ -14,11 +14,7 @@ namespace ApplicationCore.Entities.Identity
 
         public string Town { get; set; }
 
-        public int Rating { get; set; }
-
         public byte[] Photo { get; set; }
-
-        public bool OpenData { get; set; }
 
         public string UniqueUrl { get; set; }
 

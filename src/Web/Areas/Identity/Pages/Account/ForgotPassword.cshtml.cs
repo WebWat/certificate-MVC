@@ -9,6 +9,8 @@ using Microsoft.Extensions.Localization;
 using System.Text;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Models;
+using Web.Interfaces;
+using Web.Models;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -18,12 +20,17 @@ namespace Web.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly IEmailTemplate _emailTemplate;
 
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, IStringLocalizer<SharedResource> localizer)
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager,
+                                   IEmailSender emailSender, 
+                                   IStringLocalizer<SharedResource> localizer,
+                                   IEmailTemplate emailTemplate)
         {
             _userManager = userManager;
             _emailSender = emailSender;
             _localizer = localizer;
+            _emailTemplate = emailTemplate;
         }
 
 
@@ -50,7 +57,9 @@ namespace Web.Areas.Identity.Pages.Account
                         values: new { area = "Identity", code = code },
                         protocol: HttpContext.Request.Scheme);
 #if RELEASE
-                await _emailSender.SendEmailAsync(Input.Email, _localizer["ForgotEmailSend"], callbackUrl, _localizer["ForgotConfirmSend"]);
+                var email = _emailTemplate.GetTemplate(EmailMessageType.ForgotPasswordConfirmation, callbackUrl);
+
+                await _emailSender.SendEmailAsync(Input.Email, email.subject, email.template);
                 return RedirectToPage("./ForgotPasswordConfirmation");
 #elif DEBUG
                 return Redirect(callbackUrl);

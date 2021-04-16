@@ -54,7 +54,7 @@ namespace Web
                 })
                 .ConfigureLogging(logging =>
                 {
-                    logging.AddConfiguration(config.GetSection("Logging")); //?
+                    logging.AddConfiguration(config.GetSection("Logging"));
                 });
                 
         }

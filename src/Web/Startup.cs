@@ -14,7 +14,9 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Globalization;
 using Web.Configuration;
+using ApplicationCore.Constants;
 using Web.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Web
 {
@@ -31,16 +33,17 @@ namespace Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<Email>(Configuration.GetSection("Email"));
+            services.Configure<FileSettings>(Configuration.GetSection("FileSettings"));
 
             //Core services
-            ConfigureCoreServices.Configure(services);
+            services.AddCoreServices();
 
             //Web services
-            ConfigureWebServices.Configure(services);
+            services.AddWebServices();
 
             //Database
             services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))); //Use DockerConnection for Docker
 
             //Identity
             services.AddTransient<IPasswordValidator<ApplicationUser>, CustomPasswordPolicy>();
@@ -56,7 +59,7 @@ namespace Web
             });
 
             //Cookie
-            ConfigureCookieSettings.Configure(services);
+            services.ConfigureCookieSettings();
 
             //Localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -69,6 +72,13 @@ namespace Web
                     new CultureInfo("ru")
                 };
 
+                var provider = new CookieRequestCultureProvider()
+                {
+                    CookieName = "culture"
+                };
+
+                options.RequestCultureProviders.Insert(0, provider);
+
                 options.DefaultRequestCulture = new RequestCulture("ru");
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
@@ -76,7 +86,10 @@ namespace Web
 
             //Other services
             services.AddScoped<IUrlShortener, UrlShortener>();
-            services.AddAntiforgery();
+            services.AddAntiforgery(options =>
+            {
+                options.Cookie.Name = CookieNamesConstants.Antiforgery;
+            });
             services.AddHttpClient();
             services.AddControllersWithViews().AddDataAnnotationsLocalization(options => {
                 options.DataAnnotationLocalizerProvider = (type, factory) =>

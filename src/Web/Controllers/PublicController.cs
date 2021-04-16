@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Web.Interfaces;
 
@@ -22,7 +23,7 @@ namespace Web.Controllers
         [Route("{uniqueUrl}")]
         public async Task<IActionResult> Index(string uniqueUrl, string year, string find)
         {
-            var _user = await _repository.GetAsync(i => i.UniqueUrl == uniqueUrl);
+            var _user = await _repository.GetAsync(i => EF.Functions.Collate(i.UniqueUrl, "SQL_Latin1_General_CP1_CS_AS") == uniqueUrl);
 
             if (_user == null)
             {

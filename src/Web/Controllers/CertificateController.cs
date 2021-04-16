@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.IO;
 using System.Threading.Tasks;
 using Web.Extensions;
 using Web.Interfaces;
+using Web.Models;
 using Web.ViewModels;
 
 namespace Web.Controllers
@@ -19,19 +21,19 @@ namespace Web.Controllers
         private readonly ILogger<CertificateController> _logger;
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly long _fileSizeLimit = 2097152;
-        private readonly long _fileMinSize = 524288;
-        private readonly string _expansion = "image/jpeg";
+        private readonly FileSettings _fileSettings;
 
         public CertificateController(ICertificateViewModelService certificateService, 
                                      UserManager<ApplicationUser> userManager, 
                                      IStringLocalizer<SharedResource> localizer,
-                                     ILogger<CertificateController> logger)
+                                     ILogger<CertificateController> logger,
+                                     IOptions<FileSettings> options)
         {
             _certificateService = certificateService;
             _userManager = userManager;
             _localizer = localizer;
             _logger = logger;
+            _fileSettings = options.Value;
         }
 
 
@@ -79,7 +81,7 @@ namespace Web.Controllers
             {
                 if (cvm.File != null)
                 {
-                    if (cvm.File.CheckFileExtension(_expansion)) 
+                    if (cvm.File.CheckFileExtension(_fileSettings.Expansion)) 
                     {
                         ModelState.AddModelError("File", _localizer["FileExtensionError"]);
                         return View();
@@ -90,7 +92,7 @@ namespace Web.Controllers
                     using (var binaryReader = new BinaryReader(cvm.File.OpenReadStream()))
                     {
 
-                        if (cvm.File.CheckFileSize(_fileMinSize, _fileSizeLimit))
+                        if (cvm.File.CheckFileSize(_fileSettings.MinSize, _fileSettings.SizeLimit))
                         {
                             ModelState.AddModelError("File", _localizer["FileSizeError"]);
                             return View();
@@ -136,7 +138,7 @@ namespace Web.Controllers
             {
                 if (cvm.File != null)
                 {
-                    if (cvm.File.CheckFileExtension(_expansion))
+                    if (cvm.File.CheckFileExtension(_fileSettings.Expansion))
                     {
                         ModelState.AddModelError("File", _localizer["FileExtensionError"]);
                         return View(cvm);
@@ -146,7 +148,7 @@ namespace Web.Controllers
 
                     using (var binaryReader = new BinaryReader(cvm.File.OpenReadStream()))
                     {
-                        if (cvm.File.CheckFileSize(_fileMinSize, _fileSizeLimit))
+                        if (cvm.File.CheckFileSize(_fileSettings.MinSize, _fileSettings.SizeLimit))
                         {
                             ModelState.AddModelError("File", _localizer["FileSizeError"]);
                             return View(cvm);

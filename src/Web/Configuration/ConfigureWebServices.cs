@@ -4,19 +4,21 @@ using Web.Services;
 
 namespace Web.Configuration
 {
-    public class ConfigureWebServices
+    public static class ConfigureWebServices
     {
-        public static void Configure(IServiceCollection services)
+        public static IServiceCollection AddWebServices(this IServiceCollection services)
         {
             services.AddScoped<IStageService, StageService>();
             services.AddScoped<ICertificateViewModelService, CertificateViewModelService>();
             services.AddScoped<ILinkViewModelService, LinkViewModelService>();
             services.AddScoped<IPublicViewModelService, PublicViewModelService>();
-            services.AddScoped<IRatingViewModelService, RatingViewModelService>();
             services.AddScoped<IAdminViewModelService, AdminViewModelService>();
             services.AddScoped<IModeratorViewModelService, ModeratorViewModelService>();
             services.AddScoped<IEventViewModelService, EventViewModelService>();
             services.AddScoped<ICachedPublicViewModelService, CachedPublicViewModelService>();
+            services.AddScoped<IEmailTemplate, EmailTemplate>();
+
+            return services;
         }
     }
 }

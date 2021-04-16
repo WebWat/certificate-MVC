@@ -13,13 +13,13 @@ namespace Web.ViewModels
         [Required(ErrorMessage = "Required")]
         [Display(Name = "AwardTitle")]
         [MaxLength(100)]
-        [RegularExpression(@"[^&<>\""'/]*$", ErrorMessage = "RegularExpression")]
+        [RegularExpression(@"[^&<>\/]*$", ErrorMessage = "RegularExpression")]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Required")]
         [Display(Name = "AwardDescription")]
         [MaxLength(200)]
-        [RegularExpression(@"[^&<>\""'/]*$", ErrorMessage = "RegularExpression")]
+        [RegularExpression(@"[^&<>\/]*$", ErrorMessage = "RegularExpression")]
         public string Description { get; set; }
 
         [Display(Name = "Date")]
@@ -39,6 +39,6 @@ namespace Web.ViewModels
         public string UserId { get; set; }
 
         [Display(Name = "Stage")]
-        public int Stage { get; set; }
+        public Stage Stage { get; set; }
     }
 }

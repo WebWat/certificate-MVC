@@ -2,6 +2,7 @@
 using ApplicationCore.Entities.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Infrastructure.Data
 {
@@ -16,5 +17,17 @@ namespace Infrastructure.Data
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<Event> Events { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<Certificate>()
+                .Property(e => e.Stage)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (Stage)Enum.Parse(typeof(Stage), v));
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
