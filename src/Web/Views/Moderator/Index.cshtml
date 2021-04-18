@@ -1,6 +1,10 @@
 ﻿@model EventListViewModel
 @{
     ViewData["Title"] = Localizer["Title"];
+    if (Model.Events.Count() == 1)
+    {
+        Context.Response.Cookies.Append("event_isLast", "true", new() { SameSite = SameSiteMode.Lax });
+    }
 }
 
 <div id="modDialog" class="modal fade">

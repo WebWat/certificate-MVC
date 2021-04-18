@@ -14,5 +14,7 @@ namespace Web.ViewModels
         public string Find { get; set; }
 
         public string Year { get; set; }
+
+        public PageViewModel PageViewModel { get; set; }
     }
 }

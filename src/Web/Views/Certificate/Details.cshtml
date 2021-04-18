@@ -36,7 +36,7 @@
         }
         <p><a class="btn btn-info btn-sm mt-2 mb-3" asp-controller="Link" asp-action="Index" asp-route-id="@Model.Id">@Localizer["Manage"]</a></p>
         <div class="btn-group mb-3" role="group">
-            <a asp-controller="Certificate" asp-action="Index" style="word-break: normal" class="btn btn-primary">@Localizer["Back"]</a>
+            <a asp-controller="Certificate" asp-action="Index" asp-route-page="@Model.Page" style="word-break: normal" class="btn btn-primary">@Localizer["Back"]</a>
             <a asp-controller="Download" asp-action="Jpg" asp-route-id="@Model.Id" class="btn btn-primary">@Localizer["Download"]</a>
             <a asp-controller="Certificate" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">@Localizer["Change"]</a>
             <a asp-controller="Certificate" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger delete">@Localizer["Delete"]</a>

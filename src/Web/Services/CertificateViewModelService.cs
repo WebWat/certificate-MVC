@@ -28,9 +28,14 @@ namespace Web.Services
             _cacheService = cacheService;
         }
 
-        public IndexViewModel GetIndexViewModel(string userId, string year, string find)
+        public IndexViewModel GetIndexViewModel(int page, string userId, string year, string find)
         {
-            var items = _repository.ListByUserId(userId);
+            var list = _repository.ListByUserId(userId);
+
+            int pageSize = 12;
+
+            var count = list.Count();
+            var items = list.Skip((page - 1) * pageSize).Take(pageSize);
 
             //Sort by date
             if (year != null && year != _localizer["All"])
@@ -68,6 +73,7 @@ namespace Web.Services
                 Find = find,
                 Year = year,
                 Years = new SelectList(years),
+                PageViewModel = new PageViewModel(count, page, pageSize)
             };
 
             return ivm;
@@ -126,7 +132,7 @@ namespace Web.Services
             _cacheService.SetList(userId);
         }
 
-        public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int id, string userId)
+        public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page, int id, string userId)
         {
             var certificate = await _repository.GetCertificateIncludeLinksAsync(id, userId);
 
@@ -144,7 +150,8 @@ namespace Web.Services
                 Date = certificate.Date,
                 Stage = certificate.Stage,
                 ImageData = certificate.File,
-                UserId = certificate.UserId
+                UserId = certificate.UserId,
+                Page = page
             };
         }
 

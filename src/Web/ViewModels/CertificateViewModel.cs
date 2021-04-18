@@ -40,5 +40,7 @@ namespace Web.ViewModels
 
         [Display(Name = "Stage")]
         public Stage Stage { get; set; }
+
+        public int Page { get; set; }
     }
 }

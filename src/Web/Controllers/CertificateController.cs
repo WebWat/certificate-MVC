@@ -1,10 +1,12 @@
-﻿using ApplicationCore.Entities.Identity;
+﻿using ApplicationCore.Constants;
+using ApplicationCore.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
 using Web.Extensions;
@@ -37,19 +39,21 @@ namespace Web.Controllers
         }
 
 
-        public async Task<IActionResult> Index(string year, string find)
+        public async Task<IActionResult> Index(int page = 1, string year = null, string find = null)
         {
             var _user = await _userManager.GetUserAsync(User);
 
-            return View(_certificateService.GetIndexViewModel(_user.Id, year, find));
+            return View(_certificateService.GetIndexViewModel(page, _user.Id, year, find));
         }
 
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, int page = 0)
         {
+            page = GetCurrentPage(page);
+
             var _user = await _userManager.GetUserAsync(User);
 
-            var certificate = await _certificateService.GetCertificateByIdIncludeLinksAsync(id, _user.Id);
+            var certificate = await _certificateService.GetCertificateByIdIncludeLinksAsync(page, id, _user.Id);
 
             if (certificate == null)
             {
@@ -179,13 +183,23 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
+            int currentPage = GetCurrentPage();
+
+            if (HttpContext.Request.Cookies["isLast"] == "true")
+            {
+                if (currentPage > 1)
+                    currentPage -= 1;
+
+                HttpContext.Response.Cookies.Append("isLast", "false", new() { SameSite = SameSiteMode.Lax });
+            }
+
             var _user = await _userManager.GetUserAsync(User);
 
             await _certificateService.DeleteCertificateAsync(id, _user.Id);
 
             _logger.LogInformation($"Certificate {id} deleted by User {_user.Id}");
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { page = currentPage });
         }
 
 
@@ -200,6 +214,20 @@ namespace Web.Controllers
                         protocol: Request.Scheme);
 
             return Json(callbackUrl);
+        }
+
+        private int GetCurrentPage(int page = 0)
+        {
+            if (page == 0)
+            {
+                page = int.TryParse(HttpContext.Request.Cookies["page"], out int result) ? result : 1;
+            }
+            else
+            {
+                HttpContext.Response.Cookies.Append("page", page.ToString(), new() { SameSite = SameSiteMode.Lax });
+            }
+
+            return page;
         }
     }
 }

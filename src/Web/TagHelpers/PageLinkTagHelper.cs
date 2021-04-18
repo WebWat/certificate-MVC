@@ -27,6 +27,7 @@ namespace Web.TagHelpers
         {
             IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
             output.TagName = "div";
+            output.Attributes.Add("style", "display: flex; justify-content: center; margin-top: 1em;");
 
             TagBuilder tag = new TagBuilder("ul");
             tag.AddCssClass("pagination");

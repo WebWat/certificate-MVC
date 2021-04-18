@@ -10,14 +10,17 @@ async function copy() {
     }
 }
 
-function start(a) {
-    sessionStorage.setItem("current_page", "1");
-    document.location.href = location.origin + "/Certificate/Details/" + a;
+function start(a, b) {
+    sessionStorage.setItem("isReturn", true);
+    document.location.href = location.origin + "/Certificate/Details/" + a + "?page=" + b;
 }
 
 window.onload = () => {
     document.body.classList.add("loaded_hiding");
-    window.scrollTo(0, +sessionStorage.getItem("scroll"));
+    if (sessionStorage.getItem("isReturn") === "true") {
+        window.scrollTo(0, +sessionStorage.getItem("scroll"));
+    }
+    sessionStorage.setItem("isReturn", false);
 }
 
 window.addEventListener("scroll", () => {

@@ -42,5 +42,21 @@ namespace IntegrationTests.Repositories
             // Assert
             Assert.Equal(repositoryResult.Id, contextResult.Id);
         }
+
+        //Use for Coyote
+        public async Task GetAndDeleteAtTheSameTime()
+        {
+            _context.Certificates.Add(CertificateBuilder.GetDefaultValue());
+            _context.SaveChanges();
+
+            _context.ChangeTracker.Clear();
+
+            var certificate = await _context.Certificates.AsNoTracking().FirstOrDefaultAsync();
+
+            var deleteResult = repository.DeleteAsync(certificate);
+            var getResult = repository.GetByIdAsync(certificate.Id);
+
+            await Task.WhenAll(deleteResult, getResult);
+        }
     }
 }

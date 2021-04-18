@@ -1,8 +1,11 @@
 ﻿@model IndexViewModel
 @{
     ViewData["Title"] = Localizer["Title"];
+    if(Model.Certificates.Count() == 1)
+    {
+        Context.Response.Cookies.Append("isLast", "true", new() { SameSite = SameSiteMode.Lax });
+    }
 }
-
 <h1 class="caption">@Localizer["Title"]</h1>
 <div class="card mb-3">
     <div class="card-body">
@@ -35,7 +38,7 @@
         @foreach (var item in Model.Certificates)
         {
             <div class="col-sm-6">
-                <div class="card mb-3 anim" onclick="start(@item.Id)">
+                <div class="card mb-3 anim" onclick="start(@item.Id, @Model.PageViewModel.PageNumber)">
                     <div class="row no-gutters">
                         <div class="col-md-4 ms-image">
                             <img src="data:image/jpeg;base64,@(Convert.ToBase64String(item.ImageData))" class="card-img">
@@ -52,6 +55,8 @@
             </div>
         }
     </div>
+
+    <page-link page-model="Model.PageViewModel" page-controller="Certificate" page-action="Index"></page-link>
 }
 else
 {

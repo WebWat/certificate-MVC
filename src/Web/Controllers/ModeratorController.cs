@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Constants;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -9,7 +10,6 @@ using Web.ViewModels;
 namespace Web.Controllers
 {
     [Authorize(Roles = Roles.AdminAndModerator)]
-    [IgnoreAntiforgeryToken]
     public class ModeratorController : Controller
     {
         private readonly IModeratorViewModelService _moderatorService;
@@ -23,6 +23,8 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Index(int page = 1)
         {
+            HttpContext.Response.Cookies.Append("page_event", page.ToString(), new() { SameSite = SameSiteMode.Lax });
+
             return View(await _moderatorService.GetEventListAsync(page));
         }
 
@@ -44,6 +46,8 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Edit(int id, int page)
         {
+            HttpContext.Response.Cookies.Append("page_event", page.ToString(), new() { SameSite = SameSiteMode.Lax });
+
             return View(await _moderatorService.GetEventByIdAsync(id, page));
         }
 
@@ -67,11 +71,21 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
+            int currentPage = int.TryParse(HttpContext.Request.Cookies["page_event"], out int result) ? result : 1;
+
+            if (HttpContext.Request.Cookies["event_isLast"] == "true")
+            {
+                if (currentPage > 1)
+                    currentPage -= 1;
+
+                HttpContext.Response.Cookies.Append("event_isLast", "false", new() { SameSite = SameSiteMode.Lax });
+            }
+
             await _moderatorService.DeleteEventAsync(id);
 
             _logger.LogInformation($"Event {id} deleted");
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { page = currentPage });
         }
     }
 }
