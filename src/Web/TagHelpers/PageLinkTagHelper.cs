@@ -22,6 +22,8 @@ namespace Web.TagHelpers
         public PageViewModel PageModel { get; set; }
         public string PageController { get; set; }
         public string PageAction { get; set; }
+        public string UniqueUrl { get; set; }
+
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -83,7 +85,10 @@ namespace Web.TagHelpers
             TagBuilder link = new TagBuilder("a");
             link.AddCssClass("page-link");
 
-            link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = 1 });
+            if (UniqueUrl != null)
+                link.Attributes["href"] = urlHelper.Action(PageAction, PageController) + "?page=1";
+            else
+                link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = 1 });
 
             link.InnerHtml.Append("«");
             item.InnerHtml.AppendHtml(link);
@@ -99,7 +104,10 @@ namespace Web.TagHelpers
             TagBuilder link = new TagBuilder("a");
             link.AddCssClass("page-link");
 
-            link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = PageModel.TotalPages });
+            if (UniqueUrl != null)
+                link.Attributes["href"] = urlHelper.Action(PageAction, PageController) + $"?page={PageModel.TotalPages}";
+            else
+                link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = PageModel.TotalPages });
 
             link.InnerHtml.Append("»");
             item.InnerHtml.AppendHtml(link);
@@ -120,7 +128,10 @@ namespace Web.TagHelpers
             }
             else
             {
-                link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = pageNumber });
+                if (UniqueUrl != null)
+                    link.Attributes["href"] = urlHelper.Action(PageAction, PageController) + $"?page={pageNumber}";
+                else
+                    link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = pageNumber });
             }
 
             link.InnerHtml.Append(pageNumber.ToString());

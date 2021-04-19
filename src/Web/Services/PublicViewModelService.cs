@@ -20,9 +20,14 @@ namespace Web.Services
             _localizer = localizer;
         }
 
-        public PublicViewModel GetPublicViewModel(string year, string find, string userId, string name, string middleName, string surname, string code, byte[] photo)
+        public PublicViewModel GetPublicViewModel(int page, string year, string find, string userId, string name, string middleName, string surname, string code, byte[] photo)
         {
-            var items = _cacheService.GetList(userId);
+            var list = _cacheService.GetList(userId);
+
+            int pageSize = 12;
+
+            var count = list.Count();
+            var items = list.Skip((page - 1) * pageSize).Take(pageSize);
 
             //Sort by date
             if (year != null && year != _localizer["All"])
@@ -63,13 +68,14 @@ namespace Web.Services
                 Surname = surname,
                 UniqueUrl = code,
                 MiddleName = middleName,
-                ImageData = photo
+                ImageData = photo,
+                PageViewModel = new PageViewModel(count, page, pageSize)
             };
 
             return pvm;
         }
 
-        public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int id, string userId, string url)
+        public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page, int id, string userId, string url)
         {
             var certificate = await _cacheService.GetItemAsync(id, userId);
 
@@ -83,7 +89,8 @@ namespace Web.Services
                 Date = certificate.Date,
                 UniqueUrl = url,
                 ImageData = certificate.File,
-                UserId = certificate.UserId
+                UserId = certificate.UserId,
+                Page = page
             };
         }
     }

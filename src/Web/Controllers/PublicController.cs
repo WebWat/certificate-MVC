@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace Web.Controllers
         }
 
         [Route("{uniqueUrl}")]
-        public async Task<IActionResult> Index(string uniqueUrl, string year, string find)
+        public async Task<IActionResult> Index(string uniqueUrl, string year, string find, int page = 1)
         {
             var _user = await _repository.GetAsync(i => EF.Functions.Collate(i.UniqueUrl, "SQL_Latin1_General_CP1_CS_AS") == uniqueUrl);
 
@@ -30,11 +31,11 @@ namespace Web.Controllers
                 return NotFound();
             }
 
-            return View(_service.GetPublicViewModel(year, find, _user.Id, _user.Name, _user.MiddleName, _user.Surname, _user.UniqueUrl, _user.Photo));
+            return View(_service.GetPublicViewModel(page, year, find, _user.Id, _user.Name, _user.MiddleName, _user.Surname, _user.UniqueUrl, _user.Photo));
         }
 
         [Route("[action]/{uniqueUrl}/{id?}")]
-        public async Task<IActionResult> Details(string uniqueUrl, int id)
+        public async Task<IActionResult> Details(string uniqueUrl, int id, int page = 1)
         {
             var _user = await _repository.GetAsync(i => i.UniqueUrl == uniqueUrl);
 
@@ -43,7 +44,7 @@ namespace Web.Controllers
                 return NotFound();
             }
 
-            var certificate = await _service.GetCertificateByIdIncludeLinksAsync(id, _user.Id, _user.UniqueUrl);
+            var certificate = await _service.GetCertificateByIdIncludeLinksAsync(page, id, _user.Id, _user.UniqueUrl);
 
             if (certificate == null)
             {

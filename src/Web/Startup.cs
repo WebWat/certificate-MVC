@@ -127,6 +127,10 @@ namespace Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "public",
+                    pattern: "Public/{uniqueUrl}",
+                    defaults: new { controller = "Public", action = "Index" });
                 endpoints.MapRazorPages();
             });
         }

@@ -1,11 +1,15 @@
 ﻿"use strict";
-function start(a, b) {
-    document.location.href = location.origin + "/Public/Details/" + b + "/" + a;
+function start(a, b, c) {
+    sessionStorage.setItem("isReturn", true);
+    document.location.href = location.origin + "/Public/Details/" + b + "/" + a + "?page=" + c;
 }
 
 window.onload = () => {
     document.body.classList.add("loaded_hiding");
-    window.scrollTo(0, +sessionStorage.getItem("scroll"));
+    if (sessionStorage.getItem("isReturn") === "true") {
+        window.scrollTo(0, +sessionStorage.getItem("scroll"));
+    }
+    sessionStorage.setItem("isReturn", false);
 }
 
 window.addEventListener("scroll", () => {

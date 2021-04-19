@@ -40,7 +40,7 @@ else
         @foreach (var item in Model.Certificates)
         {
             <div class="col-sm-6">
-                <div class="card mb-3 anim" onclick="start('@item.Id','@Model.UniqueUrl')">
+                <div class="card mb-3 anim" onclick="start(@item.Id, '@Model.UniqueUrl', @Model.PageViewModel.PageNumber)">
                     <div class="row no-gutters">
                         <div class="col-md-4 ms-image">
                             <img src="data:image/jpeg;base64,@(Convert.ToBase64String(item.ImageData))" class="card-img">
@@ -57,6 +57,8 @@ else
             </div>
         }
     </div>
+
+    <page-link page-model="Model.PageViewModel" page-controller="Public" page-action="Index" unique-url="@Model.UniqueUrl"></page-link>
 }
 else
 {

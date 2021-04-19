@@ -19,5 +19,7 @@ namespace Web.ViewModels
         public string Surname { get; set; }
         public string UniqueUrl { get; set; }
         public byte[] ImageData { get; set; }
+
+        public PageViewModel PageViewModel { get; set; }
     }
 }
