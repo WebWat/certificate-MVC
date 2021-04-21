@@ -32,6 +32,17 @@ else
                 <input type="submit" value="@Localizer["Search"]" class="btn btn-info ml-2" />
             </div>
         </form>
+        @if (!string.IsNullOrEmpty(Context.Request.Query["find"]))
+        {
+            <h5 style="margin-bottom: 0;"><a asp-controller="Public" asp-action="Index" asp-route-uniqueUrl="@Model.UniqueUrl" class="badge badge-primary">&times; @Localizer["Clear"]</a></h5>
+        }
+        else if (!string.IsNullOrEmpty(Context.Request.Query["year"]))
+        {
+            if (Context.Request.Query["year"] != Localizer["All"].Value)
+            {
+                <h5 style="margin-bottom: 0;"><a asp-controller="Public" asp-action="Index" asp-route-uniqueUrl="@Model.UniqueUrl" class="badge badge-primary">&times; @Localizer["Clear"]</a></h5>
+            }
+        }
     </div>
 </div>
 @if (Model.Certificates.Any())

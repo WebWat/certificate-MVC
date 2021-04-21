@@ -9,6 +9,19 @@ html {
     border-top: 1px solid #e5e5e5;
 }
 
+.hide {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.hide > p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
 .footer-flex {
     flex-direction: row;
 }

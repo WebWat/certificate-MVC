@@ -32,22 +32,22 @@ namespace Web.Services
         {
             var list = _repository.ListByUserId(userId);
 
-            int pageSize = 12;
-
-            var count = list.Count();
-            var items = list.Skip((page - 1) * pageSize).Take(pageSize);
-
             //Sort by date
             if (year != null && year != _localizer["All"])
             {
-                items = items.Where(i => i.Date.Year == int.Parse(year));
+                list = list.Where(i => i.Date.Year == int.Parse(year));
             }
 
             //Sort by title
             if (!string.IsNullOrEmpty(find))
             {
-                items = items.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower()));
+                list = list.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower()));
             }
+
+            int pageSize = 12;
+
+            var count = list.Count();
+            var items = list.Skip((page - 1) * pageSize).Take(pageSize);
 
             var certificates = items.Select(i =>
             {
