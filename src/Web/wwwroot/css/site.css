@@ -58,9 +58,49 @@ body {
     margin-bottom: 0;
 }
 
+.width-12 {
+    width: 12em;
+}
+
+.space-around {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.flex-link {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-search {
+
+}
+
+.buttons-padding {
+    
+}
+
+.badge-left {
+
+}
+
+.mt-layout {
+
+}
+
+.font-size-clear {
+    font-size: 18px;
+}
+
 @media (max-width: 768px) {
     html {
         font-size: 17px;
+    }
+
+    .mt-layout {
+        margin-bottom: 1em;
+        padding-bottom: 1em;
+        border-bottom: 1px solid #808080;
     }
 
     .jumbotron {
@@ -68,12 +108,46 @@ body {
         padding-bottom: 8rem;
     }
 
+    .flex-search {
+        flex-direction: column;
+        justify-content: space-between;
+        height: 9em;
+    }
+
+    .font-size-clear {
+        font-size: 20px;
+    }
+
+    .flex-link {
+        flex-direction: column;
+        justify-content: unset;
+        align-items: unset;
+    }
+
+    .badge-left {
+        width: min-content;
+        padding-left: 0;
+    }
+
+    .buttons-padding > a {
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+    }
+
+    .space-around {
+        margin: 0;
+    }
+
+    .width-12 {
+        width: auto !important;
+    }
+
     .ms-image {
         max-height: 30em !important;
     }
 
     .ms-image-details {
-        float: left;
+        float: left !important;
     }
 
     .footer-flex {
@@ -203,26 +277,26 @@ a {
     cursor: pointer;
 }
 
-    .anim:hover {
-        border-color: #007bff;
-    }
+.anim:hover {
+    border-color: #007bff;
+}
 
 /* File loader */
 input#File {
     display: none;
 }
 
-    input#File + label {
-        display: block;
-        width: 100%;
-        height: calc(1.5em + .75rem + 2px);
-        background-color: white;
-        margin-bottom: 0;
-        padding: 8px;
-        color: #495057;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-    }
+input#File + label {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    background-color: white;
+    margin-bottom: 0;
+    padding: 8px;
+    color: #495057;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
 
 /* Opacity */
 .op-4 {
@@ -234,13 +308,13 @@ input#File {
 }
 
 /* Index search engine size */
-@media screen and (max-width: 991px) {
+/*@media (max-width: 991px) {
     #Year {
         -ms-flex: 0 0 20%;
         flex: 0 0 20%;
         max-width: 20%;
     }
-}
+}*/
 
 /*Card image*/
 .ms-image-rating {

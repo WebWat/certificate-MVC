@@ -26,9 +26,9 @@
             {
                 @foreach (var a in Model.Links)
                 {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <li class="list-group-item d-flex flex-link">
                         <a href="@a.Name" target="_blank">@a.Name</a>
-                        <span class="badge float-right">
+                        <span class="badge float-right badge-left">
                             <a asp-controller="Link" asp-action="Delete" asp-route-id="@a.Id" class="btn btn-sm btn-danger delete">@Localizer["Delete"]</a>
                         </span>
                     </li>

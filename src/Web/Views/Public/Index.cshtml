@@ -24,23 +24,23 @@ else
 <div class="card mb-3">
     <div class="card-body">
         <form method="get">
-            <div class="d-flex justify-content-start">
+            <div class="d-flex flex-search justify-content-between">
                 <div class="col-md-8 p-0">
-                    <input asp-for="Find" class="form-control autocom" placeholder="@Localizer["Info"]" maxlength="30" autocomplete="off" />
+                    <input asp-for="Find" class="form-control mw-100 autocom" placeholder="@Localizer["Info"]" maxlength="30" autocomplete="off" />
                 </div>
-                <select asp-for="Year" asp-items="Model.Years" class="form-control ml-1 col-md-3"></select>
-                <input type="submit" value="@Localizer["Search"]" class="btn btn-info ml-2" />
+                <select asp-for="Year" asp-items="Model.Years" class="form-control col-md-3 mw-100 space-around"></select>
+                <input type="submit" value="@Localizer["Search"]" class="btn btn-info" />
             </div>
         </form>
         @if (!string.IsNullOrEmpty(Context.Request.Query["find"]))
         {
-            <h5 style="margin-bottom: 0;"><a asp-controller="Public" asp-action="Index" asp-route-uniqueUrl="@Model.UniqueUrl" class="badge badge-primary">&times; @Localizer["Clear"]</a></h5>
+            <h5 class="mb-0 mt-2 font-size-clear"><a asp-controller="Public" asp-action="Index" asp-route-uniqueUrl="@Model.UniqueUrl" class="badge badge-primary">&times; @Localizer["Clear"]</a></h5>
         }
         else if (!string.IsNullOrEmpty(Context.Request.Query["year"]))
         {
             if (Context.Request.Query["year"] != Localizer["All"].Value)
             {
-                <h5 style="margin-bottom: 0;"><a asp-controller="Public" asp-action="Index" asp-route-uniqueUrl="@Model.UniqueUrl" class="badge badge-primary">&times; @Localizer["Clear"]</a></h5>
+                <h5 class="mb-0 mt-2 font-size-clear"><a asp-controller="Public" asp-action="Index" asp-route-uniqueUrl="@Model.UniqueUrl" class="badge badge-primary">&times; @Localizer["Clear"]</a></h5>
             }
         }
     </div>

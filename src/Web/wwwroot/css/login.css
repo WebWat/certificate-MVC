@@ -22,12 +22,12 @@ body {
     font-size: 1.2em;
 }
 
-.term-alert {
+.flex {
+    display: flex;
+    position: absolute;
     top: 0;
     width: 100%;
-    position: absolute;
-    color: white;
-    background-color: #acacac;
+    justify-content: space-around;
 }
 
 .form-signin {
@@ -62,17 +62,17 @@ body {
     height: 80px;
 }
 
-    .lds-dual-ring:after {
-        content: " ";
-        display: block;
-        width: 64px;
-        height: 64px;
-        margin: 8px;
-        border-radius: 50%;
-        border: 6px solid black;
-        border-color: black transparent black transparent;
-        animation: lds-dual-ring 1.2s linear infinite;
-    }
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid black;
+    border-color: black transparent black transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
 
 @keyframes lds-dual-ring {
     0% {
@@ -83,4 +83,4 @@ body {
         transform: rotate(360deg);
     }
 }
-/*<div class="lds-dual-ring"> </div>*/
+
