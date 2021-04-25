@@ -13,6 +13,8 @@ using Web.Extensions;
 using Web.Interfaces;
 using Web.Models;
 using Web.ViewModels;
+using System.Diagnostics;
+using ImageMagick;
 
 namespace Web.Controllers
 {
@@ -41,6 +43,8 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Index(int page = 1, string year = null, string find = null)
         {
+            page = page <= 0 ? 1 : page;
+
             var _user = await _userManager.GetUserAsync(User);
 
             return View(_certificateService.GetIndexViewModel(page, _user.Id, year, find));
@@ -72,7 +76,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CertificateViewModel cvm)
+        public async Task<IActionResult> Create(CertificateViewModel cvm)   
         {
             var _user = await _userManager.GetUserAsync(User);
 
@@ -95,7 +99,6 @@ namespace Web.Controllers
 
                     using (var binaryReader = new BinaryReader(cvm.File.OpenReadStream()))
                     {
-
                         if (cvm.File.CheckFileSize(_fileSettings.MinSize, _fileSettings.SizeLimit))
                         {
                             ModelState.AddModelError("File", _localizer["FileSizeError"]);

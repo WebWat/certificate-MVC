@@ -17,6 +17,8 @@ using Web.Configuration;
 using ApplicationCore.Constants;
 using Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.Linq;
 
 namespace Web
 {

@@ -23,6 +23,8 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Index(int page = 1)
         {
+            page = page <= 0 ? 1 : page;
+
             HttpContext.Response.Cookies.Append("page_event", page.ToString(), new() { SameSite = SameSiteMode.Lax });
 
             return View(await _moderatorService.GetEventListAsync(page));

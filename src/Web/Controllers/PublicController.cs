@@ -24,6 +24,8 @@ namespace Web.Controllers
         [Route("{uniqueUrl}")]
         public async Task<IActionResult> Index(string uniqueUrl, string year, string find, int page = 1)
         {
+            page = page <= 0 ? 1 : page;
+
             var _user = await _repository.GetAsync(i => EF.Functions.Collate(i.UniqueUrl, "SQL_Latin1_General_CP1_CS_AS") == uniqueUrl);
 
             if (_user == null)

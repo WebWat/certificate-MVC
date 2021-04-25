@@ -10,6 +10,7 @@ namespace Web.ViewModels
         public PageViewModel(int count, int pageNumber, int pageSize)
         {
             PageNumber = pageNumber;
+
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
         }
 

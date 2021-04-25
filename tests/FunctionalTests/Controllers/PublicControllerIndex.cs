@@ -33,9 +33,10 @@ namespace FunctionalTests.Controllers
             var response = await Client.GetAsync("/Public/" + AuthorizationConstants.UniqueUrl);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             string id = GetCertificateId(stringResponse);
 
-            response = await Client.GetAsync($"/Public/Details/{AuthorizationConstants.UniqueUrl}/{id}");
+            response = await Client.GetAsync($"/Public/Details/{AuthorizationConstants.UniqueUrl}/{id}?page=1");
             response.EnsureSuccessStatusCode();
             stringResponse = await response.Content.ReadAsStringAsync();
 
@@ -45,7 +46,7 @@ namespace FunctionalTests.Controllers
 
         private string GetCertificateId(string input)
         {
-            var regex = new Regex(@"start\('(\d+)");
+            var regex = new Regex(@"start\((\d+)");
             var match = regex.Match(input);
             return match.Groups.Values.LastOrDefault().Value;
         }
