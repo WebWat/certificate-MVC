@@ -14,7 +14,6 @@ using Web.Interfaces;
 using Web.Models;
 using Web.ViewModels;
 using System.Diagnostics;
-using ImageMagick;
 
 namespace Web.Controllers
 {

@@ -35,10 +35,17 @@
         {
             <p>@Localizer["None"]</p>
         }
-       <a asp-route="public" asp-route-uniqueUrl="@Model.UniqueUrl" asp-route-page="@Model.Page" class="btn btn-primary mt-3">@Localizer["Back"]</a>
+        <a asp-route="public" asp-route-uniqueUrl="@Model.UniqueUrl" asp-route-page="@Model.Page" class="btn btn-primary mt-3">@Localizer["Back"]</a>
     </div>
     <div class="col-md-6 col-md-offset-2">
-        <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" class="img-fluid img-thumbnail ms-image-details" />
+        <a href="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" data-lightbox="image-@Model.Id" data-title="@Model.Title">
+            <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" class="img-fluid img-thumbnail ms-image-details" />
+        </a>
     </div>
 </div>
+
+@section Scripts
+{
+    <script src="~/lib/lightbox2/js/lightbox.js"></script>
+}
 

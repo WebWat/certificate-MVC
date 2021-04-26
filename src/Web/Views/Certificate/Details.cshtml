@@ -43,11 +43,14 @@
         </div>
     </div>
     <div class="col-md-6">
-        <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" class="img-fluid img-thumbnail ms-image-details" />
+        <a href="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" data-lightbox="image-@Model.Id" data-title="@Model.Title">
+            <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" class="img-fluid img-thumbnail ms-image-details" />
+        </a>
     </div>
 </div>
 
 @section Scripts
 {
     <script type="text/javascript" src="~/js/modalWindow.js" asp-append-version="true"></script>
+    <script src="~/lib/lightbox2/js/lightbox.js"></script>
 }
