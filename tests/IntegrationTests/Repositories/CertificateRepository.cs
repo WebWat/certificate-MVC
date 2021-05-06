@@ -44,7 +44,7 @@ namespace IntegrationTests.Repositories
         }
 
         //Use for Coyote
-        public async Task GetAndDeleteAtTheSameTime()
+        public async Task GetAndUpdateAtTheSameTime()
         {
             _context.Certificates.Add(CertificateBuilder.GetDefaultValue());
             _context.SaveChanges();
@@ -53,10 +53,11 @@ namespace IntegrationTests.Repositories
 
             var certificate = await _context.Certificates.AsNoTracking().FirstOrDefaultAsync();
 
+            //This code throws an DbUpdateConcurrencyException, so we add a check (try-catch) to the "Edit" methods of the controllers
             var deleteResult = repository.DeleteAsync(certificate);
-            var getResult = repository.GetByIdAsync(certificate.Id);
+            var updateResult = repository.UpdateAsync(new ApplicationCore.Entities.Certificate { Id = certificate.Id, Title = "New title" });
 
-            await Task.WhenAll(deleteResult, getResult);
+            await Task.WhenAll(deleteResult, updateResult);
         }
     }
 }

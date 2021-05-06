@@ -22,6 +22,8 @@ namespace Web.Services
 
         public PublicViewModel GetPublicViewModel(int page, string year, string find, string userId, string name, string middleName, string surname, string code, byte[] photo)
         {
+            page = page <= 0 ? 1 : page;
+
             var list = _cacheService.GetList(userId);
 
             //Sort by date

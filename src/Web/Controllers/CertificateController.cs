@@ -1,19 +1,18 @@
-﻿using ApplicationCore.Constants;
-using ApplicationCore.Entities.Identity;
+﻿using ApplicationCore.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
 using Web.Extensions;
 using Web.Interfaces;
 using Web.Models;
 using Web.ViewModels;
-using System.Diagnostics;
 
 namespace Web.Controllers
 {
@@ -42,8 +41,6 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Index(int page = 1, string year = null, string find = null)
         {
-            page = page <= 0 ? 1 : page;
-
             var _user = await _userManager.GetUserAsync(User);
 
             return View(_certificateService.GetIndexViewModel(page, _user.Id, year, find));
@@ -165,7 +162,16 @@ namespace Web.Controllers
                     cvm.ImageData = imageData;
                 }
 
-                await _certificateService.UpdateCertificateAsync(cvm, _user.Id);
+                try
+                {
+                    await _certificateService.UpdateCertificateAsync(cvm, _user.Id);
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    _logger.LogError("An error occurred while updating the certificate: " + ex.Message);
+
+                    return RedirectToAction(nameof(Index));
+                }
 
                 _logger.LogInformation($"Certificate {cvm.Id} changed by User {_user.Id}");
 

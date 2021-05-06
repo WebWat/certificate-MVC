@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Web.Interfaces;
@@ -50,7 +51,20 @@ namespace Web.Controllers
         {
             HttpContext.Response.Cookies.Append("page_event", page.ToString(), new() { SameSite = SameSiteMode.Lax });
 
-            return View(await _moderatorService.GetEventByIdAsync(id, page));
+            EventViewModel result = default;
+
+            try
+            {
+                result = await _moderatorService.GetEventByIdAsync(id, page);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError("An error occurred while updating the event: " + ex.Message);
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(result);
         }
 
         [HttpPost]

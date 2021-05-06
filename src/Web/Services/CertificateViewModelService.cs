@@ -30,6 +30,8 @@ namespace Web.Services
 
         public IndexViewModel GetIndexViewModel(int page, string userId, string year, string find)
         {
+            page = page <= 0 ? 1 : page;
+
             var list = _repository.ListByUserId(userId);
 
             //Sort by date
