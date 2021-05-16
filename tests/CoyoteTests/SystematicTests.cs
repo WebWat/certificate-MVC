@@ -1,10 +1,8 @@
 ﻿using IntegrationTests.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Coyote;
 using Microsoft.Coyote.SystematicTesting;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
