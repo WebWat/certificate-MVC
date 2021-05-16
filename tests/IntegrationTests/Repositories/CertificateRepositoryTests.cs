@@ -8,12 +8,12 @@ using Xunit;
 
 namespace IntegrationTests.Repositories
 {
-    public class CertificateRepository
+    public class CertificateRepositoryTests
     {
         private readonly ICertificateRepository repository;
         private readonly ApplicationContext _context;
 
-        public CertificateRepository()
+        public CertificateRepositoryTests()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
                 .UseInMemoryDatabase(databaseName: "CertificateDB")

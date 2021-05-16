@@ -9,12 +9,12 @@ using Xunit;
 
 namespace IntegrationTests.Repositories
 {
-    public class EventRepository
+    public class LinkRepositoryTests
     {
-        private readonly IAsyncRepository<Event> repository;
+        private readonly IAsyncRepository<Link> repository;
         private readonly ApplicationContext _context;
 
-        public EventRepository()
+        public LinkRepositoryTests()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
                 .UseInMemoryDatabase(databaseName: "CertificateDB")
@@ -22,18 +22,18 @@ namespace IntegrationTests.Repositories
 
             _context = new ApplicationContext(dbOptions);
 
-            repository = new EFCoreRepository<Event>(_context);
+            repository = new EFCoreRepository<Link>(_context);
 
-            _context.Events.AddRange(EventBuilder.GetDefaultValues());
+            _context.Links.AddRange(LinkBuilder.GetDefaultValues());
             _context.SaveChanges();
         }
 
         [Fact]
-        public async Task GetEventById()
+        public async Task GetLinkById()
         {
             // Arrange & Act
             var repositoryResult = await repository.GetByIdAsync(1);
-            var contextResult = await _context.Events.AsNoTracking().FirstOrDefaultAsync(i => i.Id == 1);
+            var contextResult = await _context.Links.AsNoTracking().FirstOrDefaultAsync(i => i.Id == 1);
 
             // Assert
             Assert.Equal(repositoryResult.Id, contextResult.Id);
