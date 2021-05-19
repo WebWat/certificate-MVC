@@ -5,6 +5,7 @@ using ApplicationCore.Models;
 using Infrastructure.Data;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Globalization;
+using System.IO;
 using Web.Configuration;
 using Web.Models;
 
@@ -56,6 +58,10 @@ namespace Web
                 options.Lockout.MaxFailedAccessAttempts = 10;
                 options.Lockout.AllowedForNewUsers = true;
             });
+
+            //Data protection
+            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Directory.GetCurrentDirectory() + @"\keys"))
+                                        .SetDefaultKeyLifetime(TimeSpan.FromDays(180));
 
             //Cookie
             services.ConfigureCookieSettings();

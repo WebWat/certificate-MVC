@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Web.Interfaces;
-using Web.ViewModels;
 
 namespace Web.Controllers
 {
@@ -23,29 +22,6 @@ namespace Web.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _adminService.GetIndexAdminViewModelListAsync());
-        }
-
-        public async Task<IActionResult> Edit(string login)
-        {
-            var user = await _adminService.GetUserAsync(login);
-
-            if(user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(AdminViewModel avm)
-        {
-            await _adminService.EditUserRoleAsync(avm.Login, avm.Role);
-
-            _logger.LogInformation($"Changed {avm.Login} role to {avm.Role}");
-
-            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -7,7 +7,5 @@ namespace Web.Interfaces
     public interface IAdminViewModelService
     {
         Task<IEnumerable<AdminViewModel>> GetIndexAdminViewModelListAsync();
-        Task EditUserRoleAsync(string login, string role);
-        Task<AdminViewModel> GetUserAsync(string login);
     }
 }

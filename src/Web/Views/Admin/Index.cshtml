@@ -16,7 +16,6 @@
         <th>@Localizer["Confirmed"]</th>
         <th>@Localizer["RegistrationDate"]</th>
         <th>@Localizer["Role"]</th>
-        <th>@Localizer["Actions"]</th>
     </tr>
     @foreach (var u in Model)
     {
@@ -36,9 +35,6 @@
             </td>
             <td>@u.RegistrationDate.ToString("HH:mm dd.MM.yyyy") (UTC)</td>
             <td>@u.Role</td>
-            <td>
-                <a asp-controller="Admin" asp-action="Edit" asp-route-login="@u.Login">@Localizer["ChangeRole"]</a>
-            </td>
         </tr>
         i++;
     }

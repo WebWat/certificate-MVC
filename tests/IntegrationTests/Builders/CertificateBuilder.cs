@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.Entities;
-using System;
 
 namespace IntegrationTests.Builders
 {

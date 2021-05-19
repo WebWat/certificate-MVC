@@ -21,16 +21,6 @@ namespace Web.Services
             _userManager = userManager;
         }
 
-        public async Task EditUserRoleAsync(string login, string role)
-        {
-            var user = await _userManager.FindByNameAsync(login);
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            await _userManager.RemoveFromRolesAsync(user, roles);
-
-            await _userManager.AddToRoleAsync(user, role);
-        }
 
         public async Task<IEnumerable<AdminViewModel>> GetIndexAdminViewModelListAsync()
         {
@@ -53,23 +43,6 @@ namespace Web.Services
             }
 
             return result;
-        }
-
-        public async Task<AdminViewModel> GetUserAsync(string login)
-        {
-            var user = await _userRepository.GetAsync(i => i.UserName == login);
-
-            if(user == null)
-            {
-                return null;
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            return new AdminViewModel
-            {
-                Role = roles.First()
-            };
         }
     }
 }
