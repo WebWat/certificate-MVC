@@ -16,7 +16,6 @@ namespace Infrastructure.Data
 
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Link> Links { get; set; }
-        public DbSet<Event> Events { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

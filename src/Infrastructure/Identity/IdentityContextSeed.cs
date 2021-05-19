@@ -14,7 +14,6 @@ namespace Infrastructure.Identity
             {
                 await roleManager.CreateAsync(new IdentityRole("Admin"));
                 await roleManager.CreateAsync(new IdentityRole("User"));
-                await roleManager.CreateAsync(new IdentityRole("Moderator"));
             }
 
             if (await userManager.FindByNameAsync("admin") is null)

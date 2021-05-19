@@ -13,8 +13,6 @@ namespace Web.Configuration
             services.AddScoped<ILinkViewModelService, LinkViewModelService>();
             services.AddScoped<IPublicViewModelService, PublicViewModelService>();
             services.AddScoped<IAdminViewModelService, AdminViewModelService>();
-            services.AddScoped<IModeratorViewModelService, ModeratorViewModelService>();
-            services.AddScoped<IEventViewModelService, EventViewModelService>();
             services.AddScoped<ICachedPublicViewModelService, CachedPublicViewModelService>();
             services.AddScoped<IEmailTemplate, EmailTemplate>();
 

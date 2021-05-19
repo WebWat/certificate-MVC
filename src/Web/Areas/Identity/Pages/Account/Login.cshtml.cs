@@ -91,15 +91,7 @@ namespace Web.Areas.Identity.Pages.Account
 
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     {
-                        //Correct http error 403
-                        if ((role[0].Contains("Admin") || role[0].Contains("Moderator")) && returnUrl.Contains("Event"))
-                        {
-                            return RedirectToAction("Index", "Home");
-                        }
-                        else
-                        {
-                            return Redirect(returnUrl);
-                        }
+                        return Redirect(returnUrl);
                     }
                     else
                     {

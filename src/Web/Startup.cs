@@ -1,3 +1,4 @@
+using ApplicationCore.Constants;
 using ApplicationCore.Entities.Identity;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
@@ -14,11 +15,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Globalization;
 using Web.Configuration;
-using ApplicationCore.Constants;
 using Web.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.ResponseCompression;
-using System.Linq;
 
 namespace Web
 {

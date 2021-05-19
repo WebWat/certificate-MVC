@@ -8,7 +8,7 @@
     if (User.Identity.IsAuthenticated)
     {
         var user = await UserManager.GetUserAsync(User);
-        fill = user.Town != null && user.Photo != null;
+        fill = user?.Town != null && user?.Photo != null;
     }
 }
 
@@ -26,18 +26,11 @@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Certificate" asp-action="Index">@SharedLocalizer["Certificate"]</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Event" asp-action="Index">@SharedLocalizer["Events"]</a>
-        </li>
     </ul>
 }
 else if (User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value.Contains("User"))
 {
     <partial name="Roles/_UserPartial" model="fill" />
-}
-else if (User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value.Contains("Moderator"))
-{
-    <partial name="Roles/_ModeratorPartial" model="fill" />
 }
 else if (User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value.Contains("Admin"))
 {
