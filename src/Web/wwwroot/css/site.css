@@ -111,7 +111,7 @@ body {
     .flex-search {
         flex-direction: column;
         justify-content: space-between;
-        height: 9em;
+        height: 13em;
     }
 
     .font-size-clear {

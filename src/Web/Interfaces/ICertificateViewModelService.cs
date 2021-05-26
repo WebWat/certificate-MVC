@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using ApplicationCore.Entities;
+using System.Threading.Tasks;
 using Web.ViewModels;
 
 namespace Web.Interfaces
 {
     public interface ICertificateViewModelService
     {
-        IndexViewModel GetIndexViewModel(int page, string userId, string year, string find);
+        IndexViewModel GetIndexViewModel(int page, string userId, string year, string find, Stage? stage);
 
         Task UpdateCertificateAsync(CertificateViewModel cvm, string userId);
         Task CreateCertificateAsync(CertificateViewModel cvm, string userId);

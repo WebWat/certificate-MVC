@@ -18,17 +18,20 @@ namespace Web.Services
         private readonly ICertificateRepository _repository;
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly ICachedPublicViewModelService _cacheService;
+        private readonly IStageService _stageService;
 
         public CertificateViewModelService(ICertificateRepository repository,
                                            IStringLocalizer<SharedResource> localizer,
-                                           ICachedPublicViewModelService cacheService)
+                                           ICachedPublicViewModelService cacheService,
+                                           IStageService stageService)
         {
             _repository = repository;
             _localizer = localizer;
             _cacheService = cacheService;
+            _stageService = stageService;
         }
 
-        public IndexViewModel GetIndexViewModel(int page, string userId, string year, string find)
+        public IndexViewModel GetIndexViewModel(int page, string userId, string year, string find, Stage? stage)
         {
             page = page <= 0 ? 1 : page;
 
@@ -44,6 +47,12 @@ namespace Web.Services
             if (!string.IsNullOrEmpty(find))
             {
                 list = list.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower()));
+            }
+
+            //Sort by stage
+            if (stage != null)
+            {
+                list = list.Where(p => p.Stage == stage);
             }
 
             int pageSize = 12;
@@ -66,15 +75,20 @@ namespace Web.Services
                 return certificateViewModel;
             });
 
-            List<string> years = Enumerable.Range(2000, DateTime.Now.Year - 1999).Reverse().Select(i => i.ToString()).ToList();
+            var years = Enumerable.Range(2000, DateTime.Now.Year - 1999).Reverse().Select(i => i.ToString()).ToList();
             years.Insert(0, _localizer["All"].Value);
+
+            var stages = _stageService.GetStages();
+            stages.Insert(0, new() { EnumName = string.Empty, Name = _localizer["All"].Value });
 
             IndexViewModel ivm = new IndexViewModel
             {
                 Certificates = certificates,
                 Find = find,
                 Year = year,
+                Stage = null,
                 Years = new SelectList(years),
+                Stages = new SelectList(stages, "EnumName", "Name"),
                 PageViewModel = new PageViewModel(count, page, pageSize)
             };
 

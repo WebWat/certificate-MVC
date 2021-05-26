@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Entities.Identity;
+﻿using ApplicationCore.Entities;
+using ApplicationCore.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -39,11 +40,11 @@ namespace Web.Controllers
         }
 
 
-        public async Task<IActionResult> Index(int page = 1, string year = null, string find = null)
+        public async Task<IActionResult> Index(int page = 1, string year = null, string find = null, Stage? stage = null)
         {
             var _user = await _userManager.GetUserAsync(User);
 
-            return View(_certificateService.GetIndexViewModel(page, _user.Id, year, find));
+            return View(_certificateService.GetIndexViewModel(page, _user.Id, year, find, stage));
         }
 
 

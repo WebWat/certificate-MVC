@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using ApplicationCore.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Interfaces;
@@ -13,14 +13,19 @@ namespace Web.Services
     {
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly ICachedPublicViewModelService _cacheService;
+        private readonly IStageService _stageService;
 
-        public PublicViewModelService(ICachedPublicViewModelService cacheService, IStringLocalizer<SharedResource> localizer)
+        public PublicViewModelService(ICachedPublicViewModelService cacheService, IStringLocalizer<SharedResource> localizer,
+                                      IStageService stageService)
         {
             _cacheService = cacheService;
             _localizer = localizer;
+            _stageService = stageService;
         }
 
-        public PublicViewModel GetPublicViewModel(int page, string year, string find, string userId, string name, string middleName, string surname, string code, byte[] photo)
+        public PublicViewModel GetPublicViewModel(int page, string year, string find, Stage? stage, 
+                                                  string userId, string name, string middleName, 
+                                                  string surname, string code, byte[] photo)
         {
             page = page <= 0 ? 1 : page;
 
@@ -36,6 +41,12 @@ namespace Web.Services
             if (!string.IsNullOrEmpty(find))
             {
                 list = list.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower())).ToList();
+            }
+
+            //Sort by stage
+            if (stage != null)
+            {
+                list = list.Where(p => p.Stage == stage).ToList();
             }
 
             int pageSize = 12;
@@ -57,15 +68,20 @@ namespace Web.Services
                 return certificateViewModel;
             });
 
-            List<string> years = Enumerable.Range(2000, DateTime.Now.Year - 1999).Reverse().Select(i => i.ToString()).ToList();
+            var years = Enumerable.Range(2000, DateTime.Now.Year - 1999).Reverse().Select(i => i.ToString()).ToList();
             years.Insert(0, _localizer["All"].Value);
+
+            var stages = _stageService.GetStages();
+            stages.Insert(0, new() { EnumName = string.Empty, Name = _localizer["All"].Value });
 
             PublicViewModel pvm = new PublicViewModel
             {
                 Certificates = certificates,
                 Find = find,
-                Years = new SelectList(years),
+                Stage = null,
                 Year = year,
+                Stages = new SelectList(stages, "EnumName", "Name"),
+                Years = new SelectList(years),
                 Name = name,
                 Surname = surname,
                 UniqueUrl = code,
