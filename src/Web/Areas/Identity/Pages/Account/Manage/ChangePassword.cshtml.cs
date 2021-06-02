@@ -58,6 +58,15 @@ namespace Web.Areas.Identity.Pages.Account.Manage
 
             var user = await _userManager.GetUserAsync(User);
 
+            var correctPassword = await _userManager.CheckPasswordAsync(user, Input.OldPassword);
+
+            if (!correctPassword)
+            {
+                ModelState.AddModelError(string.Empty, _localizer["IncorrectPassword"]);
+
+                return Page();
+            }
+
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
 
             if (!changePasswordResult.Succeeded)
