@@ -31,19 +31,19 @@ namespace Web.Services
 
             var list = _cacheService.GetList(userId);
 
-            //Sort by date
+            // Sort by date.
             if (year != null && year != _localizer["All"])
             {
                 list = list.Where(i => i.Date.Year == int.Parse(year)).ToList();
             }
 
-            //Sort by title
+            // Sort by title.
             if (!string.IsNullOrEmpty(find))
             {
                 list = list.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower())).ToList();
             }
 
-            //Sort by stage
+            // Sort by stage.
             if (stage != null)
             {
                 list = list.Where(p => p.Stage == stage).ToList();

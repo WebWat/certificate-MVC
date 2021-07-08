@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Infrastructure.Services
 {
     /// <summary>
-    /// Reduces user links
+    /// Reduces user links.
     /// </summary>
     public class UrlShortener : IUrlShortener
     {
@@ -23,6 +23,7 @@ namespace Infrastructure.Services
             _apiKey = configuration["Api:Key"];
             _logger = logger;
         }
+
 
         public async Task<string> GetShortenedUrlAsync(string url)
         {
@@ -41,12 +42,12 @@ namespace Infrastructure.Services
 
                 string result = await response.Content.ReadAsStringAsync();
 
-                return result.Replace("\"", "");
+                return result.Replace("\"", string.Empty);
             }
 
             _logger.LogWarning("An error occurred while executing the query: " + response.StatusCode);
 
-            //If the status code is not successful
+            // If the status code is not successful.
             return "Error";
         }
     }

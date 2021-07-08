@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Entities;
+﻿using ApplicationCore.Constants;
+using ApplicationCore.Entities;
 using ApplicationCore.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Web.Extensions;
 using Web.Interfaces;
@@ -48,13 +50,13 @@ namespace Web.Controllers
         }
 
 
-        public async Task<IActionResult> Details(int id, int page = 0)
+        public async Task<IActionResult> Details(int id, CancellationToken cancellationToken, int page = 0)
         {
             page = GetCurrentPage(page);
 
             var _user = await _userManager.GetUserAsync(User);
 
-            var certificate = await _certificateService.GetCertificateByIdIncludeLinksAsync(page, id, _user.Id);
+            var certificate = await _certificateService.GetCertificateByIdIncludeLinksAsync(page, id, _user.Id, cancellationToken);
 
             if (certificate == null)
             {
@@ -73,7 +75,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CertificateViewModel cvm)   
+        public async Task<IActionResult> Create(CertificateViewModel cvm, CancellationToken cancellationToken)   
         {
             var _user = await _userManager.GetUserAsync(User);
 
@@ -92,8 +94,6 @@ namespace Web.Controllers
                         return View();
                     }
 
-                    byte[] imageData = null;
-
                     using (var binaryReader = new BinaryReader(cvm.File.OpenReadStream()))
                     {
                         if (cvm.File.CheckFileSize(_fileSettings.MinSize, _fileSettings.SizeLimit))
@@ -101,13 +101,11 @@ namespace Web.Controllers
                             ModelState.AddModelError("File", _localizer["FileSizeError"]);
                             return View();
                         }
-                        imageData = binaryReader.ReadBytes((int)cvm.File.Length);
+                        cvm.ImageData = binaryReader.ReadBytes((int)cvm.File.Length);
                     }
-
-                    cvm.ImageData = imageData;
                 }
 
-                await _certificateService.CreateCertificateAsync(cvm, _user.Id);
+                await _certificateService.CreateCertificateAsync(cvm, _user.Id, cancellationToken);
 
                 _logger.LogInformation($"New certificate created by User {_user.Id}");
 
@@ -117,11 +115,11 @@ namespace Web.Controllers
         }
 
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken)
         {
             var _user = await _userManager.GetUserAsync(User);
 
-            var certificate = await _certificateService.GetCertificateByIdAsync(id, _user.Id);
+            var certificate = await _certificateService.GetCertificateByIdAsync(id, _user.Id, cancellationToken);
 
             if (certificate == null)
             {
@@ -134,7 +132,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CertificateViewModel cvm)
+        public async Task<IActionResult> Edit(CertificateViewModel cvm, CancellationToken cancellationToken)
         {
             var _user = await _userManager.GetUserAsync(User);
 
@@ -148,8 +146,6 @@ namespace Web.Controllers
                         return View(cvm);
                     }
 
-                    byte[] imageData = null;
-
                     using (var binaryReader = new BinaryReader(cvm.File.OpenReadStream()))
                     {
                         if (cvm.File.CheckFileSize(_fileSettings.MinSize, _fileSettings.SizeLimit))
@@ -157,15 +153,13 @@ namespace Web.Controllers
                             ModelState.AddModelError("File", _localizer["FileSizeError"]);
                             return View(cvm);
                         }
-                        imageData = binaryReader.ReadBytes((int)cvm.File.Length);
+                        cvm.ImageData = binaryReader.ReadBytes((int)cvm.File.Length);
                     }
-
-                    cvm.ImageData = imageData;
                 }
 
                 try
                 {
-                    await _certificateService.UpdateCertificateAsync(cvm, _user.Id);
+                    await _certificateService.UpdateCertificateAsync(cvm, _user.Id, cancellationToken);
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
@@ -176,7 +170,7 @@ namespace Web.Controllers
 
                 _logger.LogInformation($"Certificate {cvm.Id} changed by User {_user.Id}");
 
-                return RedirectToAction("Details", new { id = cvm.Id });
+                return RedirectToAction(nameof(Details), new { id = cvm.Id });
             }
             return View(cvm);
         }
@@ -184,27 +178,28 @@ namespace Web.Controllers
 
         public IActionResult Delete()
         {
-            return PartialView("Delete");
+            return PartialView(nameof(Delete));
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             int currentPage = GetCurrentPage();
 
-            if (HttpContext.Request.Cookies["isLast"] == "true")
+            if (HttpContext.Request.Cookies[CookieNamesConstants.IsLastPage] == "true")
             {
                 if (currentPage > 1)
                     currentPage -= 1;
 
-                HttpContext.Response.Cookies.Append("isLast", "false", new() { SameSite = SameSiteMode.Lax });
+                HttpContext.Response.Cookies.Append(CookieNamesConstants.IsLastPage, "false", 
+                                                    new() { SameSite = SameSiteMode.Lax });
             }
 
             var _user = await _userManager.GetUserAsync(User);
 
-            await _certificateService.DeleteCertificateAsync(id, _user.Id);
+            await _certificateService.DeleteCertificateAsync(id, _user.Id, cancellationToken);
 
             _logger.LogInformation($"Certificate {id} deleted by User {_user.Id}");
 
@@ -230,11 +225,12 @@ namespace Web.Controllers
         {
             if (page == 0)
             {
-                page = int.TryParse(HttpContext.Request.Cookies["page"], out int result) ? result : 1;
+                page = int.TryParse(HttpContext.Request.Cookies[CookieNamesConstants.Page], out int result) ? result : 1;
             }
             else
             {
-                HttpContext.Response.Cookies.Append("page", page.ToString(), new() { SameSite = SameSiteMode.Lax });
+                HttpContext.Response.Cookies.Append(CookieNamesConstants.Page, page.ToString(), 
+                                                    new() { SameSite = SameSiteMode.Lax });
             }
 
             return page;

@@ -13,6 +13,7 @@ namespace Web.ViewComponents
             _repository = repository;
         }
 
+
         public async Task<IViewComponentResult> InvokeAsync()
         {
             return View(await _repository.GetCountAsync());

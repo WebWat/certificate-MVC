@@ -29,11 +29,13 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             _logger = logger;
         }
 
+
         [BindProperty]
         public ChangePasswordInput Input { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -48,6 +50,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
 
             return Page();
         }
+
 
         public async Task<IActionResult> OnPostAsync()
         {

@@ -27,8 +27,10 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             _logger = logger;
         }
 
+
         [TempData]
         public string StatusMessage { get; set; }
+
 
         public async Task<IActionResult> OnPostAsync()
         {

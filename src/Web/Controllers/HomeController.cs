@@ -21,27 +21,29 @@ namespace Web.Controllers
             _localizer = localizer;
         }
 
+
         public IActionResult Index()
         {
             return View();
         }
+
 
         public IActionResult Term()
         {
             return View();
         }
 
+
         [HttpPost]
         public IActionResult SetLanguage(string culture, string returnUrl)
         {
-            Response.Cookies.Append(
-                CookieNamesConstants.Culture,
-                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
-                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
-            );
+            Response.Cookies.Append(CookieNamesConstants.Culture,
+                                    CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                                    new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
 
             return LocalRedirect(returnUrl);
         }
+
 
         [Route("/HttpError")]
         public IActionResult HttpErrorPage(string code)
@@ -55,6 +57,7 @@ namespace Web.Controllers
                     return NoContent();
             }
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

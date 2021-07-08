@@ -23,8 +23,10 @@ namespace Web.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
+
         [BindProperty]
         public ResetInput Input { get; set; }
+
 
         public IActionResult OnGet(string code = null)
         {
@@ -42,6 +44,7 @@ namespace Web.Areas.Identity.Pages.Account
                 return Page();
             }
         }
+
 
         public async Task<IActionResult> OnPostAsync()
         {

@@ -44,6 +44,7 @@ namespace Web
             host.Run();
         }
 
+
         public static IHostBuilder CreateHostBuilder(string[] args) {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddCommandLine(args).Build();
 

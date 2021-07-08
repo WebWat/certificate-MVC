@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Localization;
 using System.Text;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Models;
@@ -19,23 +18,21 @@ namespace Web.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
-        private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly IEmailTemplate _emailTemplate;
 
         public ForgotPasswordModel(UserManager<ApplicationUser> userManager,
-                                   IEmailSender emailSender, 
-                                   IStringLocalizer<SharedResource> localizer,
+                                   IEmailSender emailSender,
                                    IEmailTemplate emailTemplate)
         {
             _userManager = userManager;
             _emailSender = emailSender;
-            _localizer = localizer;
             _emailTemplate = emailTemplate;
         }
 
 
         [BindProperty]
         public EmailInput Input { get; set; }
+
 
         public async Task<IActionResult> OnPostAsync()
         {

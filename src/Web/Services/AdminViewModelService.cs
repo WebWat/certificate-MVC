@@ -26,18 +26,18 @@ namespace Web.Services
         {
             var users = _userRepository.List(i => i.UserName != AuthorizationConstants.UserName);
 
-            List<AdminViewModel> result = new List<AdminViewModel>();
+            var result = new List<AdminViewModel>();
 
-            foreach (var u in users)
+            foreach (var user in users)
             {
-                var roles = await _userManager.GetRolesAsync(u);
+                var roles = await _userManager.GetRolesAsync(user);
 
                 result.Add(new AdminViewModel
                 {
-                    Login = u.UserName,
-                    Email = u.Email,
-                    EmailConfirmed = u.EmailConfirmed,
-                    RegistrationDate = u.RegistrationDate,
+                    Login = user.UserName,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    RegistrationDate = user.RegistrationDate,
                     Role = roles.First()
                 });
             }

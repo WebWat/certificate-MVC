@@ -15,6 +15,7 @@ namespace Web.Services
             _localizer = localizer;
         }
 
+
         public List<StageViewModel> GetStages()
         {
             return new List<StageViewModel>
@@ -26,6 +27,7 @@ namespace Web.Services
                 new StageViewModel { EnumName = nameof(Stage.International), Name = _localizer["International"].Value }
             };
         }
+
 
         public string GetNameOfStage(Stage stage) => stage switch
         {

@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Entities;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace ApplicationCore.Interfaces
 {

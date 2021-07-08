@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Infrastructure.Services
 {
     /// <summary>
-    /// Sends message to email
+    /// Sends message to email.
     /// </summary>
     public class EmailSender : IEmailSender
     {
@@ -22,11 +22,12 @@ namespace Infrastructure.Services
             _logger = logger;
         }
 
+
         public async Task SendEmailAsync(string email, string subject, string template)
         {
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress(_email.Name, _email.Name));
-            emailMessage.To.Add(new MailboxAddress("", email));
+            emailMessage.To.Add(new MailboxAddress(string.Empty, email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {

@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Entities.Identity;
+﻿using ApplicationCore.Constants;
+using ApplicationCore.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
@@ -16,11 +17,12 @@ namespace Web.Models
             _localizer = localizer;
         }
 
+
         public Task<IdentityResult> ValidateAsync(UserManager<ApplicationUser> manager, ApplicationUser user, string password)
         {
             List<IdentityError> errors = new List<IdentityError>();
 
-            if (password.ToLower().Contains("admin") || password.ToLower().Contains("user"))
+            if (password.ToLower().Contains(Roles.Admin) || password.ToLower().Contains(Roles.User))
             {
                 errors.Add(new IdentityError
                 {
@@ -45,6 +47,7 @@ namespace Web.Models
             }
 
             Regex regex = new Regex(@"\d");
+
             if (!regex.IsMatch(password))
             {
                 errors.Add(new IdentityError
@@ -54,6 +57,7 @@ namespace Web.Models
             }
 
             regex = new Regex(@"\D");
+
             if (!regex.IsMatch(password))
             {
                 errors.Add(new IdentityError

@@ -33,6 +33,7 @@ namespace Web.Controllers
             _stage = stage;
         }
 
+
         [HttpGet("{id}")]
         public async Task<FileResult> Jpg(int id)
         {
@@ -42,6 +43,7 @@ namespace Web.Controllers
 
             return File(certificate.File, "image/jpeg", certificate.Title + ".jpg");
         }
+
 
         [HttpGet]
         public async Task<FileResult> Zip()
@@ -75,6 +77,7 @@ namespace Web.Controllers
             return File(compressedFileStream.ToArray(), "application/zip", _localizer["Achievements"] + ".zip");
         }
 
+
         [HttpGet]
         public async Task<FileResult> Excel()
         {
@@ -84,7 +87,7 @@ namespace Web.Controllers
             int column = 2;
             int count = 1;
 
-            //https://epplussoftware.com/developers/licenseexception
+            // https://epplussoftware.com/developers/licenseexception
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             using (var package = new ExcelPackage())

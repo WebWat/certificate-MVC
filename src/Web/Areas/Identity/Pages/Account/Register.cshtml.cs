@@ -42,15 +42,18 @@ namespace Areas.Identity.Pages.Account
             _emailTemplate = emailTemplate;
         }
 
+
         [BindProperty]
         public RegisterInput Input { get; set; }
 
         public string ReturnUrl { get; set; }
 
+
         public void OnGet(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
         }
+
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
@@ -99,11 +102,10 @@ namespace Areas.Identity.Pages.Account
 #elif RELEASE
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code },
-                        protocol: Request.Scheme);
+                    var callbackUrl = Url.Page("/Account/ConfirmEmail",
+                                               pageHandler: null,
+                                               values: new { area = "Identity", userId = user.Id, code = code },
+                                               protocol: Request.Scheme);
 
                     var email = _emailTemplate.GetTemplate(EmailMessageType.RegisterConfirmation, callbackUrl);
 

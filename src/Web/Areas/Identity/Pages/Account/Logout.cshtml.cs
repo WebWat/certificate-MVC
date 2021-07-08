@@ -17,9 +17,11 @@ namespace Web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
         }
 
+
         public void OnGet()
         {
         }
+
 
         public async Task<IActionResult> OnPost()
         {

@@ -16,6 +16,7 @@ namespace Web.Services
             _localizer = localizer;
         }
 
+
         public (string subject, string template) GetTemplate(EmailMessageType messageType, string callbackUrl)
         {
             switch (messageType)

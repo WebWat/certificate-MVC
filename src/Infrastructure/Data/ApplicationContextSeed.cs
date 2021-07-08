@@ -11,7 +11,8 @@ namespace Infrastructure.Data
 {
     public class ApplicationContextSeed
     {
-        public static async Task SeedAsync(ApplicationContext context, UserManager<ApplicationUser> userManager, string imagePath)
+        public static async Task SeedAsync(ApplicationContext context, UserManager<ApplicationUser> userManager, 
+                                           string imagePath)
         {
             var _user = await userManager.FindByNameAsync("admin");
 
@@ -30,6 +31,7 @@ namespace Infrastructure.Data
                 await context.SaveChangesAsync();
             }
         }
+
 
         private static IEnumerable<Certificate> GetCertificates(string userId, string path)
         {
@@ -55,6 +57,7 @@ namespace Infrastructure.Data
                 }
             };
         }
+
 
         private static IEnumerable<Link> GetLinks(string userId, int certificateId)
         {

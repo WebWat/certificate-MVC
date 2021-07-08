@@ -12,11 +12,11 @@ namespace Infrastructure.Identity
         {
             if (!await roleManager.Roles.AnyAsync())
             {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
-                await roleManager.CreateAsync(new IdentityRole("User"));
+                await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+                await roleManager.CreateAsync(new IdentityRole(Roles.User));
             }
 
-            if (await userManager.FindByNameAsync("admin") is null)
+            if (await userManager.FindByNameAsync(AuthorizationConstants.UserName) is null)
             {
                 var admin = new ApplicationUser
                 {
@@ -29,7 +29,7 @@ namespace Infrastructure.Identity
 
                 await userManager.CreateAsync(admin, AuthorizationConstants.Password);
 
-                await userManager.AddToRoleAsync(admin, "Admin");
+                await userManager.AddToRoleAsync(admin, Roles.Admin);
             }
         }
     }

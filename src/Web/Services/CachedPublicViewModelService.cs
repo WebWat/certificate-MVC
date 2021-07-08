@@ -21,15 +21,18 @@ namespace Web.Services
             _memoryCache = memoryCache;
         }
 
+
         public async Task<Certificate> GetItemAsync(int id, string userId)
         {
-            return await _memoryCache.GetOrCreateAsync(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel), id.ToString()), async item =>
+            return await _memoryCache.GetOrCreateAsync(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel), 
+                                                       id.ToString()), async item =>
             {
                 item.SlidingExpiration = CacheHelper.DefaultExpiration;
 
                 return await _repository.GetCertificateIncludeLinksAsync(id, userId);
             });
         }
+
 
         public List<Certificate> GetList(string userId)
         {
@@ -41,6 +44,7 @@ namespace Web.Services
             });
         }
 
+
         public async Task SetItemAsync(int id, string userId)
         {
             var item = await _repository.GetCertificateIncludeLinksAsync(id, userId);
@@ -49,9 +53,11 @@ namespace Web.Services
                              new MemoryCacheEntryOptions().SetSlidingExpiration(CacheHelper.DefaultExpiration));
         }
 
+
         public void SetList(string userId)
         {
-            _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.ToString()), _repository.ListByUserId(userId).ToList(),
+            _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.ToString()), 
+                             _repository.ListByUserId(userId).ToList(),
                              new MemoryCacheEntryOptions().SetSlidingExpiration(CacheHelper.DefaultExpiration));
         }
     }

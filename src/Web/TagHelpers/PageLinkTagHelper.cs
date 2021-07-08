@@ -11,11 +11,6 @@ namespace Web.TagHelpers
     {
         private readonly IUrlHelperFactory urlHelperFactory;
 
-        public PageLinkTagHelper(IUrlHelperFactory helperFactory)
-        {
-            urlHelperFactory = helperFactory;
-        }
-
         [ViewContext]
         [HtmlAttributeNotBound]
         public ViewContext ViewContext { get; set; }
@@ -23,6 +18,11 @@ namespace Web.TagHelpers
         public string PageController { get; set; }
         public string PageAction { get; set; }
         public string UniqueUrl { get; set; }
+
+        public PageLinkTagHelper(IUrlHelperFactory helperFactory)
+        {
+            urlHelperFactory = helperFactory;
+        }
 
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -77,6 +77,7 @@ namespace Web.TagHelpers
             output.Content.AppendHtml(tag);
         }
 
+
         TagBuilder CreateFirstPage(IUrlHelper urlHelper)
         {
             TagBuilder item = new TagBuilder("li");
@@ -96,6 +97,7 @@ namespace Web.TagHelpers
             return item;
         }
 
+
         TagBuilder CreateLastPage(IUrlHelper urlHelper)
         {
             TagBuilder item = new TagBuilder("li");
@@ -113,6 +115,7 @@ namespace Web.TagHelpers
             item.InnerHtml.AppendHtml(link);
             return item;
         }
+
 
         TagBuilder CreateTag(int pageNumber, IUrlHelper urlHelper)
         {

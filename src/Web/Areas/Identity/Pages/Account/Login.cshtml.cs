@@ -30,6 +30,7 @@ namespace Web.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
+
         [BindProperty]
         public LoginInput Input { get; set; }
 
@@ -37,6 +38,7 @@ namespace Web.Areas.Identity.Pages.Account
 
         [TempData]
         public string ErrorMessage { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
@@ -54,6 +56,7 @@ namespace Web.Areas.Identity.Pages.Account
             return Page();
         }
 
+
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -65,9 +68,7 @@ namespace Web.Areas.Identity.Pages.Account
 
                 if (user != null)
                 {
-#if DEBUG
-
-#elif RELEASE
+#if !DEBUG
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
                         ModelState.AddModelError(string.Empty, _localizer["UnconfirmedEmailError"]);

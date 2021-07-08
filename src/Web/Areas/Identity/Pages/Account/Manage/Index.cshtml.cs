@@ -33,11 +33,13 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             _fileSettings = options.Value;
         }
 
+
         [TempData]
         public string StatusMessage { get; set; }
 
         [BindProperty]
         public IndexInput Input { get; set; }
+
 
         private async Task LoadAsync(ApplicationUser user)
         {
@@ -53,6 +55,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             };
         }
 
+
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -61,6 +64,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
 
             return Page();
         }
+
 
         public async Task<IActionResult> OnPostAsync()
         {

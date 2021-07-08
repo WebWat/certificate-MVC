@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Entities;
+using System.Threading;
 using System.Threading.Tasks;
 using Web.ViewModels;
 
@@ -8,11 +9,13 @@ namespace Web.Interfaces
     {
         IndexViewModel GetIndexViewModel(int page, string userId, string year, string find, Stage? stage);
 
-        Task UpdateCertificateAsync(CertificateViewModel cvm, string userId);
-        Task CreateCertificateAsync(CertificateViewModel cvm, string userId);
-        Task DeleteCertificateAsync(int id, string userId);
+        Task UpdateCertificateAsync(CertificateViewModel cvm, string userId, CancellationToken cancellationToken = default);
+        Task CreateCertificateAsync(CertificateViewModel cvm, string userId, CancellationToken cancellationToken = default);
+        Task DeleteCertificateAsync(int id, string userId, CancellationToken cancellationToken = default);
 
-        Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page, int id, string userId);
-        Task<CertificateViewModel> GetCertificateByIdAsync(int id, string userId);
+        Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page, int id, string userId, 
+                                                                       CancellationToken cancellationToken = default);
+        Task<CertificateViewModel> GetCertificateByIdAsync(int id, string userId, 
+                                                           CancellationToken cancellationToken = default);
     }
 }

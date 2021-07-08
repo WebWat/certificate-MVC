@@ -7,6 +7,7 @@ namespace Web.Interfaces
     public interface IStageService
     {
         List<StageViewModel> GetStages();
+
         string GetNameOfStage(Stage stage);
     }
 }

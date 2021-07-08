@@ -23,12 +23,12 @@ namespace Web
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -36,17 +36,17 @@ namespace Web
             services.Configure<Email>(Configuration.GetSection("Email"));
             services.Configure<FileSettings>(Configuration.GetSection("FileSettings"));
 
-            //Core services
+            // Core services.
             services.AddCoreServices();
 
-            //Web services
+            // Web services.
             services.AddWebServices();
 
-            //Database
+            // Database.
             services.AddDbContext<ApplicationContext>(options =>
                             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))); //Use DockerConnection for Docker
 
-            //Identity
+            // Identity.
             services.AddTransient<IPasswordValidator<ApplicationUser>, CustomPasswordPolicy>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -59,14 +59,14 @@ namespace Web
                 options.Lockout.AllowedForNewUsers = true;
             });
 
-            //Data protection
+            // Data protection.
             services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Directory.GetCurrentDirectory() + @"\keys"))
                                         .SetDefaultKeyLifetime(TimeSpan.FromDays(180));
 
-            //Cookie
+            // Cookie.
             services.ConfigureCookieSettings();
 
-            //Localization
+            // Localization.
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             services.Configure<RequestLocalizationOptions>(options =>
@@ -89,7 +89,7 @@ namespace Web
                 options.SupportedUICultures = supportedCultures;
             });
 
-            //Other services
+            // Other services.
             services.AddScoped<IUrlShortener, UrlShortener>();
             services.AddAntiforgery(options =>
             {

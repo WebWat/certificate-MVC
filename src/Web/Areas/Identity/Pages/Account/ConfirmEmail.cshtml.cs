@@ -19,6 +19,7 @@ namespace Web.Areas.Identity.Pages.Account
             _userManager = userManager;
         }
 
+
         public async Task<IActionResult> OnGetAsync(string userId, string code)
         {
             if (userId == null || code == null)
@@ -34,16 +35,15 @@ namespace Web.Areas.Identity.Pages.Account
             }
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+
             var result = await _userManager.ConfirmEmailAsync(user, code);
 
             if (result.Succeeded)
             {
                 return RedirectToPage("./EmailConfirmed");
             }
-            else
-            {
-                return NotFound();
-            }
+
+            return NotFound();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Web.Interfaces;
 using Web.ViewModels;
@@ -25,11 +26,11 @@ namespace Web.Services
             _cacheService = cacheService;
         }
 
-        public async Task CreateLinkAsync(int certificateId, LinkViewModel cvm, string userId)
+        public async Task CreateLinkAsync(int certificateId, LinkViewModel lvm, string userId, CancellationToken cancellationToken = default)
         {
-            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId, userId);
+            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId, userId, cancellationToken);
 
-            //check the number of links
+            // Check the number of links.
             if (links.Links.Count >= 5)
             {
                 return;
@@ -37,18 +38,18 @@ namespace Web.Services
 
             await _linkRepository.CreateAsync(new Link
             {
-                Id = cvm.Id,
-                Name = await _urlShortener.GetShortenedUrlAsync(cvm.Name),
+                Id = lvm.Id,
+                Name = await _urlShortener.GetShortenedUrlAsync(lvm.Name),
                 CertificateId = certificateId,
                 UserId = userId
-            });
+            }, cancellationToken);
 
             await _cacheService.SetItemAsync(certificateId, userId);
         }
 
-        public async Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId, string userId)
+        public async Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId, string userId, CancellationToken cancellationToken = default)
         {
-            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId, userId);
+            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId, userId, cancellationToken);
 
             return new LinkListViewModel
             {
@@ -66,11 +67,11 @@ namespace Web.Services
             };
         }
 
-        public async Task<int> DeleteLinkAsync(int id, string userId)
+        public async Task<int> DeleteLinkAsync(int id, string userId, CancellationToken cancellationToken = default)
         {
-            var link = await _linkRepository.GetAsync(i => i.Id == id && i.UserId == userId);
+            var link = await _linkRepository.GetAsync(i => i.Id == id && i.UserId == userId, cancellationToken);
 
-            await _linkRepository.DeleteAsync(link);
+            await _linkRepository.DeleteAsync(link, cancellationToken);
 
             await _cacheService.SetItemAsync(link.CertificateId, userId);
 
