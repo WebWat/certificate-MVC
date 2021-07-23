@@ -16,15 +16,16 @@ namespace UnitTests.ApplicationCore.Services
             _output = output;
         }
 
+
         [Fact]
         public void GenerateUrl()
         {
-            //Arrange & Act
+            // Arrange & Act
             string expected = _urlGenerator.Generate();
 
             _output.WriteLine("Generated string: " + expected);
 
-            //Assert
+            // Assert
             Assert.NotNull(expected);
             Assert.NotEqual(string.Empty, expected);
         }

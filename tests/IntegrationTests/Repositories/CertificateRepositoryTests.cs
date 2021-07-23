@@ -16,7 +16,7 @@ namespace IntegrationTests.Repositories
         public CertificateRepositoryTests()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "CertificateDB")
+                .UseInMemoryDatabase(databaseName: "CertificateTestDB")
                 .Options;
 
             _context = new ApplicationContext(dbOptions);
@@ -31,6 +31,7 @@ namespace IntegrationTests.Repositories
             _context.SaveChanges();
         }
 
+
         [Fact]
         public async Task GetCertificateById()
         {
@@ -43,7 +44,8 @@ namespace IntegrationTests.Repositories
             Assert.Equal(repositoryResult.Id, contextResult.Id);
         }
 
-        //Use for Coyote
+
+        // Use for Coyote
         public async Task GetAndUpdateAtTheSameTime()
         {
             _context.Certificates.Add(CertificateBuilder.GetDefaultValue());
@@ -53,7 +55,8 @@ namespace IntegrationTests.Repositories
 
             var certificate = await _context.Certificates.AsNoTracking().FirstOrDefaultAsync();
 
-            //This code throws an DbUpdateConcurrencyException, so we add a check (try-catch) to the "Edit" methods of the controllers
+            // This code throws an DbUpdateConcurrencyException,
+            // so we add a check (try-catch) to the "Edit" methods of the controllers.
             var deleteResult = repository.DeleteAsync(certificate);
             var updateResult = repository.UpdateAsync(new ApplicationCore.Entities.Certificate { Id = certificate.Id, Title = "New title" });
 

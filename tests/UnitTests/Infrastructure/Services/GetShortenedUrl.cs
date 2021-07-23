@@ -38,16 +38,17 @@ namespace UnitTests.Infrastructure.Services
 
             _urlShortener = new UrlShortener(httpClientFactory, configuration, logger);
         }
-
-        [Fact]
+        
+        // Using secret data
+        // [Fact]
         public async Task ShortUrlRequest()
         {
-            //Arrange & Act
+            // Arrange & Act
             string expected = await _urlShortener.GetShortenedUrlAsync("https://example.com");
 
             _output.WriteLine("Actual link: " + expected);
 
-            //Assert
+            // Assert
             Assert.NotEqual("Error", expected);
         }
     }

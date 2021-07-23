@@ -35,7 +35,7 @@ namespace Infrastructure.Repositories
 
         public async Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
+            return await _context.Set<T>().FindAsync(new object[] { id }, cancellationToken);
         }
 
 

@@ -29,7 +29,7 @@ namespace FunctionalTests
 
                 services.AddDbContext<ApplicationContext>(options =>
                 {
-                    options.UseInMemoryDatabase("CertificateDB");
+                    options.UseInMemoryDatabase("FunctionalDB");
                     options.UseInternalServiceProvider(provider);
                 });
 

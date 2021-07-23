@@ -24,6 +24,7 @@ namespace FunctionalTests.Pages
 
         public HttpClient Client { get; }
 
+
         [Fact]
         public async Task ReturnsSuccessfulSignInOnPostWithRedirect()
         {
@@ -44,6 +45,7 @@ namespace FunctionalTests.Pages
             Assert.Equal(HttpStatusCode.Redirect, postResponse.StatusCode);
             Assert.Equal(new Uri("/Certificate", UriKind.Relative), postResponse.Headers.Location);
         }
+
 
         private string GetRequestVerificationToken(string input)
         {

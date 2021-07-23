@@ -14,6 +14,7 @@ namespace FunctionalTests.Controllers
 
         public HttpClient Client { get; }
 
+
         [Fact]
         public async Task RedirectsToLoginIfNotAuthenticated()
         {

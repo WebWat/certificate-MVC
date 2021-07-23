@@ -17,6 +17,7 @@ namespace FunctionalTests.Controllers
 
         public HttpClient Client { get; }
 
+
         [Fact]
         public async Task ReturnsIndexWithCertificateListing()
         {
@@ -26,6 +27,7 @@ namespace FunctionalTests.Controllers
 
             Assert.Contains("Robofest", stringResponse);
         }
+
 
         [Fact]
         public async Task ReturnsDetailsWithCertificateAndLinks()
@@ -41,7 +43,7 @@ namespace FunctionalTests.Controllers
             stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains("Robofest", stringResponse);
-            Assert.Contains("http://url.certfcate.ru/examplelink1", stringResponse);
+            Assert.Contains("http://url.certfcate.ru/examplelink2", stringResponse);
         }
 
         private string GetCertificateId(string input)

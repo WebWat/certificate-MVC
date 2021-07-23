@@ -17,7 +17,7 @@ namespace IntegrationTests.Repositories
         public LinkRepositoryTests()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "CertificateDB")
+                .UseInMemoryDatabase(databaseName: "LinkTestDB")
                 .Options;
 
             _context = new ApplicationContext(dbOptions);
