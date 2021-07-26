@@ -24,7 +24,7 @@ namespace Web.Services
 
         public async Task<Certificate> GetItemAsync(int id, string userId)
         {
-            return await _memoryCache.GetOrCreateAsync(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel), 
+            return await _memoryCache.GetOrCreateAsync(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel),
                                                        id.ToString()), async item =>
             {
                 item.SlidingExpiration = CacheHelper.DefaultExpiration;
@@ -56,7 +56,7 @@ namespace Web.Services
 
         public void SetList(string userId)
         {
-            _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.ToString()), 
+            _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.ToString()),
                              _repository.ListByUserId(userId).ToList(),
                              new MemoryCacheEntryOptions().SetSlidingExpiration(CacheHelper.DefaultExpiration));
         }

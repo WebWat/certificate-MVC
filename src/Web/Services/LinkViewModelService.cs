@@ -31,6 +31,7 @@ namespace Web.Services
             var links = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId, userId, cancellationToken);
 
             // Check the number of links.
+            // TODO: rewrite
             if (links.Links.Count >= 5)
             {
                 return;

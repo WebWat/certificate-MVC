@@ -19,7 +19,7 @@ namespace CoyoteTests
         }
 
 
-        // Throw an exception, which we fixed
+        // Throw an exception, which we fixed.
         // [Fact]
         public void TestCertificateRepository()
         {

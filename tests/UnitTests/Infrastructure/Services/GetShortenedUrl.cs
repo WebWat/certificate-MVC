@@ -39,7 +39,7 @@ namespace UnitTests.Infrastructure.Services
             _urlShortener = new UrlShortener(httpClientFactory, configuration, logger);
         }
         
-        // Using secret data
+        // Using secret data.
         // [Fact]
         public async Task ShortUrlRequest()
         {
