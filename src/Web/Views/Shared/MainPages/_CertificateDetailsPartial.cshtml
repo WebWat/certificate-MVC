@@ -1,0 +1,32 @@
+﻿@model CertificateViewModel
+@inject IStringLocalizer<SharedResource> LocalizerPartial
+@inject IStageService Service
+
+<h5>@LocalizerPartial["AwardTitle"]</h5>
+<p>@Html.DisplayFor(model => model.Title)</p>
+<br />
+<h5>@LocalizerPartial["Description"]</h5>
+<p>@Html.DisplayFor(model => model.Description)</p>
+<br />
+<h5>@LocalizerPartial["Stage"]</h5>
+<p>@Service.GetNameOfStage(Model.Stage)</p>
+<br />
+<h5>@LocalizerPartial["Date"]</h5>
+<p>@Html.DisplayFor(model => model.Date)</p>
+<br />
+<h5>@LocalizerPartial["Links"]</h5>
+@if (Model.Links.Count != 0)
+{
+    <ul class="list-group">
+        @foreach (var link in Model.Links)
+        {
+            <li class="list-group-item truncated">
+                <a href="@link.Url" target="_blank">@link.Url</a>
+            </li>                
+        }
+    </ul> 
+}
+else
+{
+    <p>@LocalizerPartial["None"]</p>
+}

@@ -21,10 +21,12 @@ namespace FunctionalTests.Controllers
         [Fact]
         public async Task ReturnsIndexWithCertificateListing()
         {
+            // Arrange & Act
             var response = await Client.GetAsync("/Public/" + AuthorizationConstants.UniqueUrl);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
 
+            // Assert
             Assert.Contains("Robofest", stringResponse);
         }
 
@@ -32,6 +34,7 @@ namespace FunctionalTests.Controllers
         [Fact]
         public async Task ReturnsDetailsWithCertificateAndLinks()
         {
+            // Arrange & Act
             var response = await Client.GetAsync("/Public/" + AuthorizationConstants.UniqueUrl);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -42,14 +45,17 @@ namespace FunctionalTests.Controllers
             response.EnsureSuccessStatusCode();
             stringResponse = await response.Content.ReadAsStringAsync();
 
+            // Assert
             Assert.Contains("Robofest", stringResponse);
-            Assert.Contains("http://url.certfcate.ru/examplelink2", stringResponse);
+            Assert.Contains("https://example.com/", stringResponse);
         }
+
 
         private string GetCertificateId(string input)
         {
             var regex = new Regex(@"start\((\d+)");
             var match = regex.Match(input);
+
             return match.Groups.Values.LastOrDefault().Value;
         }
     }

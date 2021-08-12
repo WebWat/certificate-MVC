@@ -130,7 +130,7 @@
     <value>Your data (name and city) will be displayed in the ranking</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>Minimum 512Kb. Maximum 2 Mb.</value>
+    <value>Minimum 1 Kb. Maximum 3 Mb.</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>

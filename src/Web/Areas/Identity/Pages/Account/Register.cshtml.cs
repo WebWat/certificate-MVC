@@ -114,6 +114,7 @@ namespace Areas.Identity.Pages.Account
                     return RedirectToPage("./RegisterConfirmation");
 #endif
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

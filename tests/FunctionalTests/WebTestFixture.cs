@@ -23,9 +23,8 @@ namespace FunctionalTests
             {
                 services.AddEntityFrameworkInMemoryDatabase();
 
-                var provider = services
-                    .AddEntityFrameworkInMemoryDatabase()
-                    .BuildServiceProvider();
+                var provider = services.AddEntityFrameworkInMemoryDatabase()
+                                       .BuildServiceProvider();
 
                 services.AddDbContext<ApplicationContext>(options =>
                 {

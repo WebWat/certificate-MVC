@@ -28,6 +28,7 @@ namespace FunctionalTests.Pages
         [Fact]
         public async Task ReturnsSuccessfulSignInOnPostWithRedirect()
         {
+            // Arrange & Act
             var getResponse = await Client.GetAsync("/identity/account/login?returnUrl=%2FCertificate");
             getResponse.EnsureSuccessStatusCode();
             var stringResponse1 = await getResponse.Content.ReadAsStringAsync();
@@ -41,7 +42,10 @@ namespace FunctionalTests.Pages
             };
             var formContent = new FormUrlEncodedContent(keyValues);
 
-            var postResponse = await Client.PostAsync("/identity/account/login?returnUrl=%2FCertificate", formContent);
+            var postResponse = await Client.PostAsync("/identity/account/login?returnUrl=%2FCertificate", 
+                                                      formContent);
+
+            // Assert
             Assert.Equal(HttpStatusCode.Redirect, postResponse.StatusCode);
             Assert.Equal(new Uri("/Certificate", UriKind.Relative), postResponse.Headers.Location);
         }
@@ -52,6 +56,7 @@ namespace FunctionalTests.Pages
             string regexpression = @"name=""__RequestVerificationToken"" type=""hidden"" value=""([-A-Za-z0-9+=/\\_]+?)""";
             var regex = new Regex(regexpression);
             var match = regex.Match(input);
+
             return match.Groups.Values.LastOrDefault().Value;
         }
     }

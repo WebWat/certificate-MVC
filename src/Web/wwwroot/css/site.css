@@ -111,7 +111,7 @@ body {
     .flex-search {
         flex-direction: column;
         justify-content: space-between;
-        height: 13em;
+        height: 18rem;
     }
 
     .font-size-clear {
@@ -337,4 +337,14 @@ input#File + label {
 
 .img-float {
     float: right;
+}
+
+.truncated {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.break-word {
+    word-wrap: break-word;
 }

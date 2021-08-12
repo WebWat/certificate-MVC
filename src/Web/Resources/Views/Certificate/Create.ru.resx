@@ -133,7 +133,7 @@
     <value>Международный</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>Минимум  512Кб. Максимум 2 Мб.</value>
+    <value>Минимум  1 Кб. Максимум 3 Мб.</value>
   </data>
   <data name="Republican" xml:space="preserve">
     <value>Республиканский</value>

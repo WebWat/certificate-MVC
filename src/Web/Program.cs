@@ -45,7 +45,8 @@ namespace Web
         }
 
 
-        public static IHostBuilder CreateHostBuilder(string[] args) {
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddCommandLine(args).Build();
 
             return Host.CreateDefaultBuilder(args)
@@ -57,7 +58,7 @@ namespace Web
                 {
                     logging.AddConfiguration(config.GetSection("Logging"));
                 });
-                
+
         }
     }
 }

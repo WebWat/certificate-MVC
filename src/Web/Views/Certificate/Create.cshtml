@@ -12,14 +12,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <div class="col-md-12 p-0">
-                    <input asp-for="Title" class="form-control autocom" autocomplete="off" />
-                </div>
+                <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="File" class="control-label"></label>
-                <input asp-for="File" id="File" accept="image/jpeg" />
+                <input asp-for="File" accept="image/jpeg" />
                 <label id="text" for="File" asp-for="File"></label>
                 <p class="text-muted text-note float-right">@Localizer["Note"]</p>
                 <span asp-validation-for="File" class="text-danger"></span>

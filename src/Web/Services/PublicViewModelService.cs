@@ -1,7 +1,10 @@
-﻿using ApplicationCore.Entities;
+﻿using ApplicationCore.Constants;
+using ApplicationCore.Entities;
+using ApplicationCore.Entities.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Interfaces;
@@ -15,7 +18,8 @@ namespace Web.Services
         private readonly ICachedPublicViewModelService _cacheService;
         private readonly IStageService _stageService;
 
-        public PublicViewModelService(ICachedPublicViewModelService cacheService, IStringLocalizer<SharedResource> localizer,
+        public PublicViewModelService(ICachedPublicViewModelService cacheService, 
+                                      IStringLocalizer<SharedResource> localizer,
                                       IStageService stageService)
         {
             _cacheService = cacheService;
@@ -24,17 +28,16 @@ namespace Web.Services
         }
 
         public PublicViewModel GetPublicViewModel(int page, string year, string find, Stage? stage, 
-                                                  string userId, string name, string middleName, 
-                                                  string surname, string code, byte[] photo)
+                                                  ApplicationUser user)
         {
             page = page <= 0 ? 1 : page;
 
-            var list = _cacheService.GetList(userId);
+            var list = _cacheService.GetList(user.Id);
 
             // Sort by date.
-            if (year != null && year != _localizer["All"])
+            if (year != null && year != _localizer["All"] && int.TryParse(year, out int result))
             {
-                list = list.Where(i => i.Date.Year == int.Parse(year)).ToList();
+                list = list.Where(i => i.Date.Year == result).ToList();
             }
 
             // Sort by title.
@@ -49,10 +52,7 @@ namespace Web.Services
                 list = list.Where(p => p.Stage == stage).ToList();
             }
 
-            int pageSize = 12;
-
-            var count = list.Count();
-            var items = list.Skip((page - 1) * pageSize).Take(pageSize);
+            var items = list.Skip((page - 1) * Common.PageSize).Take(Common.PageSize);
 
             var certificates = items.Select(i =>
             {
@@ -82,12 +82,17 @@ namespace Web.Services
                 Year = year,
                 Stages = new SelectList(stages, "EnumName", "Name"),
                 Years = new SelectList(years),
-                Name = name,
-                Surname = surname,
-                UniqueUrl = code,
-                MiddleName = middleName,
-                ImageData = photo,
-                PageViewModel = new PageViewModel(count, page, pageSize)
+                Name = user.Name,
+                Surname = user.Surname,
+                UniqueUrl = user.UniqueUrl,
+                MiddleName = user.MiddleName,
+                ImageData = user.Photo,
+                Controller = "Public",
+                Parameters = new Dictionary<string, string>
+                {
+                    ["uniqueUrl"] = user.UniqueUrl
+                },
+                PageViewModel = new PageViewModel(list.Count, page, Common.PageSize)
             };
 
             return pvm;

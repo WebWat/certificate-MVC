@@ -12,55 +12,66 @@ namespace Web.Services
     {
         private readonly IAsyncRepository<Link> _linkRepository;
         private readonly ICertificateRepository _certificateRepository;
-        private readonly IUrlShortener _urlShortener;
         private readonly ICachedPublicViewModelService _cacheService;
 
-        public LinkViewModelService(IAsyncRepository<Link> linkRepository, 
-                                    IUrlShortener urlShortener, 
-                                    ICertificateRepository certificateRepository, 
+        public LinkViewModelService(IAsyncRepository<Link> linkRepository,
+                                    ICertificateRepository certificateRepository,
                                     ICachedPublicViewModelService cacheService)
         {
             _linkRepository = linkRepository;
-            _urlShortener = urlShortener;
             _certificateRepository = certificateRepository;
             _cacheService = cacheService;
         }
 
-        public async Task CreateLinkAsync(int certificateId, LinkViewModel lvm, string userId, CancellationToken cancellationToken = default)
+        // TODO: change to Status?
+        public async Task<bool> CreateLinkAsync(LinkViewModel lvm,
+                                                string userId,
+                                                CancellationToken cancellationToken = default)
         {
-            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId, userId, cancellationToken);
-
-            // Check the number of links.
-            // TODO: rewrite
-            if (links.Links.Count >= 5)
+            var certificate = await _certificateRepository.GetCertificateIncludeLinksAsync(lvm.CertificateId,
+                                                                                           userId,
+                                                                                           cancellationToken);
+            if (certificate != null)
             {
-                return;
+                if (certificate.Links.Count >= 5)
+                {
+                    return true;
+                }
+
+                await _linkRepository.CreateAsync(new Link(lvm.Url, lvm.CertificateId),
+                                                  cancellationToken);
+
+                await _cacheService.SetItemAsync(lvm.CertificateId, userId);
+
+                return true;
             }
 
-            await _linkRepository.CreateAsync(new Link
-            {
-                Id = lvm.Id,
-                Name = await _urlShortener.GetShortenedUrlAsync(lvm.Name),
-                CertificateId = certificateId,
-                UserId = userId
-            }, cancellationToken);
-
-            await _cacheService.SetItemAsync(certificateId, userId);
+            return false;
         }
 
-        public async Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId, string userId, CancellationToken cancellationToken = default)
+        public async Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId,
+                                                                       string userId,
+                                                                       CancellationToken cancellationToken = default)
         {
-            var links = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId, userId, cancellationToken);
+            var certificate = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId,
+                                                                                           userId,
+                                                                                           cancellationToken);
+
+            if (certificate is null)
+            {
+                return null;
+            }
 
             return new LinkListViewModel
             {
                 CertificateId = certificateId,
-                Links = links.Links.Select(i =>
+                Links = certificate.Links.Select(e =>
                 {
                     var link = new LinkViewModel
                     {
-                        Id = i.Id,
-                        Name = i.Name
+                        Id = e.Id,
+                        Url = e.Url,
+                        CertificateId = e.CertificateId
                     };
 
                     return link;
@@ -68,15 +79,30 @@ namespace Web.Services
             };
         }
 
-        public async Task<int> DeleteLinkAsync(int id, string userId, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteLinkAsync(int id,
+                                                int certificateId,
+                                                string userId,
+                                                CancellationToken cancellationToken = default)
         {
-            var link = await _linkRepository.GetAsync(i => i.Id == id && i.UserId == userId, cancellationToken);
+            var certificate = await _certificateRepository.GetCertificateIncludeLinksAsync(certificateId,
+                                                                                           userId,
+                                                                                           cancellationToken);
 
-            await _linkRepository.DeleteAsync(link, cancellationToken);
+            if (certificate != null)
+            {
+                var link = certificate.Links.FirstOrDefault(i => i.Id == id);
 
-            await _cacheService.SetItemAsync(link.CertificateId, userId);
+                if (link != null)
+                {
+                    await _linkRepository.DeleteAsync(link, cancellationToken);
 
-            return link.CertificateId;
+                    await _cacheService.SetItemAsync(link.CertificateId, userId);
+
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

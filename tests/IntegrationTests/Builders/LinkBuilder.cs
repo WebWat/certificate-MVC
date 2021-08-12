@@ -9,8 +9,8 @@ namespace IntegrationTests.Builders
         {
             return new List<Link>
             {
-                new Link { CertificateId = certificateId, Name = "http://url.certfcate.ru/examplelink1" },
-                new Link { CertificateId = certificateId, Name = "http://url.certfcate.ru/examplelinl2" }
+                new Link ("https://example.com", certificateId),
+                new Link ("https://example.com/", certificateId)
             };
         }
     }

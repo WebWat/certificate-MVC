@@ -17,8 +17,8 @@ namespace IntegrationTests.Repositories
         public LinkRepositoryTests()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "LinkTestDB")
-                .Options;
+                                .UseInMemoryDatabase(databaseName: "LinkTestDB")
+                                .Options;
 
             _context = new ApplicationContext(dbOptions);
 
@@ -31,12 +31,14 @@ namespace IntegrationTests.Repositories
         [Fact]
         public async Task GetLinkById()
         {
-            // Arrange & Act
-            var repositoryResult = await repository.GetByIdAsync(1);
-            var contextResult = await _context.Links.AsNoTracking().FirstOrDefaultAsync(i => i.Id == 1);
+            // Arrange
+            var contextResult = await _context.Links.AsNoTracking().FirstOrDefaultAsync();
+
+            // Act
+            var repositoryResult = await repository.GetByIdAsync(contextResult.Id);
 
             // Assert
-            Assert.Equal(repositoryResult.Id, contextResult.Id);
+            Assert.Equal(contextResult.Id, repositoryResult.Id);
         }
     }
 }

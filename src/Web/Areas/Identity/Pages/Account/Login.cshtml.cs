@@ -94,21 +94,20 @@ namespace Web.Areas.Identity.Pages.Account
                     {
                         return Redirect(returnUrl);
                     }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
+
+                    return RedirectToAction("Index", "Home");
                 }
+
                 if (result.IsLockedOut)
                 {
                     return RedirectToPage("./Lockout");
                 }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, _localizer["WrongPasswordError"]);
-                    return Page();
-                }
+
+                ModelState.AddModelError(string.Empty, _localizer["WrongPasswordError"]);
+
+                return Page();
             }
+
             return Page();
         }
     }

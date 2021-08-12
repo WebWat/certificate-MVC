@@ -10,20 +10,20 @@ namespace IntegrationTests.Repositories
 {
     public class CertificateRepositoryTests
     {
-        private readonly ICertificateRepository repository;
+        private readonly ICertificateRepository _repository;
         private readonly ApplicationContext _context;
 
         public CertificateRepositoryTests()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "CertificateTestDB")
-                .Options;
+                            .UseInMemoryDatabase(databaseName: "CertificateTestDB")
+                            .Options;
 
             _context = new ApplicationContext(dbOptions);
 
-            repository = new Infrastructure.Repositories.CertificateRepository(_context);
+            _repository = new Infrastructure.Repositories.CertificateRepository(_context);
 
-            _context.Certificates.Add(CertificateBuilder.GetDefaultValue());
+            _context.Certificates.AddRange(CertificateBuilder.GetDefaultValues());
             _context.SaveChanges();
 
             var certificate = _context.Certificates.AsNoTracking().FirstOrDefault();
@@ -33,22 +33,56 @@ namespace IntegrationTests.Repositories
 
 
         [Fact]
-        public async Task GetCertificateById()
+        public async Task GetCertificateWithLinks()
         {
-            // Arrange & Act
-            var certificate = await _context.Certificates.AsNoTracking().FirstOrDefaultAsync();
-            var repositoryResult = await repository.GetByIdAsync(certificate.Id);
-            var contextResult = await _context.Certificates.AsNoTracking().FirstOrDefaultAsync(i => i.Id == certificate.Id);
+            // Arrange
+            var certificate = await _context.Certificates.Include(e => e.Links).AsNoTracking().FirstAsync();
+
+            // Act
+            var repositoryResult = await _repository.GetCertificateIncludeLinksAsync(certificate.Id,
+                                                                                     certificate.UserId);
 
             // Assert
-            Assert.Equal(repositoryResult.Id, contextResult.Id);
+            Assert.Equal(certificate.Title, repositoryResult.Title);
+            Assert.Equal(certificate.Links.Count, repositoryResult.Links.Count);
+        }
+        
+
+        [Fact]
+        public async Task GetCertificateByUserId()
+        {
+            // Arrange
+            var certificate = await _context.Certificates.AsNoTracking().FirstAsync();
+
+            // Act
+            var repositoryResult = await _repository.GetByUserIdAsync(certificate.Id,
+                                                                      certificate.UserId);
+
+            // Assert
+            Assert.Equal(certificate.Title, repositoryResult.Title);
+        }
+        
+
+        [Fact]
+        public async Task GetListByUserId()
+        {
+            // Arrange
+            var certificate = await _context.Certificates.AsNoTracking().FirstAsync();
+            var list = _context.Certificates.Where(e => e.UserId == certificate.UserId);
+
+            // Act
+            var repositoryResult = _repository.ListByUserId(certificate.UserId);
+
+            // Assert
+            Assert.Equal(list.Count(), repositoryResult.Count());
         }
 
 
         // Use for Coyote
+        /*********************************/
         public async Task GetAndUpdateAtTheSameTime()
         {
-            _context.Certificates.Add(CertificateBuilder.GetDefaultValue());
+            _context.Certificates.AddRange(CertificateBuilder.GetDefaultValues());
             _context.SaveChanges();
 
             _context.ChangeTracker.Clear();
@@ -57,10 +91,11 @@ namespace IntegrationTests.Repositories
 
             // This code throws an DbUpdateConcurrencyException,
             // so we add a check (try-catch) to the "Edit" methods of the controllers.
-            var deleteResult = repository.DeleteAsync(certificate);
-            var updateResult = repository.UpdateAsync(new ApplicationCore.Entities.Certificate { Id = certificate.Id, Title = "New title" });
+            var deleteResult = _repository.DeleteAsync(certificate);
+            var updateResult = _repository.UpdateAsync(certificate);
 
             await Task.WhenAll(deleteResult, updateResult);
         }
+        /*********************************/
     }
 }

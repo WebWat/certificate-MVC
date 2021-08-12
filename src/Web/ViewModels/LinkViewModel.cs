@@ -8,6 +8,8 @@ namespace Web.ViewModels
 
         [Required(ErrorMessage = "Required")]
         [Url(ErrorMessage = "IncorrectUrl")]
-        public string Name { get; set; }
+        public string Url { get; set; }
+
+        public int CertificateId { get; set; }
     }
 }

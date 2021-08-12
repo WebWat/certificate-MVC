@@ -16,6 +16,7 @@ namespace Web.Controllers
             _adminService = adminService;
         }
 
+
         public async Task<IActionResult> Index()
         {
             return View(await _adminService.GetIndexAdminViewModelListAsync());

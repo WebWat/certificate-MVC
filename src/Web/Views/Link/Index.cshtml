@@ -1,41 +1,46 @@
 ﻿@model LinkListViewModel
 @{
     ViewData["Title"] = Localizer["Title"];
+
+    string disabled = Model.Links.Count() >= 5 ? "disabled" : string.Empty;
 }
-<div id="modDialog" class="modal fade">
-    <div id="dialogContent" class="modal-dialog"></div>
-</div>
+
+<partial name="MainPages/_DeleteModalPartial" />
 
 <h1 class="caption">@Localizer["Title"]</h1>
-<h4 class="caption">@Localizer["Description"]</h4>
+
+<p style="font-size: 1.5rem;">@Localizer["Description"]</p>
+
+<a asp-controller="Link" 
+   asp-action="Create" 
+   asp-route-id="@Model.CertificateId" 
+   class="btn btn-success @disabled">@Localizer["Create"]
+</a>
 <hr />
 <div class="row">
-    <div class="col-md-8">
-        <form asp-action="Create">
-            <input asp-for="CertificateId" type="hidden" />
-            <div class="input-group mb-3">
-                <input asp-for="Link.Name" class="form-control">
-                <div class="input-group-prepend">
-                    <input type="submit" class="btn btn-primary" value="@Localizer["Add"]" />
-                </div>
-            </div>
-            <span asp-validation-for="Link.Name" class="text-danger"></span>
-        </form>
+    <div class="col-md-8">      
         <ul class="list-group mt-3">
-            @if (Model?.Links != null)
+            @foreach (var link in Model.Links)
             {
-                @foreach (var a in Model.Links)
-                {
-                    <li class="list-group-item d-flex flex-link">
-                        <a href="@a.Name" target="_blank">@a.Name</a>
-                        <span class="badge float-right badge-left">
-                            <a asp-controller="Link" asp-action="Delete" asp-route-id="@a.Id" class="btn btn-sm btn-danger delete">@Localizer["Delete"]</a>
-                        </span>
-                    </li>
-                }
+                <li class="list-group-item d-flex flex-link">
+                    <a href="@link.Url" target="_blank" class="truncated">@link.Url</a>
+                    <span class="badge float-right badge-left">
+                        <a asp-controller="Link" 
+                           asp-action="Delete" 
+                           asp-route-id="@link.Id"
+                           asp-route-certificateId="@link.CertificateId"
+                           class="btn btn-sm btn-danger delete">@Localizer["Delete"]</a>
+                    </span>
+                </li>
             }
         </ul>
-        <p><a class="btn btn-primary mt-3" asp-controller="Certificate" asp-action="Details" asp-route-id="@Model.CertificateId">@Localizer["Back"]</a></p>
+        <p>
+            <a class="btn btn-primary mt-3" 
+              asp-controller="Certificate" 
+              asp-action="Details" 
+              asp-route-id="@Model.CertificateId">@Localizer["Back"]
+            </a>
+        </p>
     </div>
 </div>
 

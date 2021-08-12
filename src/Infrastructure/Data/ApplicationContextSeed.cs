@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Entities;
+﻿using ApplicationCore.Constants;
+using ApplicationCore.Entities;
 using ApplicationCore.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,10 @@ namespace Infrastructure.Data
 {
     public class ApplicationContextSeed
     {
-        public static async Task SeedAsync(ApplicationContext context, UserManager<ApplicationUser> userManager, 
+        public static async Task SeedAsync(ApplicationContext context, UserManager<ApplicationUser> userManager,
                                            string imagePath)
         {
-            var _user = await userManager.FindByNameAsync("admin");
+            var _user = await userManager.FindByNameAsync(AuthorizationConstants.UserName);
 
             if (!await context.Certificates.AnyAsync())
             {
@@ -26,7 +27,7 @@ namespace Infrastructure.Data
             {
                 foreach (var item in await context.Certificates.ToListAsync())
                 {
-                    await context.Links.AddRangeAsync(GetLinks(_user.Id, item.Id));
+                    await context.Links.AddRangeAsync(GetLinks(item.Id));
                 }
                 await context.SaveChangesAsync();
             }
@@ -37,34 +38,28 @@ namespace Infrastructure.Data
         {
             return new List<Certificate>
             {
-                new Certificate
-                {
-                    Title = "Robofest",
-                    Description = "2nd place in the Robo-racing category",
-                    Date = DateTime.UtcNow,
-                    Stage = Stage.AllRussian,
-                    File = File.ReadAllBytes(path),
-                    UserId = userId
-                },
-                new Certificate
-                {
-                    Title = "Robofest",
-                    Description = "3rd place in the RoboFootball category",
-                    Date = DateTime.UtcNow,
-                    Stage = Stage.AllRussian,
-                    File = File.ReadAllBytes(path),
-                    UserId = userId
-                }
+                new Certificate(userId,
+                                "Robofest",
+                                File.ReadAllBytes(path),
+                                "2nd place in the Robo-racing category",
+                                Stage.AllRussian,
+                                DateTime.UtcNow),
+                new Certificate(userId,
+                                "Robofest",
+                                File.ReadAllBytes(path),
+                                "3rd place in the RoboFootball category",
+                                Stage.AllRussian,
+                                DateTime.UtcNow),
             };
         }
 
 
-        private static IEnumerable<Link> GetLinks(string userId, int certificateId)
+        private static IEnumerable<Link> GetLinks(int certificateId)
         {
             return new List<Link>
             {
-                new Link { CertificateId = certificateId, Name = "http://url.certfcate.ru/examplelink1", UserId = userId },
-                new Link { CertificateId = certificateId, Name = "http://url.certfcate.ru/examplelink2", UserId = userId }
+                new Link ("https://example.com", certificateId),
+                new Link ("https://example.com/", certificateId)
             };
         }
     }

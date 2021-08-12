@@ -1,4 +1,4 @@
-﻿using Web.Helpers;
+﻿using Web.Extensions;
 using Xunit;
 
 namespace UnitTests.Web.Helpers
@@ -11,7 +11,7 @@ namespace UnitTests.Web.Helpers
         public void GenerateKey(string expected, string objectName, params string[] args)
         {
             // Assert
-            Assert.Equal(expected, CacheHelper.GenerateCacheKey(objectName, args));
+            Assert.Equal(expected, objectName.GenerateCacheKey(args));
         }
     }
 }

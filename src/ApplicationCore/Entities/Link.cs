@@ -1,10 +1,14 @@
 ﻿namespace ApplicationCore.Entities
 {
-    public class Link : BaseUserClaim
+    public class Link : BaseEntity
     {
-        public string Name { get; set; }
+        public string Url { get; private set; }
+        public int CertificateId { get; private set; }
 
-        public int CertificateId { get; set; }
-        public Certificate Certificate { get; set; }
+        public Link(string url, int certificateId)
+        {
+            Url = url;
+            CertificateId = certificateId;
+        }
     }
 }

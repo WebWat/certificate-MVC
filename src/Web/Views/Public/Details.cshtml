@@ -2,44 +2,26 @@
 @inject IStageService Service
 @{
     ViewData["Title"] = Localizer["Title"];
+
+    string converted = Convert.ToBase64String(Model.ImageData);
 }
 
 <h1 class="caption">@Localizer["Title"]</h1>
 <hr />
-
 <div class="row">
-    <div class="col-md-6" style="word-wrap: break-word;">
-        <h5>@Localizer["AwardTitle"]</h5>
-        <p>@Html.DisplayFor(model => model.Title)</p>
-        <br />
-        <h5>@Localizer["Description"]</h5>
-        <p>@Html.DisplayFor(model => model.Description)</p>
-        <br />
-        <h5>@Localizer["Stage"]</h5>
-        <p>@Service.GetNameOfStage(Model.Stage)</p>
-        <br />
-        <h5>@Localizer["Date"]</h5>
-        <p>@Html.DisplayFor(model => model.Date)</p>
-        <br />
-        <h5>@Localizer["Links"]</h5>
-        @if (Model.Links.Count != 0)
-        {
-            <ul class="list-group">
-                @foreach (var a in Model.Links)
-                {
-                    <li class="list-group-item"><a href="@a.Name" target="_blank">@a.Name</a></li>
-                }
-            </ul>
-        }
-        else
-        {
-            <p>@Localizer["None"]</p>
-        }
-        <a asp-route="public" asp-route-uniqueUrl="@Model.UniqueUrl" asp-route-page="@Model.Page" class="btn btn-primary mt-3">@Localizer["Back"]</a>
+    <div class="col-md-6 break-word">
+
+        <partial name="MainPages/_CertificateDetailsPartial" model="@Model" />
+
+        <a asp-route="Public" 
+           asp-route-uniqueUrl="@Model.UniqueUrl" 
+           asp-route-page="@Model.Page" 
+           class="btn btn-primary mt-3">@Localizer["Back"]
+        </a>
     </div>
     <div class="col-md-6 col-md-offset-2">
-        <a href="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" data-lightbox="image-@Model.Id" data-title="@Model.Title">
-            <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageData))" class="img-fluid img-thumbnail ms-image-details" />
+        <a href="data:image/jpeg;base64,@converted" data-lightbox="image-@Model.Id" data-title="@Model.Title">
+            <img src="data:image/jpeg;base64,@converted" class="img-fluid img-thumbnail ms-image-details" />
         </a>
     </div>
 </div>

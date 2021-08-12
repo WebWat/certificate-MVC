@@ -30,19 +30,17 @@ namespace Web.Areas.Identity.Pages.Account
 
         public IActionResult OnGet(string code = null)
         {
-            if (code == null)
+            if (code is null)
             {
                 return BadRequest();
             }
-            else
-            {
-                Input = new ResetInput
-                {
-                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
-                };
 
-                return Page();
-            }
+            Input = new ResetInput
+            {
+                Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
+            };
+
+            return Page();
         }
 
 
@@ -55,7 +53,7 @@ namespace Web.Areas.Identity.Pages.Account
 
             var user = await _userManager.FindByEmailAsync(Input.Email);
 
-            if (user == null)
+            if (user is null)
             {
                 return RedirectToPage("./ResetPasswordConfirmation");
             }

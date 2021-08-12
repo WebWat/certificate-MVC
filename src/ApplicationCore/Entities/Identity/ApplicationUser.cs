@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
 
 namespace ApplicationCore.Entities.Identity
 {
+    // TODO: protected?
     public class ApplicationUser : IdentityUser
     {
         public string Name { get; set; }
@@ -19,9 +19,5 @@ namespace ApplicationCore.Entities.Identity
         public string UniqueUrl { get; set; }
 
         public DateTime RegistrationDate { get; set; }
-
-        public List<Certificate> Certificates { get; set; } = new List<Certificate>();
-
-        public void ClearCertificates() => Certificates.Clear();
     }
 }

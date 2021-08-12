@@ -40,7 +40,7 @@ namespace Web.Areas.Identity.Pages.Account
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
 
-                if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
+                if (user is null || !await _userManager.IsEmailConfirmedAsync(user))
                 {
                     return Page();
                 }

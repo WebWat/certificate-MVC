@@ -2,7 +2,9 @@
 using ApplicationCore.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Web.Services;
 using Xunit;
@@ -21,7 +23,7 @@ namespace UnitTests.Web.Services
 
             _mockCertificateRepository.Setup(f => f.ListByUserId(It.IsAny<string>())).Returns(GetCertificates());
             _mockCertificateRepository.Setup(f => f.GetCertificateIncludeLinksAsync(default, default, default))
-                                      .ReturnsAsync(GetCertificate());
+                                      .ReturnsAsync(GetCertificates().First());
 
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
         }
@@ -39,7 +41,6 @@ namespace UnitTests.Web.Services
 
             // Assert
             Assert.Equal("certificate_one", result.Title);
-            Assert.Single(result.Links);
             Assert.NotNull(_memoryCache.Get("CertificateViewModel_0"));
         }
 
@@ -55,7 +56,7 @@ namespace UnitTests.Web.Services
             var result = service.GetList(UserId);
 
             // Assert
-            Assert.Equal(2, result.Count);
+            Assert.NotNull(result);
             Assert.NotNull(_memoryCache.Get("PublicViewModel_" + UserId));
         }
 
@@ -86,7 +87,7 @@ namespace UnitTests.Web.Services
                                                            _memoryCache);
 
             // Act
-           service.SetList(UserId);
+            service.SetList(UserId);
 
             // Assert
             _mockCertificateRepository.Verify(f => f.ListByUserId(UserId));
@@ -97,19 +98,8 @@ namespace UnitTests.Web.Services
         private List<Certificate> GetCertificates() =>
             new()
             {
-                new Certificate { Title = "certificate1" },
-                new Certificate { Title = "certificate2" },
-            };
-
-
-        private Certificate GetCertificate() =>
-            new()
-            {
-                Title = "certificate_one",
-                Links = new List<Link>
-                {
-                    new Link { Name = "link" }
-                }
+                new Certificate(null, "certificate_one", null, null, Stage.AllRussian, DateTime.Now),
+                new Certificate(null, "certificate_two", null, null, Stage.AllRussian, DateTime.Now),
             };
     }
 }

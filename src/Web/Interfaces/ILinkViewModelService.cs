@@ -6,12 +6,17 @@ namespace Web.Interfaces
 {
     public interface ILinkViewModelService
     {
-        Task CreateLinkAsync(int certificateId, LinkViewModel cvm, string userId, 
-                             CancellationToken cancellationToken = default);
+        Task<bool> CreateLinkAsync(LinkViewModel lvm,
+                                   string userId,
+                                   CancellationToken cancellationToken = default);
 
-        Task<int> DeleteLinkAsync(int id, string userId, CancellationToken cancellationToken = default);
-
-        Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId, string userId, 
+        Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId,
+                                                          string userId,
                                                           CancellationToken cancellationToken = default);
+
+        Task<bool> DeleteLinkAsync(int id,
+                                   int certificateId,
+                                   string userId,
+                                   CancellationToken cancellationToken = default);
     }
 }

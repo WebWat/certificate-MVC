@@ -17,7 +17,7 @@ namespace Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LinkController> _logger;
 
-        public LinkController(ILinkViewModelService linkService, 
+        public LinkController(ILinkViewModelService linkService,
                               UserManager<ApplicationUser> userManager,
                               ILogger<LinkController> logger)
         {
@@ -31,20 +31,38 @@ namespace Web.Controllers
         {
             var _user = await _userManager.GetUserAsync(User);
 
-            return View(await _linkService.GetLinkListViewModelAsync(id, _user.Id, cancellationToken));
+            var result = await _linkService.GetLinkListViewModelAsync(id, _user.Id, cancellationToken);
+
+            if (result is null)
+            {
+                return NotFound();
+            }
+
+            return View(result);
         }
 
+
+        public IActionResult Create(int id)
+        {
+            return View(new LinkViewModel { CertificateId = id });
+        }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(LinkListViewModel lvm, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(LinkViewModel lvm, CancellationToken cancellationToken)
         {
             var _user = await _userManager.GetUserAsync(User);
 
             if (ModelState.IsValid)
             {
-                await _linkService.CreateLinkAsync(lvm.CertificateId, lvm.Link, _user.Id, cancellationToken);
+                var success = await _linkService.CreateLinkAsync(lvm, _user.Id, cancellationToken);
+
+                if (!success)
+                {
+                    // TODO: bad request?
+                    return NotFound();
+                }
 
                 _logger.LogInformation($"Link for the certificate {lvm.CertificateId} is created by User {_user.Id}");
             }
@@ -61,11 +79,16 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(int id, int certificateId, CancellationToken cancellationToken)
         {
             var _user = await _userManager.GetUserAsync(User);
 
-            int certificateId = await _linkService.DeleteLinkAsync(id, _user.Id, cancellationToken);
+            var success = await _linkService.DeleteLinkAsync(id, certificateId, _user.Id, cancellationToken);
+
+            if (!success)
+            {
+                return NotFound();
+            }
 
             _logger.LogInformation($"Link for the certificate {certificateId} is deleted by User {_user.Id}");
 

@@ -1,0 +1,41 @@
+﻿@model SearchViewModel
+@inject IStringLocalizer<SharedResource> LocalizerPartial
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="get">
+            <div class="d-flex flex-search justify-content-between">
+                <div class="col-md-5 p-0">
+                    <label>@LocalizerPartial["AwardTitle"]</label>
+                    <input asp-for="Find" class="form-control mw-100 autocom" placeholder="@LocalizerPartial["SearchInfo"]" maxlength="30" autocomplete="off" />
+                </div>
+                <div class="col-md-3 p-0">
+                    <label>@LocalizerPartial["Year"]</label>
+                    <select asp-for="Year" asp-items="Model.Years" class="form-control mw-100"></select>
+                </div>
+                <div class="col-md-3 p-0">
+                    <label>@LocalizerPartial["Stage"]</label>
+                    @Html.DropDownListFor(model => model.Stage, Model.Stages, new { @class = "form-control col-md-3 mw-100" })
+                </div>
+                <div class="h-auto d-flex flex-column justify-content-end">
+                    <input type="submit" value="@LocalizerPartial["Search"]" class="btn btn-info w-100" />
+                </div>
+            </div>
+        </form>
+
+        @if (!string.IsNullOrEmpty(Context.Request.Query["find"]) ||
+            (!string.IsNullOrEmpty(Context.Request.Query["year"]) &&
+            Context.Request.Query["year"] != LocalizerPartial["All"].Value) ||
+            !string.IsNullOrEmpty(Context.Request.Query["stage"]))
+        {
+            <h5 class="mb-0 mt-2 font-size-clear">
+                <a asp-controller="@Model.Controller"
+                    asp-action="Index"
+                    asp-all-route-data="@Model.Parameters"
+                    class="badge badge-primary">
+                    &times; @LocalizerPartial["Clear"]
+                </a>
+            </h5>      
+        }
+    </div>
+</div>

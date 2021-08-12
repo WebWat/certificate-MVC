@@ -133,7 +133,7 @@
     <value>International</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>Minimum 512Kb. Maximum 2 Mb.</value>
+    <value>Minimum 1 Kb. Maximum 3 Mb.</value>
   </data>
   <data name="Republican" xml:space="preserve">
     <value>Republican</value>

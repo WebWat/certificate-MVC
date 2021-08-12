@@ -1,9 +1,7 @@
 using ApplicationCore.Constants;
 using ApplicationCore.Entities.Identity;
-using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Infrastructure.Data;
-using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -36,17 +34,18 @@ namespace Web
             services.Configure<Email>(Configuration.GetSection("Email"));
             services.Configure<FileSettings>(Configuration.GetSection("FileSettings"));
 
-            // Core services.
+            // Core services
             services.AddCoreServices();
 
-            // Web services.
+            // Web services
             services.AddWebServices();
 
-            // Database.
+            // Database
             services.AddDbContext<ApplicationContext>(options =>
-                            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))); //Use DockerConnection for Docker
+                            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))); // Use DockerConnection for Docker
+            // TODO: add database for tests
 
-            // Identity.
+            // Identity
             services.AddTransient<IPasswordValidator<ApplicationUser>, CustomPasswordPolicy>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -59,14 +58,14 @@ namespace Web
                 options.Lockout.AllowedForNewUsers = true;
             });
 
-            // Data protection.
-            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Directory.GetCurrentDirectory() + @"\keys"))
+            // Data protection
+            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Directory.GetCurrentDirectory() + @"\Keys"))
                                         .SetDefaultKeyLifetime(TimeSpan.FromDays(180));
 
-            // Cookie.
+            // Cookie
             services.ConfigureCookieSettings();
 
-            // Localization.
+            // Localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             services.Configure<RequestLocalizationOptions>(options =>
@@ -89,14 +88,14 @@ namespace Web
                 options.SupportedUICultures = supportedCultures;
             });
 
-            // Other services.
-            services.AddScoped<IUrlShortener, UrlShortener>();
+            // Other services
             services.AddAntiforgery(options =>
             {
                 options.Cookie.Name = CookieNamesConstants.Antiforgery;
             });
             services.AddHttpClient();
-            services.AddControllersWithViews().AddDataAnnotationsLocalization(options => {
+            services.AddControllersWithViews().AddDataAnnotationsLocalization(options =>
+            {
                 options.DataAnnotationLocalizerProvider = (type, factory) =>
                     factory.Create(typeof(SharedResource));
             }).AddViewLocalization();
@@ -111,6 +110,7 @@ namespace Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
             }
             else
             {
@@ -131,7 +131,7 @@ namespace Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}/{certificateId?}");
                 endpoints.MapControllerRoute(
                     name: "public",
                     pattern: "Public/{uniqueUrl}",

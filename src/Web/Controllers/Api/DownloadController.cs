@@ -7,6 +7,7 @@ using Microsoft.Extensions.Localization;
 using OfficeOpenXml;
 using System.IO;
 using System.IO.Compression;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Web.Interfaces;
 
@@ -22,8 +23,8 @@ namespace Web.Controllers
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly IStageService _stage;
 
-        public DownloadController(UserManager<ApplicationUser> userManager, 
-                                  ICertificateRepository repository, 
+        public DownloadController(UserManager<ApplicationUser> userManager,
+                                  ICertificateRepository repository,
                                   IStringLocalizer<SharedResource> localizer,
                                   IStageService stage)
         {
@@ -41,7 +42,7 @@ namespace Web.Controllers
 
             var certificate = await _repository.GetByUserIdAsync(id, _user.Id);
 
-            return File(certificate.File, "image/jpeg", certificate.Title + ".jpg");
+            return File(certificate.File, MediaTypeNames.Image.Jpeg, certificate.Title + ".jpg");
         }
 
 
@@ -65,7 +66,7 @@ namespace Web.Controllers
                 {
                     var zipEntry = zipArchive.CreateEntry(item.Title + ".jpg");
 
-                    using (var originalFileStream = new MemoryStream(item.File))
+                    using var originalFileStream = new MemoryStream(item.File);
 
                     using (var zipEntryStream = zipEntry.Open())
                     {
@@ -74,7 +75,9 @@ namespace Web.Controllers
                 }
             }
 
-            return File(compressedFileStream.ToArray(), "application/zip", _localizer["Achievements"] + ".zip");
+            return File(compressedFileStream.ToArray(),
+                        MediaTypeNames.Application.Zip,
+                        _localizer["Achievements"] + ".zip");
         }
 
 
@@ -114,7 +117,7 @@ namespace Web.Controllers
                 data = package.GetAsByteArray();
             }
 
-            if (data == null || data.Length == 0)
+            if (data is null || data.Length == 0)
             {
                 return null;
             }

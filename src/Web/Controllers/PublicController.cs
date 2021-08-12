@@ -24,23 +24,23 @@ namespace Web.Controllers
 
 
         [Route("{uniqueUrl}")]
-        public async Task<IActionResult> Index(string uniqueUrl, CancellationToken cancellationToken, 
+        public async Task<IActionResult> Index(string uniqueUrl, 
+                                               CancellationToken cancellationToken, 
                                                string year = null, 
                                                string find = null, 
                                                Stage? stage = null, 
                                                int page = 1)
         {
-            var _user = await _repository.GetAsync(i => EF.Functions.Collate(i.UniqueUrl, "SQL_Latin1_General_CP1_CS_AS") == uniqueUrl, 
+            var _user = await _repository.GetAsync(e => EF.Functions.Collate(e.UniqueUrl, 
+                                                                             "SQL_Latin1_General_CP1_CS_AS") == uniqueUrl, 
                                                    cancellationToken);
 
-            if (_user == null)
+            if (_user is null)
             {
                 return NotFound();
             }
 
-            // TODO: rewrite
-            return View(_service.GetPublicViewModel(page, year, find, stage, _user.Id, _user.Name, _user.MiddleName, 
-                                                    _user.Surname, _user.UniqueUrl, _user.Photo));
+            return View(_service.GetPublicViewModel(page, year, find, stage, _user));
         }
 
 
@@ -49,14 +49,14 @@ namespace Web.Controllers
         {
             var _user = await _repository.GetAsync(i => i.UniqueUrl == uniqueUrl, cancellationToken);
 
-            if (_user == null)
+            if (_user is null)
             {
                 return NotFound();
             }
 
             var certificate = await _service.GetCertificateByIdIncludeLinksAsync(page, id, _user.Id, _user.UniqueUrl);
 
-            if (certificate == null)
+            if (certificate is null)
             {
                 return NotFound();
             }

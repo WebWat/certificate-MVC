@@ -1,0 +1,28 @@
+﻿@model LinkViewModel
+@{
+    ViewData["Title"] = Localizer["Title"];
+}
+
+<h1 class="caption">@Localizer["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-7">
+        <form asp-action="Create">
+            <input asp-for="CertificateId" type="hidden" />
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <input asp-for="Url" class="form-control" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-1">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-primary"
+                       asp-controller="Link" 
+                       asp-action="Index" 
+                       asp-route-id="@Model.CertificateId">@Localizer["Back"]</a>
+                    <input type="submit" value="@Localizer["Create"]" class="btn btn-success" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -130,7 +130,7 @@
     <value>Ваши данные (имя и город) будут отображаться в рейтинге</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>Минимум  512Кб. Максимум 2 Мб.</value>
+    <value>Минимум  1 Кб. Максимум 3 Мб.</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Сохранить</value>

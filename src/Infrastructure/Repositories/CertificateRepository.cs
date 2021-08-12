@@ -23,8 +23,11 @@ namespace Infrastructure.Repositories
 
 
         public async Task<Certificate> GetCertificateIncludeLinksAsync(int id, string userId, CancellationToken cancellationToken = default)
-        {
-            return await _context.Certificates.Include(i => i.Links).AsNoTracking().FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId, cancellationToken);
+        { 
+            return await _context.Certificates.Include(i => i.Links)
+                                              .AsNoTracking()
+                                              .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId,
+                                                                   cancellationToken);
         }
 
 

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Helpers;
+using Web.Extensions;
 using Web.Interfaces;
 using Web.ViewModels;
 
@@ -24,8 +24,8 @@ namespace Web.Services
 
         public async Task<Certificate> GetItemAsync(int id, string userId)
         {
-            return await _memoryCache.GetOrCreateAsync(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel),
-                                                       id.ToString()), async item =>
+            return await _memoryCache.GetOrCreateAsync(nameof(CertificateViewModel).GenerateCacheKey(id.ToString()),
+                                                       async item =>
             {
                 item.SlidingExpiration = CacheHelper.DefaultExpiration;
 
@@ -36,7 +36,7 @@ namespace Web.Services
 
         public List<Certificate> GetList(string userId)
         {
-            return _memoryCache.GetOrCreate(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.ToString()), item =>
+            return _memoryCache.GetOrCreate(nameof(PublicViewModel).GenerateCacheKey(userId.ToString()), item =>
             {
                 item.SlidingExpiration = CacheHelper.DefaultExpiration;
 
@@ -49,14 +49,14 @@ namespace Web.Services
         {
             var item = await _repository.GetCertificateIncludeLinksAsync(id, userId);
 
-            _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(CertificateViewModel), id.ToString()), item,
+            _memoryCache.Set(nameof(CertificateViewModel).GenerateCacheKey(id.ToString()), item,
                              new MemoryCacheEntryOptions().SetSlidingExpiration(CacheHelper.DefaultExpiration));
         }
 
 
         public void SetList(string userId)
         {
-            _memoryCache.Set(CacheHelper.GenerateCacheKey(nameof(PublicViewModel), userId.ToString()),
+            _memoryCache.Set(nameof(PublicViewModel).GenerateCacheKey(userId.ToString()),
                              _repository.ListByUserId(userId).ToList(),
                              new MemoryCacheEntryOptions().SetSlidingExpiration(CacheHelper.DefaultExpiration));
         }

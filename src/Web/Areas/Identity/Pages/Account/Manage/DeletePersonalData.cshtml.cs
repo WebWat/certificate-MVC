@@ -15,7 +15,6 @@ namespace Web.Areas.Identity.Pages.Account.Manage
     [Authorize]
     public class DeletePersonalDataModel : PageModel
     {
-        private readonly IUserRepository _repository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IStringLocalizer<DeletePersonalData> _localizer;
@@ -23,13 +22,11 @@ namespace Web.Areas.Identity.Pages.Account.Manage
 
         public DeletePersonalDataModel(UserManager<ApplicationUser> userManager,
                                        SignInManager<ApplicationUser> signInManager,
-                                       IUserRepository repository,
                                        IStringLocalizer<DeletePersonalData> localizer,
                                        ILogger<DeletePersonalDataModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _repository = repository;
             _localizer = localizer;
             _logger = logger;
         }
@@ -65,8 +62,8 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                     return Page();
                 }
             }
-
-            await _repository.DeleteUserAsync(user.Id, cancellationToken);
+            // TODO: remove certificates
+            await _userManager.DeleteAsync(user);
 
             _logger.LogInformation($"User {user.Id} has been deleted");
 

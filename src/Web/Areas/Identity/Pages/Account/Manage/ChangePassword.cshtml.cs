@@ -70,7 +70,9 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, 
+                                                                              Input.OldPassword, 
+                                                                              Input.NewPassword);
 
             if (!changePasswordResult.Succeeded)
             {
@@ -78,6 +80,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+
                 return Page();
             }
 

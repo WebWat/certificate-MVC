@@ -1,12 +1,10 @@
 ﻿@model IndexViewModel
 @{
     ViewData["Title"] = Localizer["Title"];
-    if(Model.Certificates.Count() == 1)
-    {
-        Context.Response.Cookies.Append("isLast", "true", new() { SameSite = SameSiteMode.Lax });
-    }
 }
+
 <h1 class="caption">@Localizer["Title"]</h1>
+
 <div class="card mb-3">
     <div class="card-body">
         <div class="d-flex justify-content-between">
@@ -19,31 +17,9 @@
         </div>
     </div>
 </div>
-<div class="card mb-3">
-    <div class="card-body">
-        <form method="get" name="search">
-            <div class="d-flex flex-search justify-content-between">
-                <div class="col-md-5 p-0">
-                    <input asp-for="Find" class="form-control mw-100 autocom" placeholder="@Localizer["Info"]" maxlength="30" autocomplete="off" />
-                </div>
-                <select asp-for="Year" asp-items="Model.Years" class="form-control col-md-3 mw-100"></select>
-                @Html.DropDownListFor(model => model.Stage, Model.Stages, new { @class = "form-control col-md-3 mw-100" })
-                <input type="submit" value="@Localizer["Search"]" class="btn btn-info" />
-            </div>
-        </form>
-        @if (!string.IsNullOrEmpty(Context.Request.Query["find"]) || !string.IsNullOrEmpty(Context.Request.Query["stage"]))
-        {
-            <h4 class="mb-0 mt-2 font-size-clear"><a asp-controller="Certificate" asp-action="Index" class="badge badge-primary">&times; @Localizer["Clear"]</a></h4>
-        }
-        else if (!string.IsNullOrEmpty(Context.Request.Query["year"]))
-        {
-            if (Context.Request.Query["year"] != Localizer["All"].Value)
-            {
-                <h4 class="mb-0 mt-2 font-size-clear"><a asp-controller="Certificate" asp-action="Index" class="badge badge-primary">&times; @Localizer["Clear"]</a></h4>
-            }
-        }
-    </div>
-</div>
+
+<partial name="MainPages/_SearchPartial" model="@Model" />
+
 @if (Model.Certificates.Any())
 {
     <div class="row index">
@@ -51,18 +27,7 @@
         {
             <div class="col-sm-6">
                 <div class="card mb-3 anim" onclick="start(@item.Id, @Model.PageViewModel.PageNumber)">
-                    <div class="row no-gutters">
-                        <div class="col-md-4 ms-image">
-                            <img src="data:image/jpeg;base64,@(Convert.ToBase64String(item.ImageData))" class="card-img">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">@item.Title</h5>
-                                <p class="card-text">@item.Description</p>
-                                <p class="card-text"><small class="text-muted">@item.Date.ToShortDateString()</small></p>
-                            </div>
-                        </div>
-                    </div>
+                    <partial name="MainPages/_CertificateCardPartial" model="item" />
                 </div>
             </div>
         }
@@ -72,9 +37,7 @@
 }
 else
 {
-    <div class="text-center mt-5 index">
-        <h2 class="font-weight-normal op-6">@Localizer["NotFound"]</h2>
-    </div>
+    <partial name="MainPages/_EmptyListPartial" />
 }
 
 @section Scripts

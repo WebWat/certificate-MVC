@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    /// <summary>
-    /// Sends message to email.
-    /// </summary>
     public class EmailSender : IEmailSender
     {
         private readonly Email _email;

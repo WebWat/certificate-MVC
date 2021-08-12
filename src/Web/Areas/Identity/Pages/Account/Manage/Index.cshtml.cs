@@ -94,6 +94,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                         ModelState.AddModelError("Input.File", _localizer["FileSizeError"]);
                         return Page();
                     }
+
                     imageData = binaryReader.ReadBytes((int)Input.File.Length);
                 }
 

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,8 +29,8 @@ namespace Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly FileSettings _fileSettings;
 
-        public CertificateController(ICertificateViewModelService certificateService, 
-                                     UserManager<ApplicationUser> userManager, 
+        public CertificateController(ICertificateViewModelService certificateService,
+                                     UserManager<ApplicationUser> userManager,
                                      IStringLocalizer<SharedResource> localizer,
                                      ILogger<CertificateController> logger,
                                      IOptions<FileSettings> options)
@@ -42,7 +43,10 @@ namespace Web.Controllers
         }
 
 
-        public async Task<IActionResult> Index(int page = 1, string year = null, string find = null, Stage? stage = null)
+        public async Task<IActionResult> Index(int page = 1, 
+                                               string year = null, 
+                                               string find = null, 
+                                               Stage? stage = null)
         {
             var _user = await _userManager.GetUserAsync(User);
 
@@ -56,9 +60,12 @@ namespace Web.Controllers
 
             var _user = await _userManager.GetUserAsync(User);
 
-            var certificate = await _certificateService.GetCertificateByIdIncludeLinksAsync(page, id, _user.Id, cancellationToken);
+            var certificate = await _certificateService.GetCertificateByIdIncludeLinksAsync(page, 
+                                                                                            id, 
+                                                                                            _user.Id, 
+                                                                                            cancellationToken);
 
-            if (certificate == null)
+            if (certificate is null)
             {
                 return NotFound();
             }
@@ -75,34 +82,31 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CertificateViewModel cvm, CancellationToken cancellationToken)   
+        public async Task<IActionResult> Create(CertificateViewModel cvm, CancellationToken cancellationToken)
         {
             var _user = await _userManager.GetUserAsync(User);
 
-            if (cvm.File == null)
+            if (cvm.File is null)
             {
                 ModelState.AddModelError("File", _localizer["Required"]);
             }
 
             if (ModelState.IsValid)
             {
-                if (cvm.File != null)
+                if (cvm.File.CheckFileExtension(_fileSettings.Expansion))
                 {
-                    if (cvm.File.CheckFileExtension(_fileSettings.Expansion)) 
+                    ModelState.AddModelError("File", _localizer["FileExtensionError"]);
+                    return View();
+                }
+
+                using (var binaryReader = new BinaryReader(cvm.File.OpenReadStream()))
+                {
+                    if (cvm.File.CheckFileSize(_fileSettings.MinSize, _fileSettings.SizeLimit))
                     {
-                        ModelState.AddModelError("File", _localizer["FileExtensionError"]);
+                        ModelState.AddModelError("File", _localizer["FileSizeError"]);
                         return View();
                     }
-
-                    using (var binaryReader = new BinaryReader(cvm.File.OpenReadStream()))
-                    {
-                        if (cvm.File.CheckFileSize(_fileSettings.MinSize, _fileSettings.SizeLimit))
-                        {
-                            ModelState.AddModelError("File", _localizer["FileSizeError"]);
-                            return View();
-                        }
-                        cvm.ImageData = binaryReader.ReadBytes((int)cvm.File.Length);
-                    }
+                    cvm.ImageData = binaryReader.ReadBytes((int)cvm.File.Length);
                 }
 
                 await _certificateService.CreateCertificateAsync(cvm, _user.Id, cancellationToken);
@@ -111,6 +115,7 @@ namespace Web.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+
             return View();
         }
 
@@ -121,7 +126,7 @@ namespace Web.Controllers
 
             var certificate = await _certificateService.GetCertificateByIdAsync(id, _user.Id, cancellationToken);
 
-            if (certificate == null)
+            if (certificate is null)
             {
                 return NotFound();
             }
@@ -172,6 +177,7 @@ namespace Web.Controllers
 
                 return RedirectToAction(nameof(Details), new { id = cvm.Id });
             }
+
             return View(cvm);
         }
 
@@ -188,15 +194,6 @@ namespace Web.Controllers
         {
             int currentPage = GetCurrentPage();
 
-            if (HttpContext.Request.Cookies[CookieNamesConstants.IsLastPage] == "true")
-            {
-                if (currentPage > 1)
-                    currentPage -= 1;
-
-                HttpContext.Response.Cookies.Append(CookieNamesConstants.IsLastPage, "false", 
-                                                    new() { SameSite = SameSiteMode.Lax });
-            }
-
             var _user = await _userManager.GetUserAsync(User);
 
             await _certificateService.DeleteCertificateAsync(id, _user.Id, cancellationToken);
@@ -207,6 +204,7 @@ namespace Web.Controllers
         }
 
 
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public async Task<IActionResult> Share()
         {
             var _user = await _userManager.GetUserAsync(User);
@@ -225,11 +223,12 @@ namespace Web.Controllers
         {
             if (page == 0)
             {
-                page = int.TryParse(HttpContext.Request.Cookies[CookieNamesConstants.Page], out int result) ? result : 1;
+                page = int.TryParse(HttpContext.Request.Cookies[CookieNamesConstants.Page], 
+                                    out int result) ? result : 1;
             }
             else
             {
-                HttpContext.Response.Cookies.Append(CookieNamesConstants.Page, page.ToString(), 
+                HttpContext.Response.Cookies.Append(CookieNamesConstants.Page, page.ToString(),
                                                     new() { SameSite = SameSiteMode.Lax });
             }
 
