@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Entities.Identity;
 using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -22,16 +23,20 @@ namespace Web.Controllers
         private readonly ICertificateRepository _repository;
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly IStageService _stage;
+        private readonly IWebHostEnvironment _appEnvironment;
+
 
         public DownloadController(UserManager<ApplicationUser> userManager,
                                   ICertificateRepository repository,
                                   IStringLocalizer<SharedResource> localizer,
-                                  IStageService stage)
+                                  IStageService stage,
+                                  IWebHostEnvironment appEnvironment)
         {
             _userManager = userManager;
             _repository = repository;
             _localizer = localizer;
             _stage = stage;
+            _appEnvironment = appEnvironment;
         }
 
 
@@ -42,7 +47,7 @@ namespace Web.Controllers
 
             var certificate = await _repository.GetByUserIdAsync(id, _user.Id);
 
-            return File(certificate.File, MediaTypeNames.Image.Jpeg, certificate.Title + ".jpg");
+            return File(certificate.Path, MediaTypeNames.Image.Jpeg, certificate.Title + ".jpg");
         }
 
 
@@ -53,20 +58,22 @@ namespace Web.Controllers
 
             var list = _repository.ListByUserId(_user.Id);
 
-            if (list == null)
+            if (list is null)
             {
                 return default;
             }
 
             var compressedFileStream = new MemoryStream();
-
+            // TODO: fix repetitions
             using (var zipArchive = new ZipArchive(compressedFileStream, ZipArchiveMode.Create, false))
             {
                 foreach (var item in list)
                 {
+                    // TODO: fix .jpg
                     var zipEntry = zipArchive.CreateEntry(item.Title + ".jpg");
 
-                    using var originalFileStream = new MemoryStream(item.File);
+                    using var originalFileStream = new MemoryStream(
+                        System.IO.File.ReadAllBytes(_appEnvironment.WebRootPath + item.Path));
 
                     using (var zipEntryStream = zipEntry.Open())
                     {

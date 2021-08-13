@@ -21,13 +21,13 @@ namespace UnitTests.ApplicationCore.Services
         public void GenerateUrl()
         {
             // Arrange & Act
-            string expected = _urlGenerator.Generate();
+            string result = _urlGenerator.Generate();
 
-            _output.WriteLine("Generated string: " + expected);
+            _output.WriteLine("Generated string: " + result);
 
             // Assert
-            Assert.NotNull(expected);
-            Assert.NotEqual(string.Empty, expected);
+            Assert.NotNull(result);
+            Assert.NotEqual(string.Empty, result);
         }
     }
 }

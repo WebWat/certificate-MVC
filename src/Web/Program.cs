@@ -32,7 +32,7 @@ namespace Web
                     var hostingEnviroment = services.GetRequiredService<IWebHostEnvironment>();
 
                     await IdentityContextSeed.SeedAsync(userManager, roleManager);
-                    await ApplicationContextSeed.SeedAsync(applicationContext, userManager, Path.Combine(hostingEnviroment.WebRootPath, "img/example_image.jpg"));
+                    await ApplicationContextSeed.SeedAsync(applicationContext, userManager, "/img/example_image.jpg");
                 }
                 catch (Exception ex)
                 {

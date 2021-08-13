@@ -32,7 +32,7 @@ namespace Web.ViewModels
         [DataType(DataType.Upload)]
         public IFormFile File { get; set; }
 
-        public byte[] ImageData { get; set; }
+        public string Path { get; set; }
 
         public string UniqueUrl { get; set; }
 

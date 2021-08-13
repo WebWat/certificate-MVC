@@ -76,7 +76,7 @@ namespace Web.Services
                     Title = i.Title,
                     Description = i.Description,
                     Date = i.Date,
-                    ImageData = i.File
+                    Path = i.Path
                 };
 
                 return certificateViewModel;
@@ -112,7 +112,7 @@ namespace Web.Services
             (
                 userId,
                 cvm.Title,
-                cvm.ImageData,
+                cvm.Path,
                 cvm.Description,
                 cvm.Stage,
                 cvm.Date
@@ -130,7 +130,7 @@ namespace Web.Services
             (
                 userId,
                 cvm.Title,
-                cvm.ImageData,
+                cvm.Path,
                 cvm.Description,
                 cvm.Stage,
                 cvm.Date
@@ -175,7 +175,7 @@ namespace Web.Services
                 Links = certificate.Links,
                 Date = certificate.Date,
                 Stage = certificate.Stage,
-                ImageData = certificate.File,
+                Path = certificate.Path,
                 UserId = certificate.UserId,
                 Page = page
             };
@@ -200,12 +200,7 @@ namespace Web.Services
                 Description = certificate.Description,
                 Date = certificate.Date,
                 Stage = certificate.Stage,
-                File = new FormFile(new MemoryStream(certificate.File), 
-                                    0, 
-                                    certificate.File.Length, 
-                                    "File", 
-                                    "File"),
-                ImageData = certificate.File
+                Path = certificate.Path
             };
         }
     }

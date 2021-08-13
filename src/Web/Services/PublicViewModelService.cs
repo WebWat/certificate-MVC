@@ -62,7 +62,7 @@ namespace Web.Services
                     Title = i.Title,
                     Description = i.Description,
                     Date = i.Date,
-                    ImageData = i.File,
+                    Path = i.Path,
                     UserId = i.UserId
                 };
                 return certificateViewModel;
@@ -111,7 +111,7 @@ namespace Web.Services
                 Stage = certificate.Stage,
                 Date = certificate.Date,
                 UniqueUrl = url,
-                ImageData = certificate.File,
+                Path = certificate.Path,
                 UserId = certificate.UserId,
                 Page = page
             };

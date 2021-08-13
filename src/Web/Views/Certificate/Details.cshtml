@@ -2,8 +2,6 @@
 @inject IStageService Service 
 @{
     ViewData["Title"] = Localizer["Title"];
-
-    string converted = Convert.ToBase64String(Model.ImageData);
 }
 
 <partial name="MainPages/_DeleteModalPartial" />
@@ -30,14 +28,18 @@
         </div>
     </div>
     <div class="col-md-6">
-        <a href="data:image/jpeg;base64,@converted" data-lightbox="image-@Model.Id" data-title="@Model.Title">
-            <img src="data:image/jpeg;base64,@converted" class="img-fluid img-thumbnail ms-image-details" />
+        <a href="@Url.Content(Model.Path)" data-lightbox="image-@Model.Id" data-title="@Model.Title">
+            <img src="@Url.Content(Model.Path)" class="img-fluid img-thumbnail ms-image-details" />
         </a>
     </div>
 </div>
 
 @section Scripts
 {
-    <script src="~/lib/lightbox2/js/lightbox.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.js" 
+            integrity="sha512-UHlZzRsMRK/ENyZqAJSmp/EwG8K/1X/SzErVgPc0c9pFyhUwUQmoKeEvv9X0uNw8x46FxgIJqlD2opSoH5fjug==" 
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer">
+    </script>
     <script type="text/javascript" src="~/js/modalWindow.js" asp-append-version="true"></script>
 }

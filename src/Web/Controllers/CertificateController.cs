@@ -1,7 +1,9 @@
 ﻿using ApplicationCore.Constants;
 using ApplicationCore.Entities;
 using ApplicationCore.Entities.Identity;
+using ApplicationCore.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Extensions;
@@ -28,18 +31,21 @@ namespace Web.Controllers
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly FileSettings _fileSettings;
+        private readonly IWebHostEnvironment _appEnvironment;
 
         public CertificateController(ICertificateViewModelService certificateService,
                                      UserManager<ApplicationUser> userManager,
                                      IStringLocalizer<SharedResource> localizer,
                                      ILogger<CertificateController> logger,
-                                     IOptions<FileSettings> options)
+                                     IOptions<FileSettings> options,
+                                     IWebHostEnvironment appEnvironment)
         {
             _certificateService = certificateService;
             _userManager = userManager;
             _localizer = localizer;
             _logger = logger;
             _fileSettings = options.Value;
+            _appEnvironment = appEnvironment;
         }
 
 
@@ -106,7 +112,15 @@ namespace Web.Controllers
                         ModelState.AddModelError("File", _localizer["FileSizeError"]);
                         return View();
                     }
-                    cvm.ImageData = binaryReader.ReadBytes((int)cvm.File.Length);
+
+                    var path = $"/private/{Sha512Helper.GetRandomValue()}.{cvm.File.FileName.Split('.').Last()}"; 
+
+                    using (var stream = System.IO.File.Create(_appEnvironment.WebRootPath + path))
+                    {
+                        await cvm.File.CopyToAsync(stream, cancellationToken);
+                    }
+
+                    cvm.Path = path;
                 }
 
                 await _certificateService.CreateCertificateAsync(cvm, _user.Id, cancellationToken);
@@ -158,7 +172,15 @@ namespace Web.Controllers
                             ModelState.AddModelError("File", _localizer["FileSizeError"]);
                             return View(cvm);
                         }
-                        cvm.ImageData = binaryReader.ReadBytes((int)cvm.File.Length);
+
+                        var path = $"/private/{Sha512Helper.GetRandomValue()}.{cvm.File.FileName.Split('.').Last()}";
+
+                        using (var stream = System.IO.File.Create(_appEnvironment.WebRootPath + path))
+                        {
+                            await cvm.File.CopyToAsync(stream, cancellationToken);
+                        }
+
+                        cvm.Path = path;
                     }
                 }
 

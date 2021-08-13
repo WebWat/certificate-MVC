@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
     public class ApplicationContextSeed
     {
-        public static async Task SeedAsync(ApplicationContext context, UserManager<ApplicationUser> userManager,
+        public static async Task SeedAsync(ApplicationContext context, 
+                                           UserManager<ApplicationUser> userManager,
                                            string imagePath)
         {
             var _user = await userManager.FindByNameAsync(AuthorizationConstants.UserName);
@@ -40,13 +40,13 @@ namespace Infrastructure.Data
             {
                 new Certificate(userId,
                                 "Robofest",
-                                File.ReadAllBytes(path),
+                                path,
                                 "2nd place in the Robo-racing category",
                                 Stage.AllRussian,
                                 DateTime.UtcNow),
                 new Certificate(userId,
                                 "Robofest",
-                                File.ReadAllBytes(path),
+                                path,
                                 "3rd place in the RoboFootball category",
                                 Stage.AllRussian,
                                 DateTime.UtcNow),
