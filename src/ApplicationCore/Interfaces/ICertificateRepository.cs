@@ -14,5 +14,7 @@ namespace ApplicationCore.Interfaces
         Task<Certificate> GetByUserIdAsync(int id, string userId, CancellationToken cancellationToken = default);
 
         IEnumerable<Certificate> ListByUserId(string userId);
+
+        Task DeleteCertificatesByUserId(string userId, CancellationToken cancellationToken = default);
     }
 }

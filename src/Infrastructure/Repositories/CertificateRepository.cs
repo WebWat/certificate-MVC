@@ -31,6 +31,14 @@ namespace Infrastructure.Repositories
         }
 
 
+        public async Task DeleteCertificatesByUserId(string userId, CancellationToken cancellationToken = default)
+        {
+            _context.Certificates.RemoveRange(ListByUserId(userId));
+
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+
         public IEnumerable<Certificate> ListByUserId(string userId)
         {
             return List(i => i.UserId == userId);

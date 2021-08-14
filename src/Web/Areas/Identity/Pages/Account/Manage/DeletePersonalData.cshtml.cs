@@ -19,16 +19,19 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IStringLocalizer<DeletePersonalData> _localizer;
         private readonly ILogger<DeletePersonalDataModel> _logger;
+        private readonly ICertificateRepository _repository;
 
         public DeletePersonalDataModel(UserManager<ApplicationUser> userManager,
                                        SignInManager<ApplicationUser> signInManager,
                                        IStringLocalizer<DeletePersonalData> localizer,
-                                       ILogger<DeletePersonalDataModel> logger)
+                                       ILogger<DeletePersonalDataModel> logger,
+                                       ICertificateRepository repository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _localizer = localizer;
             _logger = logger;
+            _repository = repository;
         }
 
 
@@ -62,7 +65,9 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                     return Page();
                 }
             }
-            // TODO: remove certificates
+
+            await _repository.DeleteCertificatesByUserId(user.Id, cancellationToken);
+
             await _userManager.DeleteAsync(user);
 
             _logger.LogInformation($"User {user.Id} has been deleted");
