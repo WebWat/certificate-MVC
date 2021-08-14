@@ -22,9 +22,7 @@ namespace Infrastructure.Data
         {
             modelBuilder.Entity<Certificate>()
                         .Property(e => e.Stage)
-                        .HasConversion(v => v.ToString(),
-                                       v => (Stage)Enum.Parse(typeof(Stage),
-                                       v));
+                        .HasConversion(v => v.ToString(), v => (Stage)Enum.Parse(typeof(Stage), v));
 
             base.OnModelCreating(modelBuilder);
         }
