@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class EFCoreRepository<T> : IAsyncDisposable, IAsyncRepository<T> where T : BaseEntity
+    public class EFCoreRepository<T> : IAsyncRepository<T> where T : BaseEntity
     {
         protected readonly ApplicationContext _context;
 
@@ -69,12 +69,6 @@ namespace Infrastructure.Repositories
         public async Task<int> GetCountAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Set<T>().AsNoTracking().CountAsync(cancellationToken);
-        }
-
-
-        public async ValueTask DisposeAsync()
-        {
-            await _context.DisposeAsync();
         }
     }
 }
