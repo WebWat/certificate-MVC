@@ -2,7 +2,6 @@
 using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Interfaces;
@@ -24,16 +23,14 @@ namespace Web.Controllers
 
 
         [Route("{uniqueUrl}")]
-        public async Task<IActionResult> Index(string uniqueUrl, 
-                                               CancellationToken cancellationToken, 
-                                               string year = null, 
-                                               string find = null, 
-                                               Stage? stage = null, 
+        public async Task<IActionResult> Index(string uniqueUrl,
+                                               CancellationToken cancellationToken,
+                                               string year = null,
+                                               string find = null,
+                                               Stage? stage = null,
                                                int page = 1)
         {
-            var _user = await _repository.GetAsync(e => EF.Functions.Collate(e.UniqueUrl, 
-                                                                             "SQL_Latin1_General_CP1_CS_AS") == uniqueUrl, 
-                                                   cancellationToken);
+            var _user = await _repository.GetAsync(e => e.UniqueUrl == uniqueUrl, cancellationToken);
 
             if (_user is null)
             {

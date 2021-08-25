@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,16 +19,19 @@ namespace Infrastructure.Identity
             _context = context;
         }
 
+
         public async Task<int> GetCountAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Users.AsNoTracking().CountAsync(cancellationToken);
         }
 
 
-        public async Task<ApplicationUser> GetAsync(Expression<Func<ApplicationUser, bool>> predicate,
+        public async Task<ApplicationUser> GetAsync(Func<ApplicationUser, bool> predicate,
                                                     CancellationToken cancellationToken = default)
         {
-            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(predicate, cancellationToken);
+            IEnumerable<ApplicationUser> data = await _context.Users.AsNoTracking().ToListAsync(cancellationToken);
+
+            return data.FirstOrDefault(predicate);
         }
 
 

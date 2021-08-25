@@ -22,10 +22,12 @@ namespace Web
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _environment;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            _environment = environment;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -41,15 +43,17 @@ namespace Web
             services.AddWebServices();
 
             // Database
-            services.AddDbContext<ApplicationContext>(options =>
-                            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))); // Use DockerConnection for Docker
-            // TODO: add database for tests
+            if (!_environment.IsEnvironment("Testing"))
+            {
+                // Use DockerConnection for Docker
+                services.AddDbContext<ApplicationContext>(options =>
+                            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                services.AddIdentity<ApplicationUser, IdentityRole>()
+                        .AddEntityFrameworkStores<ApplicationContext>();
+            }
 
             // Identity
             services.AddTransient<IPasswordValidator<ApplicationUser>, CustomPasswordPolicy>();
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
             {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using OfficeOpenXml;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Net.Mime;
@@ -24,6 +25,7 @@ namespace Web.Controllers
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly IStageService _stage;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly Random _random;
 
 
         public DownloadController(UserManager<ApplicationUser> userManager,
@@ -37,6 +39,7 @@ namespace Web.Controllers
             _localizer = localizer;
             _stage = stage;
             _appEnvironment = appEnvironment;
+            _random = new Random();
         }
 
 
@@ -64,13 +67,12 @@ namespace Web.Controllers
             }
 
             var compressedFileStream = new MemoryStream();
-            // TODO: fix repetitions
+
             using (var zipArchive = new ZipArchive(compressedFileStream, ZipArchiveMode.Create, false))
             {
                 foreach (var item in list)
                 {
-                    // TODO: fix .jpg
-                    var zipEntry = zipArchive.CreateEntry(item.Title + ".jpg");
+                    var zipEntry = zipArchive.CreateEntry(item.Title + "_" + _random.Next(100, 1000) + ".jpg");
 
                     using var originalFileStream = new MemoryStream(
                         System.IO.File.ReadAllBytes(_appEnvironment.WebRootPath + item.Path));

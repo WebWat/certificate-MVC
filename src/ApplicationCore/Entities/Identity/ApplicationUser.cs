@@ -3,7 +3,6 @@ using System;
 
 namespace ApplicationCore.Entities.Identity
 {
-    // TODO: protected?
     public class ApplicationUser : IdentityUser
     {
         public string Name { get; set; }

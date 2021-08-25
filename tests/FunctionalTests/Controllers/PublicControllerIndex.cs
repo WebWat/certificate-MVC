@@ -7,8 +7,7 @@ using Xunit;
 
 namespace FunctionalTests.Controllers
 {
-    // In development...
-    //[Collection("Sequential")]
+    [Collection("Sequential")]
     public class PublicControllerIndex : IClassFixture<WebTestFixture>
     {
         public PublicControllerIndex(WebTestFixture factory)
@@ -19,7 +18,7 @@ namespace FunctionalTests.Controllers
         public HttpClient Client { get; }
 
 
-        //[Fact]
+        [Fact]
         public async Task ReturnsIndexWithCertificateListing()
         {
             // Arrange & Act
@@ -32,7 +31,7 @@ namespace FunctionalTests.Controllers
         }
 
 
-        //[Fact]
+        [Fact]
         public async Task ReturnsDetailsWithCertificateAndLinks()
         {
             // Arrange & Act

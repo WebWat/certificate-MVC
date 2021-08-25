@@ -23,7 +23,7 @@ namespace Web.Services
             _cacheService = cacheService;
         }
 
-        // TODO: change to Status?
+
         public async Task<bool> CreateLinkAsync(LinkViewModel lvm,
                                                 string userId,
                                                 CancellationToken cancellationToken = default)
@@ -48,6 +48,7 @@ namespace Web.Services
 
             return false;
         }
+
 
         public async Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId,
                                                                        string userId,
@@ -78,6 +79,7 @@ namespace Web.Services
                 })
             };
         }
+
 
         public async Task<bool> DeleteLinkAsync(int id,
                                                 int certificateId,

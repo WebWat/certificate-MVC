@@ -60,8 +60,7 @@ namespace Web.Controllers
 
                 if (!success)
                 {
-                    // TODO: bad request?
-                    return NotFound();
+                    return BadRequest();
                 }
 
                 _logger.LogInformation($"Link for the certificate {lvm.CertificateId} is created by User {_user.Id}");

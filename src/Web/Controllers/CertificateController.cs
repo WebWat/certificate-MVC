@@ -113,7 +113,7 @@ namespace Web.Controllers
                         return View();
                     }
 
-                    var path = $"/private/{Sha512Helper.GetRandomValue()}.{cvm.File.FileName.Split('.').Last()}"; 
+                    var path = $"/private/{Sha512Helper.GetRandomValue()}.jpg"; 
 
                     using (var stream = System.IO.File.Create(_appEnvironment.WebRootPath + path))
                     {
@@ -173,7 +173,7 @@ namespace Web.Controllers
                             return View(cvm);
                         }
 
-                        var path = $"/private/{Sha512Helper.GetRandomValue()}.{cvm.File.FileName.Split('.').Last()}";
+                        var path = $"/private/{Sha512Helper.GetRandomValue()}.jpg";
 
                         using (var stream = System.IO.File.Create(_appEnvironment.WebRootPath + path))
                         {
