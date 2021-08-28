@@ -16,9 +16,9 @@ namespace Web.Services
         }
 
 
-        public List<StageViewModel> GetStages()
+        public List<StageViewModel> GetStages(bool includeAllValue = false)
         {
-            return new List<StageViewModel>
+            var list = new List<StageViewModel>
             {
                 new StageViewModel { EnumName = nameof(Stage.School), Name = _localizer["School"].Value },
                 new StageViewModel { EnumName = nameof(Stage.District), Name = _localizer["District"].Value },
@@ -26,6 +26,13 @@ namespace Web.Services
                 new StageViewModel { EnumName = nameof(Stage.AllRussian), Name = _localizer["All-Russian"].Value },
                 new StageViewModel { EnumName = nameof(Stage.International), Name = _localizer["International"].Value }
             };
+
+            if (includeAllValue)
+            {
+                list.Insert(0, new() { EnumName = string.Empty, Name = _localizer["All"].Value });
+            }
+
+            return list;
         }
 
 

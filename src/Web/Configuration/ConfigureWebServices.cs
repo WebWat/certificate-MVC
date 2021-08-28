@@ -15,6 +15,8 @@ namespace Web.Configuration
             services.AddScoped<IAdminViewModelService, AdminViewModelService>();
             services.AddScoped<ICachedPublicViewModelService, CachedPublicViewModelService>();
             services.AddScoped<IEmailTemplate, EmailTemplate>();
+            services.AddScoped<IFilterService, FilterService>();
+            services.AddScoped<IPageService, PageService>();
 
             return services;
         }

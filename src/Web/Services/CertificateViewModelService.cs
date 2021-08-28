@@ -1,11 +1,9 @@
 ﻿using ApplicationCore.Constants;
 using ApplicationCore.Entities;
+using ApplicationCore.Helpers;
 using ApplicationCore.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
-using System;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,16 +18,22 @@ namespace Web.Services
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly ICachedPublicViewModelService _cacheService;
         private readonly IStageService _stageService;
+        private readonly IFilterService _filterService;
+        private readonly IPageService _pageService;
 
         public CertificateViewModelService(ICertificateRepository repository,
                                            IStringLocalizer<SharedResource> localizer,
                                            ICachedPublicViewModelService cacheService,
-                                           IStageService stageService)
+                                           IStageService stageService,
+                                           IFilterService filterService,
+                                           IPageService pageService)
         {
             _repository = repository;
             _localizer = localizer;
             _cacheService = cacheService;
             _stageService = stageService;
+            _filterService = filterService;
+            _pageService = pageService;
         }
 
 
@@ -39,34 +43,11 @@ namespace Web.Services
 
             var list = _repository.ListByUserId(userId);
 
-            // Sort by date.
-            if (year != null && year != _localizer["All"] && int.TryParse(year, out int result))
-            {
-                list = list.Where(i => i.Date.Year == result);
-            }
-
-            // Sort by title.
-            if (!string.IsNullOrEmpty(find))
-            {
-                list = list.Where(p => p.Title.ToLower().Contains(find.Trim().ToLower()));
-            }
-
-            // Sort by stage.
-            if (stage != null)
-            {
-                list = list.Where(p => p.Stage == stage);
-            }
+            list = _filterService.FilterOut(list, year, find, stage);
 
             var count = list.Count();
-            var skipped = (page - 1) * Common.PageSize;
 
-            if (skipped >= count && count != 0)
-            {
-                page -= 1;
-                skipped -= Common.PageSize;
-            }
-
-            var items = list.Skip(skipped).Take(Common.PageSize);
+            var items = _pageService.GetDataToPage(list, count, ref page, includeCheck: true);
 
             var certificates = items.Select(i =>
             {
@@ -82,11 +63,9 @@ namespace Web.Services
                 return certificateViewModel;
             });
 
-            var years = Enumerable.Range(2000, DateTime.Now.Year - 1999).Reverse().Select(i => i.ToString()).ToList();
-            years.Insert(0, _localizer["All"].Value);
+            var years = EnumerableHelper.GetYears(_localizer["All"]);
 
-            var stages = _stageService.GetStages();
-            stages.Insert(0, new() { EnumName = string.Empty, Name = _localizer["All"].Value });
+            var stages = _stageService.GetStages(includeAllValue: true);
 
             IndexViewModel ivm = new IndexViewModel
             {
@@ -104,8 +83,8 @@ namespace Web.Services
         }
 
 
-        public async Task CreateCertificateAsync(CertificateViewModel cvm, 
-                                                 string userId, 
+        public async Task CreateCertificateAsync(CertificateViewModel cvm,
+                                                 string userId,
                                                  CancellationToken cancellationToken = default)
         {
             await _repository.CreateAsync(new Certificate
@@ -122,8 +101,8 @@ namespace Web.Services
         }
 
 
-        public async Task UpdateCertificateAsync(CertificateViewModel cvm, 
-                                                 string userId, 
+        public async Task UpdateCertificateAsync(CertificateViewModel cvm,
+                                                 string userId,
                                                  CancellationToken cancellationToken = default)
         {
             var certificate = new Certificate
@@ -143,8 +122,8 @@ namespace Web.Services
         }
 
 
-        public async Task DeleteCertificateAsync(int id, 
-                                                 string userId, 
+        public async Task DeleteCertificateAsync(int id,
+                                                 string userId,
                                                  CancellationToken cancellationToken = default)
         {
             var certificate = await _repository.GetByUserIdAsync(id, userId, cancellationToken);
@@ -155,9 +134,9 @@ namespace Web.Services
         }
 
 
-        public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page, 
-                                                                                    int id, 
-                                                                                    string userId, 
+        public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page,
+                                                                                    int id,
+                                                                                    string userId,
                                                                                     CancellationToken cancellationToken = default)
         {
             var certificate = await _repository.GetCertificateIncludeLinksAsync(id, userId, cancellationToken);
@@ -182,8 +161,8 @@ namespace Web.Services
         }
 
 
-        public async Task<CertificateViewModel> GetCertificateByIdAsync(int id, 
-                                                                        string userId, 
+        public async Task<CertificateViewModel> GetCertificateByIdAsync(int id,
+                                                                        string userId,
                                                                         CancellationToken cancellationToken = default)
         {
             var certificate = await _repository.GetByUserIdAsync(id, userId, cancellationToken);

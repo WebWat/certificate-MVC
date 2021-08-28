@@ -1,7 +1,7 @@
 ﻿using Web.Extensions;
 using Xunit;
 
-namespace UnitTests.Web.Helpers
+namespace UnitTests.ApplicationCore.Helpers
 {
     public class GenerateCacheKey
     {
