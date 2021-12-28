@@ -27,5 +27,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: webwatcher/certificate-MVC:dev
+          tags: webwatcher/certificate-mvc:dev
           labels: ${{ steps.meta.outputs.labels }}
