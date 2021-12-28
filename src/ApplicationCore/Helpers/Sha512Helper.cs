@@ -8,7 +8,7 @@ namespace ApplicationCore.Helpers
     {
         public static string GetRandomValue()
         {
-            var sha512 = new SHA512Managed();
+            var sha512 = SHA512.Create();
             var hash = new StringBuilder();
             byte[] array = sha512.ComputeHash(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()));
 

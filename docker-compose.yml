@@ -1,5 +1,5 @@
 version: '3.4'
-# Add redis
+
 services:
   web:
     image: ${DOCKER_REGISTRY-}web
