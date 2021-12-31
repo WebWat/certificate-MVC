@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Web.Areas.Identity.Pages.Account.Models
+namespace Web.Areas.Identity.Pages.Account.Models;
+
+public class EmailInput
 {
-    public class EmailInput
-    {
-        [Required(ErrorMessage = "Required")]
-        [EmailAddress(ErrorMessage = "EmailEmail")]
-        public string Email { get; set; }
-    }
+    [Required(ErrorMessage = "Required")]
+    [EmailAddress(ErrorMessage = "EmailEmail")]
+    public string Email { get; set; }
 }

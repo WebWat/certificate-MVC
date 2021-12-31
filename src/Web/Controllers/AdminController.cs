@@ -4,22 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Web.Interfaces;
 
-namespace Web.Controllers
+namespace Web.Controllers;
+
+// TODO: move to other project!
+[Authorize(Roles = Roles.Admin)]
+public class AdminController : Controller
 {
-    [Authorize(Roles = Roles.Admin)]
-    public class AdminController : Controller
+    private readonly IAdminViewModelService _adminService;
+
+    public AdminController(IAdminViewModelService adminService)
     {
-        private readonly IAdminViewModelService _adminService;
-
-        public AdminController(IAdminViewModelService adminService)
-        {
-            _adminService = adminService;
-        }
+        _adminService = adminService;
+    }
 
 
-        public async Task<IActionResult> Index()
-        {
-            return View(await _adminService.GetIndexAdminViewModelListAsync());
-        }
+    public async Task<IActionResult> Index()
+    {
+        return View(await _adminService.GetIndexAdminViewModelListAsync());
     }
 }

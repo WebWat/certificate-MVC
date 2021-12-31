@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Web.Areas.Identity.Pages.Account.Manage
+namespace Web.Areas.Identity.Pages.Account.Manage;
+
+[Authorize]
+public class PersonalDataModel : PageModel
 {
-    [Authorize]
-    public class PersonalDataModel : PageModel
+    public void OnGet()
     {
-        public void OnGet()
-        {
-        }
     }
 }

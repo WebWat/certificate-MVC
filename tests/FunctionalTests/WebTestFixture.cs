@@ -9,11 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
-using Web;
+using Web.Interfaces;
 
 namespace FunctionalTests
 {
-    public class WebTestFixture : WebApplicationFactory<Startup>
+    public class WebTestFixture : WebApplicationFactory<IFilterService>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
