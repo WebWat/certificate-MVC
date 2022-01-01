@@ -3,6 +3,8 @@ This web application helps you easily create, store and share your personal achi
 
 ## Badges
 
-![example workflow](https://github.com/WebWat/certificate-MVC/actions/workflows/dotnet.yml/badge.svg)
+![build and test](https://github.com/WebWat/certificate-MVC/actions/workflows/dotnet.yml/badge.svg)
+
+![docker cd](https://github.com/WebWat/certificate-MVC/actions/workflows/docker.yml/badge.svg)
 
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/webwat/certificate-MVC)
