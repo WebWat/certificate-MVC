@@ -8,3 +8,5 @@ This web application helps you easily create, store and share your personal achi
 ![docker cd](https://github.com/WebWat/certificate-MVC/actions/workflows/docker.yml/badge.svg)
 
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/webwat/certificate-MVC)
+
+[![CodeFactor](https://www.codefactor.io/repository/github/webwat/certificate-mvc/badge)](https://www.codefactor.io/repository/github/webwat/certificate-mvc)
