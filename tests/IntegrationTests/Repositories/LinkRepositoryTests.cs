@@ -7,38 +7,37 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IntegrationTests.Repositories
+namespace IntegrationTests.Repositories;
+
+public class LinkRepositoryTests
 {
-    public class LinkRepositoryTests
+    private readonly IAsyncRepository<Link> repository;
+    private readonly ApplicationContext _context;
+
+    public LinkRepositoryTests()
     {
-        private readonly IAsyncRepository<Link> repository;
-        private readonly ApplicationContext _context;
+        var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
+                            .UseInMemoryDatabase(databaseName: "LinkTestDB")
+                            .Options;
 
-        public LinkRepositoryTests()
-        {
-            var dbOptions = new DbContextOptionsBuilder<ApplicationContext>()
-                                .UseInMemoryDatabase(databaseName: "LinkTestDB")
-                                .Options;
+        _context = new ApplicationContext(dbOptions);
 
-            _context = new ApplicationContext(dbOptions);
+        repository = new EFCoreRepository<Link>(_context);
 
-            repository = new EFCoreRepository<Link>(_context);
+        _context.Links.AddRange(LinkBuilder.GetDefaultValues());
+        _context.SaveChanges();
+    }
 
-            _context.Links.AddRange(LinkBuilder.GetDefaultValues());
-            _context.SaveChanges();
-        }
+    [Fact]
+    public async Task GetLinkById()
+    {
+        // Arrange
+        var contextResult = await _context.Links.AsNoTracking().FirstOrDefaultAsync();
 
-        [Fact]
-        public async Task GetLinkById()
-        {
-            // Arrange
-            var contextResult = await _context.Links.AsNoTracking().FirstOrDefaultAsync();
+        // Act
+        var repositoryResult = await repository.GetByIdAsync(contextResult.Id);
 
-            // Act
-            var repositoryResult = await repository.GetByIdAsync(contextResult.Id);
-
-            // Assert
-            Assert.Equal(contextResult.Id, repositoryResult.Id);
-        }
+        // Assert
+        Assert.Equal(contextResult.Id, repositoryResult.Id);
     }
 }

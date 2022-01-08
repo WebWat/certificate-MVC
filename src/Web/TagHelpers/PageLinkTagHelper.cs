@@ -5,142 +5,138 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Web.ViewModels;
 
-namespace Web.TagHelpers
+namespace Web.TagHelpers;
+
+public class PageLinkTagHelper : TagHelper
 {
-    public class PageLinkTagHelper : TagHelper
+    private readonly IUrlHelperFactory urlHelperFactory;
+
+    [ViewContext]
+    [HtmlAttributeNotBound]
+    public ViewContext ViewContext { get; set; }
+    public PageViewModel PageModel { get; set; }
+    public string PageController { get; set; }
+    public string PageAction { get; set; }
+    public string UniqueUrl { get; set; }
+
+    public PageLinkTagHelper(IUrlHelperFactory helperFactory)
     {
-        private readonly IUrlHelperFactory urlHelperFactory;
+        urlHelperFactory = helperFactory;
+    }
 
-        [ViewContext]
-        [HtmlAttributeNotBound]
-        public ViewContext ViewContext { get; set; }
-        public PageViewModel PageModel { get; set; }
-        public string PageController { get; set; }
-        public string PageAction { get; set; }
-        public string UniqueUrl { get; set; }
 
-        public PageLinkTagHelper(IUrlHelperFactory helperFactory)
+    public override void Process(TagHelperContext context, TagHelperOutput output)
+    {
+        IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+        output.TagName = "div";
+        output.Attributes.Add("style", "display: flex; justify-content: center; margin-top: 1em;");
+
+        TagBuilder tag = new("ul");
+        tag.AddCssClass("pagination");
+
+        TagBuilder currentItem = CreateTag(PageModel.PageNumber, urlHelper);
+
+        if (PageModel.FirstPage)
         {
-            urlHelperFactory = helperFactory;
+            TagBuilder prevItem = CreateFirstPage(urlHelper);
+            tag.InnerHtml.AppendHtml(prevItem);
         }
 
-
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        if (PageModel.HasPreviousPage)
         {
-            IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
-            output.TagName = "div";
-            output.Attributes.Add("style", "display: flex; justify-content: center; margin-top: 1em;");
-
-            TagBuilder tag = new TagBuilder("ul");
-            tag.AddCssClass("pagination");
-
-            TagBuilder currentItem = CreateTag(PageModel.PageNumber, urlHelper);
-
-            if (PageModel.FirstPage)
+            if (PageModel.HasFollowingPreviousPage)
             {
-                TagBuilder prevItem = CreateFirstPage(urlHelper);
-                tag.InnerHtml.AppendHtml(prevItem);
+                TagBuilder prevItem2 = CreateTag(PageModel.PageNumber - 2, urlHelper);
+                tag.InnerHtml.AppendHtml(prevItem2);
             }
 
-            if (PageModel.HasPreviousPage)
-            {
-                if (PageModel.HasFollowingPreviousPage)
-                {
-                    TagBuilder prevItem2 = CreateTag(PageModel.PageNumber - 2, urlHelper);
-                    tag.InnerHtml.AppendHtml(prevItem2);
-                }
-
-                TagBuilder prevItem1 = CreateTag(PageModel.PageNumber - 1, urlHelper);
-                tag.InnerHtml.AppendHtml(prevItem1);
-            }
-
-            tag.InnerHtml.AppendHtml(currentItem);
-
-            if (PageModel.HasNextPage)
-            {
-                TagBuilder nextItem1 = CreateTag(PageModel.PageNumber + 1, urlHelper);
-                tag.InnerHtml.AppendHtml(nextItem1);
-
-                if (PageModel.HasFollowingNextPage)
-                {
-                    TagBuilder nextItem2 = CreateTag(PageModel.PageNumber + 2, urlHelper);
-                    tag.InnerHtml.AppendHtml(nextItem2);
-                }
-            }
-
-            if (PageModel.LastPage)
-            {
-                TagBuilder prevItem = CreateLastPage(urlHelper);
-                tag.InnerHtml.AppendHtml(prevItem);
-            }
-
-            output.Content.AppendHtml(tag);
+            TagBuilder prevItem1 = CreateTag(PageModel.PageNumber - 1, urlHelper);
+            tag.InnerHtml.AppendHtml(prevItem1);
         }
 
+        tag.InnerHtml.AppendHtml(currentItem);
 
-        TagBuilder CreateFirstPage(IUrlHelper urlHelper)
+        if (PageModel.HasNextPage)
         {
-            TagBuilder item = new TagBuilder("li");
-            item.AddCssClass("page-item");
+            TagBuilder nextItem1 = CreateTag(PageModel.PageNumber + 1, urlHelper);
+            tag.InnerHtml.AppendHtml(nextItem1);
 
-            TagBuilder link = new TagBuilder("a");
-            link.AddCssClass("page-link");
-
-            if (UniqueUrl != null)
-                link.Attributes["href"] = urlHelper.Action(PageAction, PageController) + "?page=1";
-            else
-                link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = 1 });
-
-            link.InnerHtml.Append("«");
-            item.InnerHtml.AppendHtml(link);
-
-            return item;
-        }
-
-
-        TagBuilder CreateLastPage(IUrlHelper urlHelper)
-        {
-            TagBuilder item = new TagBuilder("li");
-            item.AddCssClass("page-item");
-
-            TagBuilder link = new TagBuilder("a");
-            link.AddCssClass("page-link");
-
-            if (UniqueUrl != null)
-                link.Attributes["href"] = urlHelper.Action(PageAction, PageController) + $"?page={PageModel.TotalPages}";
-            else
-                link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = PageModel.TotalPages });
-
-            link.InnerHtml.Append("»");
-            item.InnerHtml.AppendHtml(link);
-            return item;
-        }
-
-
-        TagBuilder CreateTag(int pageNumber, IUrlHelper urlHelper)
-        {
-            TagBuilder item = new TagBuilder("li");
-            item.AddCssClass("page-item");
-
-            TagBuilder link = new TagBuilder("a");
-            link.AddCssClass("page-link");
-
-            if (pageNumber == PageModel.PageNumber)
+            if (PageModel.HasFollowingNextPage)
             {
-                item.AddCssClass("active");
+                TagBuilder nextItem2 = CreateTag(PageModel.PageNumber + 2, urlHelper);
+                tag.InnerHtml.AppendHtml(nextItem2);
             }
-            else
-            {
-                if (UniqueUrl != null)
-                    link.Attributes["href"] = urlHelper.Action(PageAction, PageController) + $"?page={pageNumber}";
-                else
-                    link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = pageNumber });
-            }
-
-            link.InnerHtml.Append(pageNumber.ToString());
-            item.InnerHtml.AppendHtml(link);
-
-            return item;
         }
+
+        if (PageModel.LastPage)
+        {
+            TagBuilder prevItem = CreateLastPage(urlHelper);
+            tag.InnerHtml.AppendHtml(prevItem);
+        }
+
+        output.Content.AppendHtml(tag);
+    }
+
+
+    TagBuilder CreateFirstPage(IUrlHelper urlHelper)
+    {
+        TagBuilder item = new("li");
+        item.AddCssClass("page-item");
+
+        TagBuilder link = new("a");
+        link.AddCssClass("page-link");
+
+        if (UniqueUrl != null)
+            link.Attributes["href"] = urlHelper.Action(PageAction, PageController) + "?page=1";
+        else
+            link.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { page = 1 });
+
+        link.InnerHtml.Append("«");
+        item.InnerHtml.AppendHtml(link);
+
+        return item;
+    }
+
+
+    TagBuilder CreateLastPage(IUrlHelper urlHelper)
+    {
+        TagBuilder item = new("li");
+        item.AddCssClass("page-item");
+
+        TagBuilder link = new("a");
+        link.AddCssClass("page-link");
+
+        link.Attributes["href"] = UniqueUrl != null ? urlHelper.Action(PageAction, PageController) + $"?page={PageModel.TotalPages}" :
+                                                      urlHelper.Action(PageAction, PageController, new { page = PageModel.TotalPages });
+
+        link.InnerHtml.Append("»");
+        item.InnerHtml.AppendHtml(link);
+
+        return item;
+    }
+
+
+    TagBuilder CreateTag(int pageNumber, IUrlHelper urlHelper)
+    {
+        TagBuilder item = new("li");
+        item.AddCssClass("page-item");
+
+        TagBuilder link = new("a");
+        link.AddCssClass("page-link");
+
+        if (pageNumber == PageModel.PageNumber)
+        {
+            item.AddCssClass("active");
+        }
+        else
+        {
+            link.Attributes["href"] = UniqueUrl != null ? urlHelper.Action(PageAction, PageController) + $"?page={PageModel.TotalPages}" :
+                                                          urlHelper.Action(PageAction, PageController, new { page = PageModel.TotalPages });
+        }
+
+        link.InnerHtml.Append(pageNumber.ToString());
+        item.InnerHtml.AppendHtml(link);
+
+        return item;
     }
 }

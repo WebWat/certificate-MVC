@@ -12,8 +12,8 @@ namespace Infrastructure.Data;
 public class ApplicationContextSeed
 {
     public static async Task SeedAsync(ApplicationContext context, 
-                                        UserManager<ApplicationUser> userManager,
-                                        string imagePath)
+                                       UserManager<ApplicationUser> userManager,
+                                       string imagePath)
     {
         // Get the user to get his Id.
         var _user = await userManager.FindByNameAsync(AuthorizationConstants.UserName);
@@ -32,6 +32,7 @@ public class ApplicationContextSeed
             {
                 await context.Links.AddRangeAsync(GetLinks(item.Id));
             }
+
             await context.SaveChangesAsync();
         }
     }

@@ -2,21 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Web.ViewComponents
+namespace Web.ViewComponents;
+
+public class UsersCount : ViewComponent
 {
-    public class UsersCount : ViewComponent
+    private readonly IUserRepository _repository;
+
+    public UsersCount(IUserRepository repository)
     {
-        private readonly IUserRepository _repository;
-
-        public UsersCount(IUserRepository repository)
-        {
-            _repository = repository;
-        }
+        _repository = repository;
+    }
 
 
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            return View(await _repository.GetCountAsync());
-        }
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        return View(await _repository.GetCountAsync());
     }
 }

@@ -20,6 +20,7 @@ using Web;
 using Web.Configuration;
 using Web.Models;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<Email>(builder.Configuration.GetSection("Email"));
@@ -87,7 +88,6 @@ builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
-
 
 // Database.
 if (!builder.Environment.IsEnvironment("Testing"))

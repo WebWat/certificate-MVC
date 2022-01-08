@@ -1,9 +1,8 @@
 ﻿using Web.Models;
 
-namespace Web.Interfaces
+namespace Web.Interfaces;
+
+public interface IEmailTemplate
 {
-    public interface IEmailTemplate
-    {
-        (string subject, string template) GetTemplate(EmailMessageType messageType, string callbackUrl);
-    }
+    (string subject, string template) GetTemplate(EmailMessageType messageType, string callbackUrl);
 }

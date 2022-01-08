@@ -1,65 +1,64 @@
 ﻿using System;
 
-namespace Web.ViewModels
+namespace Web.ViewModels;
+
+public class PageViewModel
 {
-    public class PageViewModel
+    public int PageNumber { get; private set; }
+    public int TotalPages { get; private set; }
+
+    public PageViewModel(int count, int pageNumber, int pageSize)
     {
-        public int PageNumber { get; private set; }
-        public int TotalPages { get; private set; }
+        PageNumber = pageNumber;
 
-        public PageViewModel(int count, int pageNumber, int pageSize)
+        TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+    }
+
+    public bool HasPreviousPage
+    {
+        get
         {
-            PageNumber = pageNumber;
-
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            return PageNumber > 1;
         }
+    }
 
-        public bool HasPreviousPage
+    public bool HasNextPage
+    {
+        get
         {
-            get
-            {
-                return PageNumber > 1;
-            }
+            return PageNumber < TotalPages;
         }
+    }
 
-        public bool HasNextPage
+    public bool HasFollowingPreviousPage
+    {
+        get
         {
-            get
-            {
-                return PageNumber < TotalPages;
-            }
+            return PageNumber > 2;
         }
+    }
 
-        public bool HasFollowingPreviousPage
+    public bool HasFollowingNextPage
+    {
+        get
         {
-            get
-            {
-                return PageNumber > 2;
-            }
+            return PageNumber < TotalPages - 1;
         }
+    }
 
-        public bool HasFollowingNextPage
+    public bool FirstPage
+    {
+        get
         {
-            get
-            {
-                return PageNumber < TotalPages - 1;
-            }
+            return PageNumber >= 4;
         }
+    }
 
-        public bool FirstPage
+    public bool LastPage
+    {
+        get
         {
-            get
-            {
-                return PageNumber >= 4;
-            }
-        }
-
-        public bool LastPage
-        {
-            get
-            {
-                return PageNumber < TotalPages - 2;
-            }
+            return PageNumber < TotalPages - 2;
         }
     }
 }

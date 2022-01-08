@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Web.ViewModels
+namespace Web.ViewModels;
+
+public class LinkViewModel
 {
-    public class LinkViewModel
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required(ErrorMessage = "Required")]
-        [Url(ErrorMessage = "IncorrectUrl")]
-        public string Url { get; set; }
+    [Required(ErrorMessage = "Required")]
+    [Url(ErrorMessage = "IncorrectUrl")]
+    public string Url { get; set; }
 
-        public int CertificateId { get; set; }
-    }
+    public int CertificateId { get; set; }
 }

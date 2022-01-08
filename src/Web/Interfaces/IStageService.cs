@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using Web.ViewModels;
 
-namespace Web.Interfaces
+namespace Web.Interfaces;
+
+public interface IStageService
 {
-    public interface IStageService
-    {
-        List<StageViewModel> GetStages(bool includeAllValue = false);
-        string GetNameOfStage(Stage stage);
-    }
+    List<StageViewModel> GetStages(bool includeAllValue = false);
+    string GetNameOfStage(Stage stage);
 }

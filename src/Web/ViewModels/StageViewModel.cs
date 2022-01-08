@@ -1,8 +1,7 @@
-﻿namespace Web.ViewModels
+﻿namespace Web.ViewModels;
+
+public class StageViewModel
 {
-    public class StageViewModel
-    {
-        public string EnumName { get; set; }
-        public string Name { get; set; }
-    }
+    public string EnumName { get; set; }
+    public string Name { get; set; }
 }

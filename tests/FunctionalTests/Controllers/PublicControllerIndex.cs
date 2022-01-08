@@ -5,58 +5,57 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace FunctionalTests.Controllers
+namespace FunctionalTests.Controllers;
+
+[Collection("Sequential")]
+public class PublicControllerIndex : IClassFixture<WebTestFixture>
 {
-    [Collection("Sequential")]
-    public class PublicControllerIndex : IClassFixture<WebTestFixture>
+    public PublicControllerIndex(WebTestFixture factory)
     {
-        public PublicControllerIndex(WebTestFixture factory)
-        {
-            Client = factory.CreateClient();
-        }
+        Client = factory.CreateClient();
+    }
 
-        public HttpClient Client { get; }
+    public HttpClient Client { get; }
 
 
-        [Fact]
-        public async Task ReturnsIndexWithCertificateListing()
-        {
-            // Arrange & Act
-            var response = await Client.GetAsync("/Public/" + AuthorizationConstants.UniqueUrl);
-            response.EnsureSuccessStatusCode();
-            var stringResponse = await response.Content.ReadAsStringAsync();
+    [Fact]
+    public async Task ReturnsIndexWithCertificateListing()
+    {
+        // Arrange & Act
+        var response = await Client.GetAsync("/Public/" + AuthorizationConstants.UniqueUrl);
+        response.EnsureSuccessStatusCode();
+        var stringResponse = await response.Content.ReadAsStringAsync();
 
-            // Assert
-            Assert.Contains("Robofest", stringResponse);
-        }
-
-
-        [Fact]
-        public async Task ReturnsDetailsWithCertificateAndLinks()
-        {
-            // Arrange & Act
-            var response = await Client.GetAsync("/Public/" + AuthorizationConstants.UniqueUrl);
-            response.EnsureSuccessStatusCode();
-            var stringResponse = await response.Content.ReadAsStringAsync();
-
-            string id = GetCertificateId(stringResponse);
-
-            response = await Client.GetAsync($"/Public/Details/{AuthorizationConstants.UniqueUrl}/{id}?page=1");
-            response.EnsureSuccessStatusCode();
-            stringResponse = await response.Content.ReadAsStringAsync();
-
-            // Assert
-            Assert.Contains("Robofest", stringResponse);
-            Assert.Contains("https://example.com/", stringResponse);
-        }
+        // Assert
+        Assert.Contains("Robofest", stringResponse);
+    }
 
 
-        private string GetCertificateId(string input)
-        {
-            var regex = new Regex(@"start\((\d+)");
-            var match = regex.Match(input);
+    [Fact]
+    public async Task ReturnsDetailsWithCertificateAndLinks()
+    {
+        // Arrange & Act
+        var response = await Client.GetAsync("/Public/" + AuthorizationConstants.UniqueUrl);
+        response.EnsureSuccessStatusCode();
+        var stringResponse = await response.Content.ReadAsStringAsync();
 
-            return match.Groups.Values.LastOrDefault().Value;
-        }
+        string id = GetCertificateId(stringResponse);
+
+        response = await Client.GetAsync($"/Public/Details/{AuthorizationConstants.UniqueUrl}/{id}?page=1");
+        response.EnsureSuccessStatusCode();
+        stringResponse = await response.Content.ReadAsStringAsync();
+
+        // Assert
+        Assert.Contains("Robofest", stringResponse);
+        Assert.Contains("https://example.com/", stringResponse);
+    }
+
+
+    private string GetCertificateId(string input)
+    {
+        var regex = new Regex(@"start\((\d+)");
+        var match = regex.Match(input);
+
+        return match.Groups.Values.LastOrDefault().Value;
     }
 }

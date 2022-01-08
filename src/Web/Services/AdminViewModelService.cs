@@ -8,41 +8,40 @@ using System.Threading.Tasks;
 using Web.Interfaces;
 using Web.ViewModels;
 
-namespace Web.Services
+namespace Web.Services;
+
+public class AdminViewModelService : IAdminViewModelService
 {
-    public class AdminViewModelService : IAdminViewModelService
+    private readonly IUserRepository _userRepository;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public AdminViewModelService(IUserRepository userRepository, UserManager<ApplicationUser> userManager)
     {
-        private readonly IUserRepository _userRepository;
-        private readonly UserManager<ApplicationUser> _userManager;
+        _userRepository = userRepository;
+        _userManager = userManager;
+    }
 
-        public AdminViewModelService(IUserRepository userRepository, UserManager<ApplicationUser> userManager)
+
+    public async Task<IEnumerable<AdminViewModel>> GetIndexAdminViewModelListAsync()
+    {
+        var users = _userRepository.List(i => i.UserName != AuthorizationConstants.UserName);
+
+        var result = new List<AdminViewModel>();
+
+        foreach (var user in users)
         {
-            _userRepository = userRepository;
-            _userManager = userManager;
-        }
+            var roles = await _userManager.GetRolesAsync(user);
 
-
-        public async Task<IEnumerable<AdminViewModel>> GetIndexAdminViewModelListAsync()
-        {
-            var users = _userRepository.List(i => i.UserName != AuthorizationConstants.UserName);
-
-            var result = new List<AdminViewModel>();
-
-            foreach (var user in users)
+            result.Add(new AdminViewModel
             {
-                var roles = await _userManager.GetRolesAsync(user);
-
-                result.Add(new AdminViewModel
-                {
-                    Login = user.UserName,
-                    Email = user.Email,
-                    EmailConfirmed = user.EmailConfirmed,
-                    RegistrationDate = user.RegistrationDate,
-                    Role = roles.First()
-                });
-            }
-
-            return result;
+                Login = user.UserName,
+                Email = user.Email,
+                EmailConfirmed = user.EmailConfirmed,
+                RegistrationDate = user.RegistrationDate,
+                Role = roles.First()
+            });
         }
+
+        return result;
     }
 }

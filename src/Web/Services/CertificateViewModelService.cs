@@ -10,177 +10,176 @@ using System.Threading.Tasks;
 using Web.Interfaces;
 using Web.ViewModels;
 
-namespace Web.Services
+namespace Web.Services;
+
+public class CertificateViewModelService : ICertificateViewModelService
 {
-    public class CertificateViewModelService : ICertificateViewModelService
+    private readonly ICertificateRepository _repository;
+    private readonly IStringLocalizer<SharedResource> _localizer;
+    private readonly ICachedPublicViewModelService _cacheService;
+    private readonly IStageService _stageService;
+    private readonly IFilterService _filterService;
+    private readonly IPageService _pageService;
+
+    public CertificateViewModelService(ICertificateRepository repository,
+                                       IStringLocalizer<SharedResource> localizer,
+                                       ICachedPublicViewModelService cacheService,
+                                       IStageService stageService,
+                                       IFilterService filterService,
+                                       IPageService pageService)
     {
-        private readonly ICertificateRepository _repository;
-        private readonly IStringLocalizer<SharedResource> _localizer;
-        private readonly ICachedPublicViewModelService _cacheService;
-        private readonly IStageService _stageService;
-        private readonly IFilterService _filterService;
-        private readonly IPageService _pageService;
+        _repository = repository;
+        _localizer = localizer;
+        _cacheService = cacheService;
+        _stageService = stageService;
+        _filterService = filterService;
+        _pageService = pageService;
+    }
 
-        public CertificateViewModelService(ICertificateRepository repository,
-                                           IStringLocalizer<SharedResource> localizer,
-                                           ICachedPublicViewModelService cacheService,
-                                           IStageService stageService,
-                                           IFilterService filterService,
-                                           IPageService pageService)
+
+    public IndexViewModel GetIndexViewModel(int page, string userId, string year, string find, Stage? stage)
+    {
+        page = page <= 0 ? 1 : page;
+
+        var list = _repository.ListByUserId(userId);
+
+        list = _filterService.FilterOut(list, year, find, stage);
+
+        var count = list.Count();
+
+        var items = _pageService.GetDataToPage(list, count, ref page, includeCheck: true);
+
+        var certificates = items.Select(i =>
         {
-            _repository = repository;
-            _localizer = localizer;
-            _cacheService = cacheService;
-            _stageService = stageService;
-            _filterService = filterService;
-            _pageService = pageService;
-        }
-
-
-        public IndexViewModel GetIndexViewModel(int page, string userId, string year, string find, Stage? stage)
-        {
-            page = page <= 0 ? 1 : page;
-
-            var list = _repository.ListByUserId(userId);
-
-            list = _filterService.FilterOut(list, year, find, stage);
-
-            var count = list.Count();
-
-            var items = _pageService.GetDataToPage(list, count, ref page, includeCheck: true);
-
-            var certificates = items.Select(i =>
+            var certificateViewModel = new CertificateViewModel
             {
-                var certificateViewModel = new CertificateViewModel
-                {
-                    Id = i.Id,
-                    Title = i.Title,
-                    Description = i.Description,
-                    Date = i.Date,
-                    Path = i.Path
-                };
-
-                return certificateViewModel;
-            });
-
-            var years = EnumerableHelper.GetYears(_localizer["All"]);
-
-            var stages = _stageService.GetStages(includeAllValue: true);
-
-            IndexViewModel ivm = new IndexViewModel
-            {
-                Certificates = certificates,
-                Find = find,
-                Year = year,
-                Stage = null,
-                Years = new SelectList(years),
-                Stages = new SelectList(stages, "EnumName", "Name"),
-                Controller = "Certificate",
-                PageViewModel = new PageViewModel(count, page, Common.PageSize)
+                Id = i.Id,
+                Title = i.Title,
+                Description = i.Description,
+                Date = i.Date,
+                Path = i.Path
             };
 
-            return ivm;
-        }
+            return certificateViewModel;
+        });
 
+        var years = EnumerableHelper.GetYears(_localizer["All"]);
 
-        public async Task CreateCertificateAsync(CertificateViewModel cvm,
-                                                 string userId,
-                                                 CancellationToken cancellationToken = default)
+        var stages = _stageService.GetStages(includeAllValue: true);
+
+        IndexViewModel ivm = new IndexViewModel
         {
-            await _repository.CreateAsync(new Certificate
-            (
-                userId,
-                cvm.Title,
-                cvm.Path,
-                cvm.Description,
-                cvm.Stage,
-                cvm.Date
-            ), cancellationToken);
+            Certificates = certificates,
+            Find = find,
+            Year = year,
+            Stage = null,
+            Years = new SelectList(years),
+            Stages = new SelectList(stages, "EnumName", "Name"),
+            Controller = "Certificate",
+            PageViewModel = new PageViewModel(count, page, Common.PageSize)
+        };
 
-            _cacheService.SetList(userId);
-        }
+        return ivm;
+    }
 
 
-        public async Task UpdateCertificateAsync(CertificateViewModel cvm,
-                                                 string userId,
-                                                 CancellationToken cancellationToken = default)
+    public async Task CreateCertificateAsync(CertificateViewModel cvm,
+                                             string userId,
+                                             CancellationToken cancellationToken = default)
+    {
+        await _repository.CreateAsync(new Certificate
+        (
+            userId,
+            cvm.Title,
+            cvm.Path,
+            cvm.Description,
+            cvm.Stage,
+            cvm.Date
+        ), cancellationToken);
+
+        _cacheService.SetList(userId);
+    }
+
+
+    public async Task UpdateCertificateAsync(CertificateViewModel cvm,
+                                             string userId,
+                                             CancellationToken cancellationToken = default)
+    {
+        var certificate = new Certificate
+        (
+            userId,
+            cvm.Title,
+            cvm.Path,
+            cvm.Description,
+            cvm.Stage,
+            cvm.Date
+        ).SetId(cvm.Id);
+
+        await _repository.UpdateAsync(certificate, cancellationToken);
+
+        await _cacheService.SetItemAsync(certificate.Id, userId);
+        _cacheService.SetList(userId);
+    }
+
+
+    public async Task DeleteCertificateAsync(int id,
+                                             string userId,
+                                             CancellationToken cancellationToken = default)
+    {
+        var certificate = await _repository.GetByUserIdAsync(id, userId, cancellationToken);
+
+        await _repository.DeleteAsync(certificate, cancellationToken);
+
+        _cacheService.SetList(userId);
+    }
+
+
+    public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page,
+                                                                                int id,
+                                                                                string userId,
+                                                                                CancellationToken cancellationToken = default)
+    {
+        var certificate = await _repository.GetCertificateIncludeLinksAsync(id, userId, cancellationToken);
+
+        if (certificate is null)
         {
-            var certificate = new Certificate
-            (
-                userId,
-                cvm.Title,
-                cvm.Path,
-                cvm.Description,
-                cvm.Stage,
-                cvm.Date
-            ).SetId(cvm.Id);
-
-            await _repository.UpdateAsync(certificate, cancellationToken);
-
-            await _cacheService.SetItemAsync(certificate.Id, userId);
-            _cacheService.SetList(userId);
+            return null;
         }
 
-
-        public async Task DeleteCertificateAsync(int id,
-                                                 string userId,
-                                                 CancellationToken cancellationToken = default)
+        return new CertificateViewModel
         {
-            var certificate = await _repository.GetByUserIdAsync(id, userId, cancellationToken);
+            Id = certificate.Id,
+            Title = certificate.Title,
+            Description = certificate.Description,
+            Links = certificate.Links,
+            Date = certificate.Date,
+            Stage = certificate.Stage,
+            Path = certificate.Path,
+            UserId = certificate.UserId,
+            Page = page
+        };
+    }
 
-            await _repository.DeleteAsync(certificate, cancellationToken);
 
-            _cacheService.SetList(userId);
-        }
+    public async Task<CertificateViewModel> GetCertificateByIdAsync(int id,
+                                                                    string userId,
+                                                                    CancellationToken cancellationToken = default)
+    {
+        var certificate = await _repository.GetByUserIdAsync(id, userId, cancellationToken);
 
-
-        public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page,
-                                                                                    int id,
-                                                                                    string userId,
-                                                                                    CancellationToken cancellationToken = default)
+        if (certificate is null)
         {
-            var certificate = await _repository.GetCertificateIncludeLinksAsync(id, userId, cancellationToken);
-
-            if (certificate is null)
-            {
-                return null;
-            }
-
-            return new CertificateViewModel
-            {
-                Id = certificate.Id,
-                Title = certificate.Title,
-                Description = certificate.Description,
-                Links = certificate.Links,
-                Date = certificate.Date,
-                Stage = certificate.Stage,
-                Path = certificate.Path,
-                UserId = certificate.UserId,
-                Page = page
-            };
+            return null;
         }
 
-
-        public async Task<CertificateViewModel> GetCertificateByIdAsync(int id,
-                                                                        string userId,
-                                                                        CancellationToken cancellationToken = default)
+        return new CertificateViewModel
         {
-            var certificate = await _repository.GetByUserIdAsync(id, userId, cancellationToken);
-
-            if (certificate is null)
-            {
-                return null;
-            }
-
-            return new CertificateViewModel
-            {
-                Id = certificate.Id,
-                Title = certificate.Title,
-                Description = certificate.Description,
-                Date = certificate.Date,
-                Stage = certificate.Stage,
-                Path = certificate.Path
-            };
-        }
+            Id = certificate.Id,
+            Title = certificate.Title,
+            Description = certificate.Description,
+            Date = certificate.Date,
+            Stage = certificate.Stage,
+            Path = certificate.Path
+        };
     }
 }
