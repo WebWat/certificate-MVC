@@ -1,8 +1,7 @@
-﻿namespace Web.Models
+﻿namespace Web.Models;
+
+public enum EmailMessageType
 {
-    public enum EmailMessageType
-    {
-        RegisterConfirmation,
-        ForgotPasswordConfirmation
-    }
+    RegisterConfirmation,
+    ForgotPasswordConfirmation
 }

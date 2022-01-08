@@ -7,46 +7,45 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CoyoteTests
+namespace CoyoteTests;
+
+public class SystematicTests
 {
-    public class SystematicTests
+    private readonly ITestOutputHelper _output;
+
+    public SystematicTests(ITestOutputHelper output)
     {
-        private readonly ITestOutputHelper _output;
+        _output = output;
+    }
 
-        public SystematicTests(ITestOutputHelper output)
+
+    // Throw an exception, which we fixed.
+    // [Fact]
+    public void TestCertificateRepository()
+    {
+        var tests = new CertificateRepositoryTests();
+        RunSystematicTest(tests.GetAndUpdateAtTheSameTime, nameof(tests.GetAndUpdateAtTheSameTime));
+    }
+
+
+    private void RunSystematicTest(Func<Task> test, string testName)
+    {
+        _output.WriteLine("Start testing " + testName);
+
+        var configuration = Configuration.Create().
+            WithTestingIterations(10).
+            WithVerbosityEnabled();
+
+        var testingEngine = TestingEngine.Create(configuration, test);
+        testingEngine.Run();
+
+        Console.WriteLine($"Done testing. Found {testingEngine.TestReport.NumOfFoundBugs} bugs.");
+
+        if (testingEngine.TestReport.NumOfFoundBugs > 0)
         {
-            _output = output;
-        }
+            var error = testingEngine.TestReport.BugReports.First();
 
-
-        // Throw an exception, which we fixed.
-        // [Fact]
-        public void TestCertificateRepository()
-        {
-            var tests = new CertificateRepositoryTests();
-            RunSystematicTest(tests.GetAndUpdateAtTheSameTime, nameof(tests.GetAndUpdateAtTheSameTime));
-        }
-
-
-        private void RunSystematicTest(Func<Task> test, string testName)
-        {
-            _output.WriteLine("Start testing " + testName);
-
-            var configuration = Configuration.Create().
-                WithTestingIterations(10).
-                WithVerbosityEnabled();
-
-            var testingEngine = TestingEngine.Create(configuration, test);
-            testingEngine.Run();
-
-            Console.WriteLine($"Done testing. Found {testingEngine.TestReport.NumOfFoundBugs} bugs.");
-
-            if (testingEngine.TestReport.NumOfFoundBugs > 0)
-            {
-                var error = testingEngine.TestReport.BugReports.First();
-
-                Assert.True(false, $"Found bug: {error}");
-            }
+            Assert.True(false, $"Found bug: {error}");
         }
     }
 }

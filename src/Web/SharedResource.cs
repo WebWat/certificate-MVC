@@ -1,6 +1,4 @@
-﻿namespace Web
+﻿namespace Web;
+public class SharedResource
 {
-    public class SharedResource
-    {
-    }
 }

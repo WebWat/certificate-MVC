@@ -7,60 +7,64 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Data
+namespace Infrastructure.Data;
+
+public class ApplicationContextSeed
 {
-    public class ApplicationContextSeed
+    public static async Task SeedAsync(ApplicationContext context, 
+                                       UserManager<ApplicationUser> userManager,
+                                       string imagePath)
     {
-        public static async Task SeedAsync(ApplicationContext context, 
-                                           UserManager<ApplicationUser> userManager,
-                                           string imagePath)
+        // Get the user to get his Id.
+        var _user = await userManager.FindByNameAsync(AuthorizationConstants.UserName);
+
+        // Filling out certificates.
+        if (!await context.Certificates.AnyAsync())
         {
-            var _user = await userManager.FindByNameAsync(AuthorizationConstants.UserName);
-
-            if (!await context.Certificates.AnyAsync())
-            {
-                await context.Certificates.AddRangeAsync(GetCertificates(_user.Id, imagePath));
-                await context.SaveChangesAsync();
-            }
-
-            if (!await context.Links.AnyAsync())
-            {
-                foreach (var item in await context.Certificates.ToListAsync())
-                {
-                    await context.Links.AddRangeAsync(GetLinks(item.Id));
-                }
-                await context.SaveChangesAsync();
-            }
+            await context.Certificates.AddRangeAsync(GetCertificates(_user.Id, imagePath));
+            await context.SaveChangesAsync();
         }
 
-
-        private static IEnumerable<Certificate> GetCertificates(string userId, string path)
+        // Filling out links.
+        if (!await context.Links.AnyAsync())
         {
-            return new List<Certificate>
+            foreach (var item in await context.Certificates.ToListAsync())
             {
-                new Certificate(userId,
-                                "Robofest",
-                                path,
-                                "2nd place in the Robo-racing category",
-                                Stage.AllRussian,
-                                DateTime.UtcNow),
-                new Certificate(userId,
-                                "Robofest",
-                                path,
-                                "3rd place in the RoboFootball category",
-                                Stage.AllRussian,
-                                DateTime.UtcNow),
-            };
-        }
+                await context.Links.AddRangeAsync(GetLinks(item.Id));
+            }
 
-
-        private static IEnumerable<Link> GetLinks(int certificateId)
-        {
-            return new List<Link>
-            {
-                new Link ("https://example.com", certificateId),
-                new Link ("https://example.com/", certificateId)
-            };
+            await context.SaveChangesAsync();
         }
     }
+
+
+    private static IEnumerable<Certificate> GetCertificates(string userId, string path)
+    {
+        return new List<Certificate>
+        {
+            new Certificate(userId,
+                            "Robofest",
+                            path,
+                            "2nd place in the Robo-racing category",
+                            Stage.AllRussian,
+                            DateTime.UtcNow),
+            new Certificate(userId,
+                            "Robofest",
+                            path,
+                            "3rd place in the RoboFootball category",
+                            Stage.AllRussian,
+                            DateTime.UtcNow),
+        };
+    }
+
+
+    private static IEnumerable<Link> GetLinks(int certificateId)
+    {
+        return new List<Link>
+        {
+            new Link ("https://example.com", certificateId),
+            new Link ("https://example.com/", certificateId)
+        };
+    }
 }
+

@@ -4,33 +4,35 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Identity
+namespace Infrastructure.Identity;
+
+public class IdentityContextSeed
 {
-    public class IdentityContextSeed
+    public static async Task SeedAsync(UserManager<ApplicationUser> userManager, 
+                                       RoleManager<IdentityRole> roleManager)
     {
-        public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        // Filling roles.
+        if (!await roleManager.Roles.AnyAsync())
         {
-            if (!await roleManager.Roles.AnyAsync())
+            await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+            await roleManager.CreateAsync(new IdentityRole(Roles.User));
+        }
+
+        // Creating a user.
+        if (await userManager.FindByNameAsync(AuthorizationConstants.UserName) is null)
+        {
+            var admin = new ApplicationUser
             {
-                await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
-                await roleManager.CreateAsync(new IdentityRole(Roles.User));
-            }
+                UserName = AuthorizationConstants.UserName,
+                Email = AuthorizationConstants.EmailAddress,
+                EmailConfirmed = true,
+                LockoutEnabled = false,
+                UniqueUrl = AuthorizationConstants.UniqueUrl
+            };
 
-            if (await userManager.FindByNameAsync(AuthorizationConstants.UserName) is null)
-            {
-                var admin = new ApplicationUser
-                {
-                    UserName = AuthorizationConstants.UserName,
-                    Email = AuthorizationConstants.EmailAddress,
-                    EmailConfirmed = true,
-                    LockoutEnabled = false,
-                    UniqueUrl = AuthorizationConstants.UniqueUrl
-                };
+            await userManager.CreateAsync(admin, AuthorizationConstants.Password);
 
-                await userManager.CreateAsync(admin, AuthorizationConstants.Password);
-
-                await userManager.AddToRoleAsync(admin, Roles.Admin);
-            }
+            await userManager.AddToRoleAsync(admin, Roles.Admin);
         }
     }
 }

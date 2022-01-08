@@ -15,90 +15,91 @@ using Web.Models;
 using Web.Areas.Identity.Pages.Account.Models;
 using Web.Interfaces;
 
-namespace Areas.Identity.Pages.Account
+namespace Areas.Identity.Pages.Account;
+
+[AllowAnonymous]
+public class RegisterModel : PageModel
 {
-    [AllowAnonymous]
-    public class RegisterModel : PageModel
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IEmailSender _emailSender;
+    private readonly IUrlGenerator _urlGenerator;
+    private readonly IStringLocalizer<SharedResource> _localizer;
+    private readonly ILogger<RegisterModel> _logger;
+    private readonly IEmailTemplate _emailTemplate;
+
+    public RegisterModel(UserManager<ApplicationUser> userManager,
+                         IEmailSender emailSender,
+                         IUrlGenerator urlGenerator,
+                         IStringLocalizer<SharedResource> localizer,
+                         ILogger<RegisterModel> logger,
+                         IEmailTemplate emailTemplate)
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
-        private readonly IUrlGenerator _urlGenerator;
-        private readonly IStringLocalizer<SharedResource> _localizer;
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailTemplate _emailTemplate;
+        _userManager = userManager;
+        _emailSender = emailSender;
+        _urlGenerator = urlGenerator;
+        _localizer = localizer;
+        _logger = logger;
+        _emailTemplate = emailTemplate;
+    }
 
-        public RegisterModel(UserManager<ApplicationUser> userManager, 
-                             IEmailSender emailSender, 
-                             IUrlGenerator urlGenerator, 
-                             IStringLocalizer<SharedResource> localizer,
-                             ILogger<RegisterModel> logger,
-                             IEmailTemplate emailTemplate)
+
+    [BindProperty]
+    public RegisterInput Input { get; set; }
+
+    public string ReturnUrl { get; set; }
+
+
+    public void OnGet(string returnUrl = null)
+    {
+        ReturnUrl = returnUrl;
+    }
+
+
+    public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+    {
+        returnUrl ??= Url.Content("~/");
+
+        if (ModelState.IsValid)
         {
-            _userManager = userManager;
-            _emailSender = emailSender;
-            _urlGenerator = urlGenerator;
-            _localizer = localizer;
-            _logger = logger;
-            _emailTemplate = emailTemplate;
-        }
+            var _user = await _userManager.FindByNameAsync(Input.UserName);
 
-
-        [BindProperty]
-        public RegisterInput Input { get; set; }
-
-        public string ReturnUrl { get; set; }
-
-
-        public void OnGet(string returnUrl = null)
-        {
-            ReturnUrl = returnUrl;
-        }
-
-
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
-        {
-            returnUrl ??= Url.Content("~/");
-
-            if (ModelState.IsValid)
+            if (_user != null)
             {
-                var _user = await _userManager.FindByNameAsync(Input.UserName);
+                ModelState.AddModelError("Input.UserName", _localizer["LoginExist"]);
+                return Page();
+            }
 
-                if (_user != null)
-                {
-                    ModelState.AddModelError("Input.UserName", _localizer["LoginExist"]);
-                    return Page();
-                }
+            _user = await _userManager.FindByEmailAsync(Input.Email);
 
-                _user = await _userManager.FindByEmailAsync(Input.Email);
+            if (_user != null)
+            {
+                ModelState.AddModelError(string.Empty, _localizer["EmailExist"]);
+                return Page();
+            }
 
-                if (_user != null)
-                {
-                    ModelState.AddModelError(string.Empty, _localizer["EmailExist"]);
-                    return Page();
-                }
+            string[] fullName = Input.FullName.Split(' ');
 
-                string[] fullName = Input.FullName.Split(' ');
+            ApplicationUser user = new()
+            {
+                Email = Input.Email,
+                UserName = Input.UserName,
+                Name = fullName[1],
+                Surname = fullName[0],
+                MiddleName = fullName[2],
+                UniqueUrl = _urlGenerator.Generate(),
+                RegistrationDate = DateTime.UtcNow
+            };
 
-                ApplicationUser user = new ApplicationUser
-                {
-                    Email = Input.Email,
-                    UserName = Input.UserName,
-                    Name = fullName[1],
-                    Surname = fullName[0],
-                    MiddleName = fullName[2],
-                    UniqueUrl = _urlGenerator.Generate(),
-                    RegistrationDate = DateTime.UtcNow          
-                };
+            var result = await _userManager.CreateAsync(user, Input.Password);
 
-                var result = await _userManager.CreateAsync(user, Input.Password);
+            if (result.Succeeded)
+            {
+                _logger.LogInformation($"New User {user.Id} registered");
 
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation($"New User {user.Id} registered");
-
-                    await _userManager.AddToRoleAsync(user, "User");
+                await _userManager.AddToRoleAsync(user, "User");
+// Remove the mandatory check by mail during debugging.
 #if DEBUG
-                    return RedirectToPage("./Login");
+                return RedirectToPage("./Login");
 #elif RELEASE
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -113,14 +114,14 @@ namespace Areas.Identity.Pages.Account
 
                     return RedirectToPage("./RegisterConfirmation");
 #endif
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
             }
-            return Page();
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
         }
+
+        return Page();
     }
 }

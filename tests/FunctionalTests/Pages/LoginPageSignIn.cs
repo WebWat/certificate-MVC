@@ -9,55 +9,54 @@ using System.Threading.Tasks;
 using ApplicationCore.Constants;
 using Xunit;
 
-namespace FunctionalTests.Pages
+namespace FunctionalTests.Pages;
+
+[Collection("Sequential")]
+public class LoginPageSignIn : IClassFixture<WebTestFixture>
 {
-    [Collection("Sequential")]
-    public class LoginPageSignIn : IClassFixture<WebTestFixture>
+    public LoginPageSignIn(WebTestFixture factory)
     {
-        public LoginPageSignIn(WebTestFixture factory)
+        Client = factory.CreateClient(new WebApplicationFactoryClientOptions
         {
-            Client = factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
-        }
+            AllowAutoRedirect = false
+        });
+    }
 
-        public HttpClient Client { get; }
+    public HttpClient Client { get; }
 
 
-        [Fact]
-        public async Task ReturnsSuccessfulSignInOnPostWithRedirect()
-        {
-            // Arrange & Act
-            var getResponse = await Client.GetAsync("/identity/account/login?returnUrl=%2FCertificate");
-            getResponse.EnsureSuccessStatusCode();
-            var stringResponse1 = await getResponse.Content.ReadAsStringAsync();
-            string token = GetRequestVerificationToken(stringResponse1);
+    [Fact]
+    public async Task ReturnsSuccessfulSignInOnPostWithRedirect()
+    {
+        // Arrange & Act
+        var getResponse = await Client.GetAsync("/identity/account/login?returnUrl=%2FCertificate");
+        getResponse.EnsureSuccessStatusCode();
+        var stringResponse1 = await getResponse.Content.ReadAsStringAsync();
+        string token = GetRequestVerificationToken(stringResponse1);
 
-            var keyValues = new List<KeyValuePair<string, string>>
+        var keyValues = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("UserNameOrEmail", AuthorizationConstants.UserName),
                 new KeyValuePair<string, string>("Password", AuthorizationConstants.Password),
                 new KeyValuePair<string, string>("__RequestVerificationToken", token)
             };
-            var formContent = new FormUrlEncodedContent(keyValues);
+        var formContent = new FormUrlEncodedContent(keyValues);
 
-            var postResponse = await Client.PostAsync("/identity/account/login?returnUrl=%2FCertificate", 
-                                                      formContent);
+        var postResponse = await Client.PostAsync("/identity/account/login?returnUrl=%2FCertificate",
+                                                  formContent);
 
-            // Assert
-            Assert.Equal(HttpStatusCode.Redirect, postResponse.StatusCode);
-            Assert.Equal(new Uri("/Certificate", UriKind.Relative), postResponse.Headers.Location);
-        }
+        // Assert
+        Assert.Equal(HttpStatusCode.Redirect, postResponse.StatusCode);
+        Assert.Equal(new Uri("/Certificate", UriKind.Relative), postResponse.Headers.Location);
+    }
 
 
-        private string GetRequestVerificationToken(string input)
-        {
-            string regexpression = @"name=""__RequestVerificationToken"" type=""hidden"" value=""([-A-Za-z0-9+=/\\_]+?)""";
-            var regex = new Regex(regexpression);
-            var match = regex.Match(input);
+    private string GetRequestVerificationToken(string input)
+    {
+        string regexpression = @"name=""__RequestVerificationToken"" type=""hidden"" value=""([-A-Za-z0-9+=/\\_]+?)""";
+        var regex = new Regex(regexpression);
+        var match = regex.Match(input);
 
-            return match.Groups.Values.LastOrDefault().Value;
-        }
+        return match.Groups.Values.LastOrDefault().Value;
     }
 }

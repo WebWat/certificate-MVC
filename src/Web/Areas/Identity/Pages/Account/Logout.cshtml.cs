@@ -5,29 +5,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 
-namespace Web.Areas.Identity.Pages.Account
+namespace Web.Areas.Identity.Pages.Account;
+
+[AllowAnonymous]
+public class LogoutModel : PageModel
 {
-    [AllowAnonymous]
-    public class LogoutModel : PageModel
+    private readonly SignInManager<ApplicationUser> _signInManager;
+
+    public LogoutModel(SignInManager<ApplicationUser> signInManager)
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        _signInManager = signInManager;
+    }
 
-        public LogoutModel(SignInManager<ApplicationUser> signInManager)
-        {
-            _signInManager = signInManager;
-        }
+    // TODO: remove onget?
 
+    public async Task<IActionResult> OnPost()
+    {
+        await _signInManager.SignOutAsync();
 
-        public void OnGet()
-        {
-        }
-
-
-        public async Task<IActionResult> OnPost()
-        {
-            await _signInManager.SignOutAsync();
-
-            return RedirectToPage("./Login");
-        }
+        return RedirectToPage("./Login");
     }
 }

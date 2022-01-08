@@ -4,15 +4,14 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ApplicationCore.Interfaces
+namespace ApplicationCore.Interfaces;
+
+public interface IUserRepository
 {
-    public interface IUserRepository
-    {
-        IEnumerable<ApplicationUser> List(Func<ApplicationUser, bool> predicate);
+    IEnumerable<ApplicationUser> List(Func<ApplicationUser, bool> predicate);
 
-        Task<ApplicationUser> GetAsync(Func<ApplicationUser, bool> predicate,
-                                       CancellationToken cancellationToken = default);
+    Task<ApplicationUser> GetAsync(Func<ApplicationUser, bool> predicate,
+                                   CancellationToken cancellationToken = default);
 
-        Task<int> GetCountAsync(CancellationToken cancellationToken = default);
-    }
+    Task<int> GetCountAsync(CancellationToken cancellationToken = default);
 }

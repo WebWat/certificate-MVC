@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics;
-using Web;
+using Web.Interfaces;
 
 namespace FunctionalTests
 {
-    public class WebTestFixture : WebApplicationFactory<Startup>
+    public class WebTestFixture : WebApplicationFactory<IFilterService>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -43,8 +43,6 @@ namespace FunctionalTests
                     var scopedServices = scope.ServiceProvider;
 
                     var db = scopedServices.GetRequiredService<ApplicationContext>();
-
-                    var loggerFactory = scopedServices.GetRequiredService<ILoggerFactory>();
 
                     db.Database.EnsureCreated();
 

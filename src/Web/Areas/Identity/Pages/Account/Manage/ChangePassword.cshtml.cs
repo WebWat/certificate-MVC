@@ -8,91 +8,90 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Manage.Models;
 
-namespace Web.Areas.Identity.Pages.Account.Manage
-{
-    [Authorize]
-    public class ChangePasswordModel : PageModel
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IStringLocalizer<ChangePassword> _localizer;
-        private readonly ILogger<ChangePasswordModel> _logger;
+namespace Web.Areas.Identity.Pages.Account.Manage;
 
-        public ChangePasswordModel(UserManager<ApplicationUser> userManager,
-                                   SignInManager<ApplicationUser> signInManager,
-                                   IStringLocalizer<ChangePassword> localizer,
-                                   ILogger<ChangePasswordModel> logger)
+[Authorize]
+public class ChangePasswordModel : PageModel
+{
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IStringLocalizer<ChangePassword> _localizer;
+    private readonly ILogger<ChangePasswordModel> _logger;
+
+    public ChangePasswordModel(UserManager<ApplicationUser> userManager,
+                               SignInManager<ApplicationUser> signInManager,
+                               IStringLocalizer<ChangePassword> localizer,
+                               ILogger<ChangePasswordModel> logger)
+    {
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _localizer = localizer;
+        _logger = logger;
+    }
+
+
+    [BindProperty]
+    public ChangePasswordInput Input { get; set; }
+
+    [TempData]
+    public string StatusMessage { get; set; }
+
+
+    public async Task<IActionResult> OnGetAsync()
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        var hasPassword = await _userManager.HasPasswordAsync(user);
+
+        if (!hasPassword)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _localizer = localizer;
-            _logger = logger;
+            return NotFound();
         }
 
-
-        [BindProperty]
-        public ChangePasswordInput Input { get; set; }
-
-        [TempData]
-        public string StatusMessage { get; set; }
+        return Page();
+    }
 
 
-        public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
         {
-            var user = await _userManager.GetUserAsync(User);
+            return Page();
+        }
 
-            var hasPassword = await _userManager.HasPasswordAsync(user);
+        var user = await _userManager.GetUserAsync(User);
 
-            if (!hasPassword)
+        var correctPassword = await _userManager.CheckPasswordAsync(user, Input.OldPassword);
+
+        if (!correctPassword)
+        {
+            ModelState.AddModelError(string.Empty, _localizer["IncorrectPassword"]);
+
+            return Page();
+        }
+
+        var changePasswordResult = await _userManager.ChangePasswordAsync(user,
+                                                                          Input.OldPassword,
+                                                                          Input.NewPassword);
+
+        if (!changePasswordResult.Succeeded)
+        {
+            foreach (var error in changePasswordResult.Errors)
             {
-                return NotFound();
+                ModelState.AddModelError(string.Empty, error.Description);
             }
 
             return Page();
         }
 
+        await _signInManager.RefreshSignInAsync(user);
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+        _logger.LogInformation($"User {user.Id} changed his password");
 
-            var user = await _userManager.GetUserAsync(User);
+        StatusMessage = _localizer["StatusMessage"];
 
-            var correctPassword = await _userManager.CheckPasswordAsync(user, Input.OldPassword);
-
-            if (!correctPassword)
-            {
-                ModelState.AddModelError(string.Empty, _localizer["IncorrectPassword"]);
-
-                return Page();
-            }
-
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, 
-                                                                              Input.OldPassword, 
-                                                                              Input.NewPassword);
-
-            if (!changePasswordResult.Succeeded)
-            {
-                foreach (var error in changePasswordResult.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-
-                return Page();
-            }
-
-            await _signInManager.RefreshSignInAsync(user);
-
-            _logger.LogInformation($"User {user.Id} changed his password");
-
-            StatusMessage = _localizer["StatusMessage"];
-
-            return RedirectToPage();
-        }
+        return RedirectToPage();
     }
-
-    public class ChangePassword { }
 }
+
+public class ChangePassword { }

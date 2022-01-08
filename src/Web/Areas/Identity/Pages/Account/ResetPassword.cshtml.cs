@@ -9,65 +9,64 @@ using System.Text;
 using System.Threading.Tasks;
 using Web.Areas.Identity.Pages.Account.Models;
 
-namespace Web.Areas.Identity.Pages.Account
+namespace Web.Areas.Identity.Pages.Account;
+
+[AllowAnonymous]
+public class ResetPasswordModel : PageModel
 {
-    [AllowAnonymous]
-    public class ResetPasswordModel : PageModel
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ILogger<ResetPasswordModel> _logger;
+
+    public ResetPasswordModel(UserManager<ApplicationUser> userManager, ILogger<ResetPasswordModel> logger)
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<ResetPasswordModel> _logger;
+        _userManager = userManager;
+        _logger = logger;
+    }
 
-        public ResetPasswordModel(UserManager<ApplicationUser> userManager, ILogger<ResetPasswordModel> logger)
+
+    [BindProperty]
+    public ResetInput Input { get; set; }
+
+
+    public IActionResult OnGet(string code = null)
+    {
+        if (code is null)
         {
-            _userManager = userManager;
-            _logger = logger;
+            return BadRequest();
         }
 
-
-        [BindProperty]
-        public ResetInput Input { get; set; }
-
-
-        public IActionResult OnGet(string code = null)
+        Input = new()
         {
-            if (code is null)
-            {
-                return BadRequest();
-            }
+            Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
+        };
 
-            Input = new ResetInput
-            {
-                Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
-            };
+        return Page();
+    }
 
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
+        {
             return Page();
         }
 
+        var user = await _userManager.FindByEmailAsync(Input.Email);
 
-        public async Task<IActionResult> OnPostAsync()
+        if (user is null)
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            var user = await _userManager.FindByEmailAsync(Input.Email);
-
-            if (user is null)
-            {
-                return RedirectToPage("./ResetPasswordConfirmation");
-            }
-
-            var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
-
-            if (result.Succeeded)
-            {
-                _logger.LogInformation($"User {user.Id} has reset his password");
-
-                return RedirectToPage("./ResetPasswordConfirmation");
-            }
-
-            return Page();
+            return RedirectToPage("./ResetPasswordConfirmation");
         }
+
+        var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
+
+        if (result.Succeeded)
+        {
+            _logger.LogInformation($"User {user.Id} has reset his password");
+
+            return RedirectToPage("./ResetPasswordConfirmation");
+        }
+
+        return Page();
     }
 }

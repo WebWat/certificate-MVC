@@ -1,7 +1,6 @@
-﻿namespace ApplicationCore.Constants
+﻿namespace ApplicationCore.Constants;
+
+public class Common
 {
-    public class Common
-    {
-        public const int PageSize = 12;
-    }
+    public const int PageSize = 12;
 }

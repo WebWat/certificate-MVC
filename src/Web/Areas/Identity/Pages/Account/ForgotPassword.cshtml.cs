@@ -11,58 +11,59 @@ using Web.Areas.Identity.Pages.Account.Models;
 using Web.Interfaces;
 using Web.Models;
 
-namespace Web.Areas.Identity.Pages.Account
+namespace Web.Areas.Identity.Pages.Account;
+
+[AllowAnonymous]
+public class ForgotPasswordModel : PageModel
 {
-    [AllowAnonymous]
-    public class ForgotPasswordModel : PageModel
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IEmailSender _emailSender;
+    private readonly IEmailTemplate _emailTemplate;
+
+    public ForgotPasswordModel(UserManager<ApplicationUser> userManager,
+                               IEmailSender emailSender,
+                               IEmailTemplate emailTemplate)
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
-        private readonly IEmailTemplate _emailTemplate;
+        _userManager = userManager;
+        _emailSender = emailSender;
+        _emailTemplate = emailTemplate;
+    }
 
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager,
-                                   IEmailSender emailSender,
-                                   IEmailTemplate emailTemplate)
+
+    [BindProperty]
+    public EmailInput Input { get; set; }
+
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (ModelState.IsValid)
         {
-            _userManager = userManager;
-            _emailSender = emailSender;
-            _emailTemplate = emailTemplate;
-        }
+            var user = await _userManager.FindByEmailAsync(Input.Email);
 
-
-        [BindProperty]
-        public EmailInput Input { get; set; }
-
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (ModelState.IsValid)
+            if (user is null || !await _userManager.IsEmailConfirmedAsync(user))
             {
-                var user = await _userManager.FindByEmailAsync(Input.Email);
+                return Page();
+            }
 
-                if (user is null || !await _userManager.IsEmailConfirmedAsync(user))
-                {
-                    return Page();
-                }
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = Url.Page(
+                    "/Account/ResetPassword",
+                    pageHandler: null,
+                    values: new { area = "Identity", code }, // TODO: ?.
+                    protocol: HttpContext.Request.Scheme);
 
-                var callbackUrl = Url.Page(
-                        "/Account/ResetPassword",
-                        pageHandler: null,
-                        values: new { area = "Identity", code = code },
-                        protocol: HttpContext.Request.Scheme);
+// Remove the mandatory check by mail during debugging.
 #if RELEASE
                 var email = _emailTemplate.GetTemplate(EmailMessageType.ForgotPasswordConfirmation, callbackUrl);
 
                 await _emailSender.SendEmailAsync(Input.Email, email.subject, email.template);
                 return RedirectToPage("./ForgotPasswordConfirmation");
 #elif DEBUG
-                return Redirect(callbackUrl);
+            return Redirect(callbackUrl);
 #endif
-            }
-            return Page();
         }
+        return Page();
     }
 }

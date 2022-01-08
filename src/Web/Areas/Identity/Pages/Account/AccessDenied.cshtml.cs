@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Web.Areas.Identity.Pages.Account
+namespace Web.Areas.Identity.Pages.Account;
+
+[Authorize]
+public class AccessDeniedModel : PageModel
 {
-    [Authorize]
-    public class AccessDeniedModel : PageModel
+    public void OnGet(string returnUrl = null)
     {
-        public void OnGet(string returnUrl = null)
-        {
-        }
     }
 }

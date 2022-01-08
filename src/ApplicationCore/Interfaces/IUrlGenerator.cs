@@ -1,7 +1,6 @@
-﻿namespace ApplicationCore.Interfaces
+﻿namespace ApplicationCore.Interfaces;
+
+public interface IUrlGenerator
 {
-    public interface IUrlGenerator
-    {
-        string Generate();
-    }
+    string Generate();
 }

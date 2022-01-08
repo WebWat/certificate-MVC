@@ -1,11 +1,10 @@
-﻿namespace ApplicationCore.Entities
+﻿namespace ApplicationCore.Entities;
+
+public enum Stage
 {
-    public enum Stage
-    {
-        School,
-        District,
-        Republican,
-        AllRussian,
-        International
-    }
+    School,
+    District,
+    Republican,
+    AllRussian,
+    International
 }

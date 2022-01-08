@@ -12,109 +12,109 @@ using Web.Areas.Identity.Pages.Account.Manage.Models;
 using Web.Extensions;
 using Web.Models;
 
-namespace Web.Areas.Identity.Pages.Account.Manage
+namespace Web.Areas.Identity.Pages.Account.Manage;
+
+[Authorize]
+public partial class IndexModel : PageModel
 {
-    [Authorize]
-    public partial class IndexModel : PageModel
-    {      
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IStringLocalizer<Index> _localizer;
-        private readonly ILogger<IndexModel> _logger;
-        private readonly FileSettings _fileSettings;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IStringLocalizer<Index> _localizer;
+    private readonly ILogger<IndexModel> _logger;
+    private readonly FileSettings _fileSettings;
 
-        public IndexModel(UserManager<ApplicationUser> userManager, 
-                          IStringLocalizer<Index> localizer, 
-                          ILogger<IndexModel> logger,
-                          IOptions<FileSettings> options)
+    public IndexModel(UserManager<ApplicationUser> userManager,
+                      IStringLocalizer<Index> localizer,
+                      ILogger<IndexModel> logger,
+                      IOptions<FileSettings> options)
+    {
+        _userManager = userManager;
+        _localizer = localizer;
+        _logger = logger;
+        _fileSettings = options.Value;
+    }
+
+
+    [TempData]
+    public string StatusMessage { get; set; }
+
+    [BindProperty]
+    public IndexInput Input { get; set; }
+
+
+    private async Task LoadAsync(ApplicationUser user)
+    {
+        var userName = await _userManager.GetUserNameAsync(user);
+
+        Input = new IndexInput
         {
-            _userManager = userManager;
-            _localizer = localizer;
-            _logger = logger;
-            _fileSettings = options.Value;
-        }
+            Username = userName,
+            Name = user.Name,
+            Surname = user.Surname,
+            MiddleName = user.MiddleName,
+            Town = user.Town
+        };
+    }
 
 
-        [TempData]
-        public string StatusMessage { get; set; }
+    public async Task<IActionResult> OnGetAsync()
+    {
+        var user = await _userManager.GetUserAsync(User);
 
-        [BindProperty]
-        public IndexInput Input { get; set; }
+        await LoadAsync(user);
+
+        return Page();
+    }
 
 
-        private async Task LoadAsync(ApplicationUser user)
+    public async Task<IActionResult> OnPostAsync()
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (!ModelState.IsValid)
         {
-            var userName = await _userManager.GetUserNameAsync(user);
-
-            Input = new IndexInput
-            {
-                Username = userName,
-                Name = user.Name,
-                Surname = user.Surname,
-                MiddleName = user.MiddleName,
-                Town = user.Town
-            };
-        }
-
-
-        public async Task<IActionResult> OnGetAsync()
-        {
-            var user = await _userManager.GetUserAsync(User);
-
             await LoadAsync(user);
-
             return Page();
         }
 
-
-        public async Task<IActionResult> OnPostAsync()
+        // If the user has added an image, then set the Image property.
+        if (Input.File != null)
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            if (!ModelState.IsValid)
+            if (Input.File.CheckFileExtension(_fileSettings.Expansion))
             {
-                await LoadAsync(user);
+                ModelState.AddModelError("Input.File", _localizer["FileExtensionError"]);
                 return Page();
             }
 
-            if (Input.File != null)
+            byte[] imageData = null;
+
+            using (var binaryReader = new BinaryReader(Input.File.OpenReadStream()))
             {
-                if (Input.File.CheckFileExtension(_fileSettings.Expansion))
+
+                if (Input.File.CheckFileSize(_fileSettings.MinSize, _fileSettings.SizeLimit))
                 {
-                    ModelState.AddModelError("Input.File", _localizer["FileExtensionError"]);
+                    ModelState.AddModelError("Input.File", _localizer["FileSizeError"]);
                     return Page();
                 }
 
-                byte[] imageData = null;
-
-                using (var binaryReader = new BinaryReader(Input.File.OpenReadStream()))
-                {
-
-                    if (Input.File.CheckFileSize(_fileSettings.MinSize, _fileSettings.SizeLimit))
-                    {
-                        ModelState.AddModelError("Input.File", _localizer["FileSizeError"]);
-                        return Page();
-                    }
-
-                    imageData = binaryReader.ReadBytes((int)Input.File.Length);
-                }
-
-                user.Photo = imageData;
+                imageData = binaryReader.ReadBytes((int)Input.File.Length);
             }
 
-            user.Surname = Input.Surname;
-            user.Name = Input.Name;
-            user.MiddleName = Input.MiddleName;
-            user.Town = Input.Town;
-
-            await _userManager.UpdateAsync(user);
-
-            _logger.LogInformation($"User {user.Id} updated his profile");
-
-            StatusMessage = _localizer["StatusMessage"];
-
-            return RedirectToPage();
+            user.Photo = imageData;
         }
-    }
 
-    public class Index { }
+        user.Surname = Input.Surname;
+        user.Name = Input.Name;
+        user.MiddleName = Input.MiddleName;
+        user.Town = Input.Town;
+
+        await _userManager.UpdateAsync(user);
+
+        _logger.LogInformation($"User {user.Id} updated his profile");
+
+        StatusMessage = _localizer["StatusMessage"];
+
+        return RedirectToPage();
+    }
 }
+
+public class Index { }
