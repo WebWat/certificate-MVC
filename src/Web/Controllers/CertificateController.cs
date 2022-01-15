@@ -54,7 +54,7 @@ public class CertificateController : Controller
     {
         var _user = await _userManager.GetUserAsync(User);
 
-        return View(_certificateService.GetIndexViewModel(page, _user.Id, year, find, stage));
+        return View(await _certificateService.GetIndexViewModel(page, _user.Id, year, find, stage));
     }
 
 

@@ -57,7 +57,7 @@ public class DownloadController : ControllerBase
     {
         var _user = await _userManager.GetUserAsync(User);
 
-        var list = _repository.ListByUserId(_user.Id);
+        var list = await _repository.ListByUserId(_user.Id);
 
         if (list is null)
         {
@@ -108,7 +108,7 @@ public class DownloadController : ControllerBase
     public async Task<FileResult> Excel()
     {
         var _user = await _userManager.GetUserAsync(User);
-        var certificates = _repository.ListByUserId(_user.Id);
+        var certificates = await _repository.ListByUserId(_user.Id);
         byte[] data = default;
         int column = 2;
         int count = 1;

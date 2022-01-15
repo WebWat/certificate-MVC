@@ -7,7 +7,7 @@ namespace Web.Interfaces;
 
 public interface ICertificateViewModelService
 {
-    IndexViewModel GetIndexViewModel(int page, string userId, string year, string find, Stage? stage);
+    Task<IndexViewModel> GetIndexViewModel(int page, string userId, string year, string find, Stage? stage);
 
     Task UpdateCertificateAsync(CertificateViewModel cvm, string userId, CancellationToken cancellationToken = default);
     Task CreateCertificateAsync(CertificateViewModel cvm, string userId, CancellationToken cancellationToken = default);

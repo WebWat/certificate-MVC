@@ -37,11 +37,11 @@ public class CertificateViewModelService : ICertificateViewModelService
     }
 
 
-    public IndexViewModel GetIndexViewModel(int page, string userId, string year, string find, Stage? stage)
+    public async Task<IndexViewModel> GetIndexViewModel(int page, string userId, string year, string find, Stage? stage)
     {
         page = page <= 0 ? 1 : page;
 
-        var list = _repository.ListByUserId(userId);
+        var list = await _repository.ListByUserId(userId);
 
         list = _filterService.FilterOut(list, year, find, stage);
 

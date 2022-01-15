@@ -32,14 +32,14 @@ public class CertificateRepository : EFCoreRepository<Certificate>, ICertificate
 
     public async Task DeleteCertificatesByUserId(string userId, CancellationToken cancellationToken = default)
     {
-        _context.Certificates.RemoveRange(ListByUserId(userId));
+        _context.Certificates.RemoveRange(await ListByUserId(userId));
 
         await _context.SaveChangesAsync(cancellationToken);
     }
 
 
-    public IEnumerable<Certificate> ListByUserId(string userId)
+    public async Task<IEnumerable<Certificate>> ListByUserId(string userId)
     {
-        return List(i => i.UserId == userId);
+        return await List(i => i.UserId == userId);
     }
 }

@@ -1,11 +1,15 @@
 ﻿using ApplicationCore.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using PieroDeTomi.EntityFrameworkCore.Identity.Cosmos.Contracts;
 using System;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using Web.ViewModels;
 
 namespace Web.Controllers;
@@ -14,14 +18,16 @@ namespace Web.Controllers;
 public class HomeController : Controller
 {
     private readonly IStringLocalizer<HomeController> _localizer;
+    IRepository _roleStore;
 
-    public HomeController(IStringLocalizer<HomeController> localizer)
+    public HomeController(IStringLocalizer<HomeController> localizer, IRepository roleStrore)
     {
         _localizer = localizer;
+        _roleStore = roleStrore;
     }
 
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         return View();
     }

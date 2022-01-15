@@ -10,4 +10,10 @@ public class Link : BaseEntity
         Url = url;
         CertificateId = certificateId;
     }
+
+    public Link SetId(int id)
+    {
+        Id = id;
+        return this;
+    }
 }

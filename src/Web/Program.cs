@@ -8,14 +8,18 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PieroDeTomi.EntityFrameworkCore.Identity.Cosmos.Contracts;
+using PieroDeTomi.EntityFrameworkCore.Identity.Cosmos.Extensions;
 using System;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using Web;
 using Web.Configuration;
 using Web.Models;
@@ -35,12 +39,6 @@ builder.Services.AddWebServices();
 // Identity.
 builder.Services.AddTransient<IPasswordValidator<ApplicationUser>, CustomPasswordPolicy>();
 
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(60);
-    options.Lockout.MaxFailedAccessAttempts = 10;
-    options.Lockout.AllowedForNewUsers = true;
-});
 
 // Data protection.
 builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Directory.GetCurrentDirectory() + @"\Keys"))
@@ -92,11 +90,28 @@ builder.Services.AddHttpContextAccessor();
 // Database.
 if (!builder.Environment.IsEnvironment("Testing"))
 {
-    // Use DockerConnection for Docker
-    builder.Services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-    builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationContext>();
+    // Use DockerConnection for Docker.
+    //builder.Services.AddDbContext<ApplicationContext>(options =>
+    //options.UseCosmos(
+    //    connectionString: builder.Configuration.GetConnectionString("CosmosDBConnection"),
+    //    databaseName: "CertificateDB"));
+    //builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    //        .AddEntityFrameworkStores<ApplicationContext>();
+
+    builder.Services.AddCosmosIdentity<ApplicationContext, ApplicationUser, IdentityRole>(
+      // Auth provider standard configuration (e.g.: account confirmation, password requirements, etc.)
+      options => 
+      {
+          options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(60);
+          options.Lockout.MaxFailedAccessAttempts = 10;
+          options.Lockout.AllowedForNewUsers = true;
+      },
+      // Cosmos DB configuration options
+      options => options.UseCosmos(
+          connectionString: builder.Configuration.GetConnectionString("CosmosDBConnection"),
+          databaseName: "CertificateDB"
+      )
+    );
 }
 
 // ServiceProvider.
@@ -107,19 +122,19 @@ using (var scope = serviceProvider.CreateScope())
 {
     var services = scope.ServiceProvider;
     var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+    var logger = loggerFactory.CreateLogger<Program>();
 
     try
     {
         var applicationContext = services.GetRequiredService<ApplicationContext>();
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var roleManager = services.GetRequiredService<IRepository>();
 
         await IdentityContextSeed.SeedAsync(userManager, roleManager);
-        await ApplicationContextSeed.SeedAsync(applicationContext, userManager, "/img/example_image.jpg");
+        //await ApplicationContextSeed.SeedAsync(applicationContext, userManager, "/img/example_image.jpg");
     }
     catch (Exception ex)
     {
-        var logger = loggerFactory.CreateLogger<Program>();
         logger.LogError(ex, "An error occurred seeding the DB.");
     }
 }

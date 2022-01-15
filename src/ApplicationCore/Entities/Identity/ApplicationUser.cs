@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using System;
 
 namespace ApplicationCore.Entities.Identity;
 
 public class ApplicationUser : IdentityUser
 {
+    //[JsonProperty(PropertyName = "partition")]
+    //public string Partition { get; set; }
+
     public string Name { get; set; }
 
     public string Surname { get; set; }

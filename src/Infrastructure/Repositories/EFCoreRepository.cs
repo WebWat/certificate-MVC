@@ -27,9 +27,10 @@ public class EFCoreRepository<T> : IAsyncRepository<T> where T : BaseEntity
     }
 
 
-    public IEnumerable<T> List(Func<T, bool> predicate)
+    public async Task<IEnumerable<T>> List(Func<T, bool> predicate)
     {
-        return _context.Set<T>().AsNoTracking().Where(predicate);
+        var value = await _context.Set<T>().AsNoTracking().ToListAsync();
+        return value.Where(predicate);
     }
 
 

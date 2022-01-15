@@ -14,6 +14,9 @@ using Web;
 using Web.Models;
 using Web.Areas.Identity.Pages.Account.Models;
 using Web.Interfaces;
+using PieroDeTomi.EntityFrameworkCore.Identity.Cosmos.Contracts;
+using Microsoft.EntityFrameworkCore;
+using ApplicationCore.Constants;
 
 namespace Areas.Identity.Pages.Account;
 
@@ -26,13 +29,15 @@ public class RegisterModel : PageModel
     private readonly IStringLocalizer<SharedResource> _localizer;
     private readonly ILogger<RegisterModel> _logger;
     private readonly IEmailTemplate _emailTemplate;
+    private readonly IRepository _repo;
 
     public RegisterModel(UserManager<ApplicationUser> userManager,
                          IEmailSender emailSender,
                          IUrlGenerator urlGenerator,
                          IStringLocalizer<SharedResource> localizer,
                          ILogger<RegisterModel> logger,
-                         IEmailTemplate emailTemplate)
+                         IEmailTemplate emailTemplate,
+                         IRepository repo)
     {
         _userManager = userManager;
         _emailSender = emailSender;
@@ -40,6 +45,7 @@ public class RegisterModel : PageModel
         _localizer = localizer;
         _logger = logger;
         _emailTemplate = emailTemplate;
+        _repo = repo;
     }
 
 
@@ -96,7 +102,18 @@ public class RegisterModel : PageModel
             {
                 _logger.LogInformation($"New User {user.Id} registered");
 
-                await _userManager.AddToRoleAsync(user, "User");
+                var role = await _repo.Table<IdentityRole>().SingleOrDefaultAsync(_ => _.Name == Roles.User);
+
+
+                IdentityUserRole<string> userRole = new IdentityUserRole<string>
+                {
+                    RoleId = role.Id,
+                    UserId = user.Id,
+                };
+
+                _repo.Add(userRole);
+                await _repo.SaveChangesAsync();
+
 // Remove the mandatory check by mail during debugging.
 #if DEBUG
                 return RedirectToPage("./Login");

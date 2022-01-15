@@ -34,13 +34,15 @@ public class CachedPublicViewModelService : ICachedPublicViewModelService
     }
 
 
-    public List<Certificate> GetList(string userId)
+    public async Task<List<Certificate>> GetList(string userId)
     {
-        return _memoryCache.GetOrCreate(nameof(PublicViewModel).GenerateCacheKey(userId.ToString()), item =>
+        return await _memoryCache.GetOrCreateAsync(nameof(PublicViewModel).GenerateCacheKey(userId.ToString()),async item =>
         {
             item.SlidingExpiration = CacheHelper.DefaultExpiration;
 
-            return _repository.ListByUserId(userId).ToList();
+            var value = await _repository.ListByUserId(userId);
+
+            return value.ToList();
         });
     }
 
@@ -54,10 +56,10 @@ public class CachedPublicViewModelService : ICachedPublicViewModelService
     }
 
 
-    public void SetList(string userId)
+    public async Task SetList(string userId)
     {
         _memoryCache.Set(nameof(PublicViewModel).GenerateCacheKey(userId.ToString()),
-                         _repository.ListByUserId(userId).ToList(),
+                         (await _repository.ListByUserId(userId)).ToList(),
                          new MemoryCacheEntryOptions().SetSlidingExpiration(CacheHelper.DefaultExpiration));
     }
 }

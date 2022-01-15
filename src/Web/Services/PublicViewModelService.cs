@@ -33,12 +33,12 @@ public class PublicViewModelService : IPublicViewModelService
         _pageService = pageService;
     }
 
-    public PublicViewModel GetPublicViewModel(int page, string year, string find, Stage? stage,
+    public async Task<PublicViewModel> GetPublicViewModel(int page, string year, string find, Stage? stage,
                                               ApplicationUser user)
     {
         page = page <= 0 ? 1 : page;
 
-        var list = _cacheService.GetList(user.Id);
+        var list = await _cacheService.GetList(user.Id);
 
         list = _filterService.FilterOut(list, year, find, stage).ToList();
 

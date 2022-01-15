@@ -19,18 +19,19 @@ public class ApplicationContextSeed
         var _user = await userManager.FindByNameAsync(AuthorizationConstants.UserName);
 
         // Filling out certificates.
-        if (!await context.Certificates.AnyAsync())
+        if ((await context.Certificates.AsNoTracking().ToListAsync()).Count == 0)
         {
             await context.Certificates.AddRangeAsync(GetCertificates(_user.Id, imagePath));
             await context.SaveChangesAsync();
         }
 
         // Filling out links.
-        if (!await context.Links.AnyAsync())
+        if ((await context.Links.AsNoTracking().ToListAsync()).Count == 0)
         {
             foreach (var item in await context.Certificates.ToListAsync())
             {
                 await context.Links.AddRangeAsync(GetLinks(item.Id));
+                break;
             }
 
             await context.SaveChangesAsync();
@@ -47,13 +48,13 @@ public class ApplicationContextSeed
                             path,
                             "2nd place in the Robo-racing category",
                             Stage.AllRussian,
-                            DateTime.UtcNow),
+                            DateTime.UtcNow).SetId(0),
             new Certificate(userId,
                             "Robofest",
                             path,
                             "3rd place in the RoboFootball category",
                             Stage.AllRussian,
-                            DateTime.UtcNow),
+                            DateTime.UtcNow).SetId(1),
         };
     }
 
@@ -62,8 +63,8 @@ public class ApplicationContextSeed
     {
         return new List<Link>
         {
-            new Link ("https://example.com", certificateId),
-            new Link ("https://example.com/", certificateId)
+            new Link("https://example.com", certificateId).SetId(0),
+            new Link("https://example.com/", certificateId).SetId(1)
         };
     }
 }

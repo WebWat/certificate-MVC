@@ -89,9 +89,9 @@ public class LoginModel : PageModel
             {
                 _logger.LogInformation($"User {user.Id} is logged in");
 
-                var role = await _userManager.GetRolesAsync(user);
+                //var role = await _userManager.GetRolesAsync(user);
 
-                // if returnurl is correct - go to it.
+                // If returnurl is correct - go to it.
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);

@@ -28,11 +28,11 @@
         </li>
     </ul>
 }
-else if (User.Claims.IsRole(Roles.User))
-{
-    <partial name="Roles/_UserPartial" model="fill" />
-}
 else if (User.Claims.IsRole(Roles.Admin))
 {
     <partial name="Roles/_AdminPartial" model="fill" />
 }
+@*else if (User.Claims.IsRole(Roles.User))
+{
+    <partial name="Roles/_UserPartial" model="fill" />
+}*@
