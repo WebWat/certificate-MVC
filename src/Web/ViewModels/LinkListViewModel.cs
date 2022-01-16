@@ -4,7 +4,7 @@ namespace Web.ViewModels;
 
 public class LinkListViewModel
 {
-    public int CertificateId { get; set; }
+    public string CertificateId { get; set; }
 
     public IEnumerable<LinkViewModel> Links { get; set; }
 }

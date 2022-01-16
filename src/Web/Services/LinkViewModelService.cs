@@ -34,7 +34,7 @@ public class LinkViewModelService : ILinkViewModelService
         if (certificate != null)
         {
             // Check the limit (maximum 5).
-            if (certificate.Links.Count >= 5)
+            if (certificate.Links?.Count >= 5)
             {
                 return true;
             }
@@ -51,7 +51,7 @@ public class LinkViewModelService : ILinkViewModelService
     }
 
 
-    public async Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId,
+    public async Task<LinkListViewModel> GetLinkListViewModelAsync(string certificateId,
                                                                    string userId,
                                                                    CancellationToken cancellationToken = default)
     {
@@ -67,7 +67,7 @@ public class LinkViewModelService : ILinkViewModelService
         return new LinkListViewModel
         {
             CertificateId = certificateId,
-            Links = certificate.Links.Select(e =>
+            Links = certificate.Links?.Select(e =>
             {
                 var link = new LinkViewModel
                 {
@@ -82,8 +82,8 @@ public class LinkViewModelService : ILinkViewModelService
     }
 
 
-    public async Task<bool> DeleteLinkAsync(int id,
-                                            int certificateId,
+    public async Task<bool> DeleteLinkAsync(string id,
+                                            string certificateId,
                                             string userId,
                                             CancellationToken cancellationToken = default)
     {

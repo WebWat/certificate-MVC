@@ -15,18 +15,21 @@
 <p>@Html.DisplayFor(model => model.Date)</p>
 <br />
 <h5>@LocalizerPartial["Links"]</h5>
-@if (Model.Links.Count != 0)
+@if (Model.Links != null)
 {
-    <ul class="list-group">
-        @foreach (var link in Model.Links)
-        {
-            <li class="list-group-item truncated">
-                <a href="@link.Url" target="_blank">@link.Url</a>
-            </li>                
-        }
-    </ul> 
-}
-else
-{
-    <p>@LocalizerPartial["None"]</p>
+    if (Model.Links?.Count != 0)
+    {
+        <ul class="list-group">
+            @foreach (var link in Model.Links?.ToList())
+            {
+                <li class="list-group-item truncated">
+                    <a href="@link.Url" target="_blank">@link.Url</a>
+                </li>                
+            }
+        </ul> 
+    }
+    else
+    {
+        <p>@LocalizerPartial["None"]</p>
+    }
 }

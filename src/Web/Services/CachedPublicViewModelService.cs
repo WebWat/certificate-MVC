@@ -22,7 +22,7 @@ public class CachedPublicViewModelService : ICachedPublicViewModelService
     }
 
 
-    public async Task<Certificate> GetItemAsync(int id, string userId)
+    public async Task<Certificate> GetItemAsync(string id, string userId)
     {
         return await _memoryCache.GetOrCreateAsync(nameof(CertificateViewModel).GenerateCacheKey(id.ToString()),
                                                    async item =>
@@ -47,7 +47,7 @@ public class CachedPublicViewModelService : ICachedPublicViewModelService
     }
 
 
-    public async Task SetItemAsync(int id, string userId)
+    public async Task SetItemAsync(string id, string userId)
     {
         var item = await _repository.GetCertificateIncludeLinksAsync(id, userId);
 

@@ -130,7 +130,7 @@ using (var scope = serviceProvider.CreateScope())
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = services.GetRequiredService<IRepository>();
 
-        await IdentityContextSeed.SeedAsync(userManager, roleManager);
+        //await IdentityContextSeed.SeedAsync(userManager, roleManager);
         //await ApplicationContextSeed.SeedAsync(applicationContext, userManager, "/img/example_image.jpg");
     }
     catch (Exception ex)

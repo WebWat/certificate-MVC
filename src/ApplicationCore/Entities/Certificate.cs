@@ -30,11 +30,4 @@ public class Certificate : BaseEntity
         Stage = stage;
         Date = date;
     }
-
-
-    public Certificate SetId(int id)
-    {
-        Id = id;
-        return this;
-    }
 }

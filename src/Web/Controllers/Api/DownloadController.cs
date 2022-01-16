@@ -42,7 +42,7 @@ public class DownloadController : ControllerBase
 
 
     [HttpGet("{id}")]
-    public async Task<FileResult> Jpg(int id)
+    public async Task<FileResult> Jpg(string id)
     {
         var _user = await _userManager.GetUserAsync(User);
 

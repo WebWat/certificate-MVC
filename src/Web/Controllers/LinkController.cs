@@ -27,7 +27,7 @@ public class LinkController : Controller
     }
 
 
-    public async Task<IActionResult> Index(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Index(string id, CancellationToken cancellationToken)
     {
         var _user = await _userManager.GetUserAsync(User);
 
@@ -42,7 +42,7 @@ public class LinkController : Controller
     }
 
 
-    public IActionResult Create(int id)
+    public IActionResult Create(string id)
     {
         return View(new LinkViewModel { CertificateId = id });
     }
@@ -78,7 +78,7 @@ public class LinkController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(int id, int certificateId, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(string id, string certificateId, CancellationToken cancellationToken)
     {
         var _user = await _userManager.GetUserAsync(User);
 

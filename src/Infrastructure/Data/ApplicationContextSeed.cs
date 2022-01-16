@@ -30,7 +30,7 @@ public class ApplicationContextSeed
         {
             foreach (var item in await context.Certificates.ToListAsync())
             {
-                await context.Links.AddRangeAsync(GetLinks(item.Id));
+                //await context.Links.AddRangeAsync(GetLinks(item.Id));
                 break;
             }
 
@@ -48,23 +48,23 @@ public class ApplicationContextSeed
                             path,
                             "2nd place in the Robo-racing category",
                             Stage.AllRussian,
-                            DateTime.UtcNow).SetId(0),
+                            DateTime.UtcNow),
             new Certificate(userId,
                             "Robofest",
                             path,
                             "3rd place in the RoboFootball category",
                             Stage.AllRussian,
-                            DateTime.UtcNow).SetId(1),
+                            DateTime.UtcNow),
         };
     }
 
 
-    private static IEnumerable<Link> GetLinks(int certificateId)
+    private static IEnumerable<Link> GetLinks(string certificateId)
     {
         return new List<Link>
         {
-            new Link("https://example.com", certificateId).SetId(0),
-            new Link("https://example.com/", certificateId).SetId(1)
+            new Link("https://example.com", certificateId),
+            new Link("https://example.com/", certificateId)
         };
     }
 }

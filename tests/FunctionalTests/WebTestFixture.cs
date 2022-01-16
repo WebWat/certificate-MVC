@@ -51,8 +51,8 @@ namespace FunctionalTests
                         var userManager = scopedServices.GetRequiredService<UserManager<ApplicationUser>>();
                         var roleManager = scopedServices.GetRequiredService<RoleManager<IdentityRole>>();
 
-                        IdentityContextSeed.SeedAsync(userManager, roleManager).Wait();
-                        ApplicationContextSeed.SeedAsync(db, userManager, "/img/example_image.jpg").Wait();
+                        //IdentityContextSeed.SeedAsync(userManager, roleManager).Wait();
+                        //ApplicationContextSeed.SeedAsync(db, userManager, "/img/example_image.jpg").Wait();
                     }
                     catch (Exception ex)
                     {

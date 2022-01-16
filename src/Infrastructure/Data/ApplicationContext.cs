@@ -24,15 +24,23 @@ public class ApplicationContext : CosmosIdentityDbContext<ApplicationUser>
     }
 
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.EnableSensitiveDataLogging();
+    }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultContainer("Container1");
+        modelBuilder.Entity<Certificate>().ToContainer("Container1").OwnsOne(_ => _.Links);
+        modelBuilder.Entity<Link>().ToContainer("LinkContainer");
 
         // Convert the Stage property of the Certificate entity
         // to store enumeration values as a string.
         modelBuilder.Entity<Certificate>()
                     .Property(e => e.Stage)
                     .HasConversion(v => v.ToString(), v => (Stage)Enum.Parse(typeof(Stage), v));
+
 
 
         base.OnModelCreating(modelBuilder);

@@ -58,7 +58,7 @@ public class CertificateController : Controller
     }
 
 
-    public async Task<IActionResult> Details(int id, CancellationToken cancellationToken, int page = 0)
+    public async Task<IActionResult> Details(string id, CancellationToken cancellationToken, int page = 0)
     {
         page = GetCurrentPage(page);
 
@@ -132,7 +132,7 @@ public class CertificateController : Controller
     }
 
 
-    public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Edit(string id, CancellationToken cancellationToken)
     {
         var _user = await _userManager.GetUserAsync(User);
 
@@ -210,7 +210,7 @@ public class CertificateController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
     {
         int currentPage = GetCurrentPage();
 

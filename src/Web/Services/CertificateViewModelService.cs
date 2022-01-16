@@ -113,7 +113,7 @@ public class CertificateViewModelService : ICertificateViewModelService
             cvm.Description,
             cvm.Stage,
             cvm.Date
-        ).SetId(cvm.Id);
+        );
 
         await _repository.UpdateAsync(certificate, cancellationToken);
 
@@ -122,7 +122,7 @@ public class CertificateViewModelService : ICertificateViewModelService
     }
 
 
-    public async Task DeleteCertificateAsync(int id,
+    public async Task DeleteCertificateAsync(string id,
                                              string userId,
                                              CancellationToken cancellationToken = default)
     {
@@ -135,7 +135,7 @@ public class CertificateViewModelService : ICertificateViewModelService
 
 
     public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page,
-                                                                                int id,
+                                                                                string id,
                                                                                 string userId,
                                                                                 CancellationToken cancellationToken = default)
     {
@@ -161,7 +161,7 @@ public class CertificateViewModelService : ICertificateViewModelService
     }
 
 
-    public async Task<CertificateViewModel> GetCertificateByIdAsync(int id,
+    public async Task<CertificateViewModel> GetCertificateByIdAsync(string id,
                                                                     string userId,
                                                                     CancellationToken cancellationToken = default)
     {

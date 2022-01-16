@@ -88,7 +88,7 @@ public class PublicViewModelService : IPublicViewModelService
         return pvm;
     }
 
-    public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page, int id, string userId, string url)
+    public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page, string id, string userId, string url)
     {
         var certificate = await _cacheService.GetItemAsync(id, userId);
 

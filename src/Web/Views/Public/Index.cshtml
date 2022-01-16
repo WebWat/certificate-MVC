@@ -33,7 +33,7 @@ else
         @foreach (var item in Model.Certificates)
         {
             <div class="col-sm-6">
-                <div class="card mb-3 anim" onclick="start(@item.Id, '@Model.UniqueUrl', @Model.PageViewModel.PageNumber)">
+                <div class="card mb-3 anim" onclick="start('@item.Id', '@Model.UniqueUrl', @Model.PageViewModel.PageNumber)">
                     <partial name="MainPages/_CertificateCardPartial" model="item" />
                 </div>
             </div>

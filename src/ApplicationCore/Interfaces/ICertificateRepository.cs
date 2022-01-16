@@ -7,11 +7,11 @@ namespace ApplicationCore.Interfaces;
 
 public interface ICertificateRepository : IAsyncRepository<Certificate>
 {
-    Task<Certificate> GetCertificateIncludeLinksAsync(int id,
+    Task<Certificate> GetCertificateIncludeLinksAsync(string id,
                                                       string userId,
                                                       CancellationToken cancellationToken = default);
 
-    Task<Certificate> GetByUserIdAsync(int id, string userId, CancellationToken cancellationToken = default);
+    Task<Certificate> GetByUserIdAsync(string id, string userId, CancellationToken cancellationToken = default);
 
     Task<IEnumerable<Certificate>> ListByUserId(string userId);
 

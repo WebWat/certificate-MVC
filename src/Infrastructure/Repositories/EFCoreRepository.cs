@@ -34,7 +34,7 @@ public class EFCoreRepository<T> : IAsyncRepository<T> where T : BaseEntity
     }
 
 
-    public async Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<T> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }

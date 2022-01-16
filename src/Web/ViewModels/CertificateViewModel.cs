@@ -8,7 +8,7 @@ namespace Web.ViewModels;
 
 public class CertificateViewModel
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     [Required(ErrorMessage = "Required")]
     [Display(Name = "AwardTitle")]

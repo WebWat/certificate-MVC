@@ -5,7 +5,7 @@ namespace IntegrationTests.Builders;
 
 public class LinkBuilder
 {
-    public static List<Link> GetDefaultValues(int certificateId = 0)
+    public static List<Link> GetDefaultValues(string certificateId)
     {
         return new List<Link>
             {

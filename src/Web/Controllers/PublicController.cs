@@ -42,7 +42,7 @@ public class PublicController : Controller
 
 
     [Route("[action]/{uniqueUrl}/{id?}")]
-    public async Task<IActionResult> Details(string uniqueUrl, int id, CancellationToken cancellationToken, int page = 1)
+    public async Task<IActionResult> Details(string uniqueUrl, string id, CancellationToken cancellationToken, int page = 1)
     {
         var _user = await _repository.GetAsync(i => i.UniqueUrl == uniqueUrl, cancellationToken);
 
