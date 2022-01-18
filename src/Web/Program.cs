@@ -2,13 +2,11 @@ using ApplicationCore.Constants;
 using ApplicationCore.Entities.Identity;
 using ApplicationCore.Models;
 using Infrastructure.Data;
-using Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +17,6 @@ using PieroDeTomi.EntityFrameworkCore.Identity.Cosmos.Extensions;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Net;
 using Web;
 using Web.Configuration;
 using Web.Models;
@@ -99,44 +96,17 @@ if (!builder.Environment.IsEnvironment("Testing"))
     //        .AddEntityFrameworkStores<ApplicationContext>();
 
     builder.Services.AddCosmosIdentity<ApplicationContext, ApplicationUser, IdentityRole>(
-      // Auth provider standard configuration (e.g.: account confirmation, password requirements, etc.)
-      options => 
+      options =>
       {
           options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(60);
           options.Lockout.MaxFailedAccessAttempts = 10;
           options.Lockout.AllowedForNewUsers = true;
       },
-      // Cosmos DB configuration options
       options => options.UseCosmos(
           connectionString: builder.Configuration.GetConnectionString("CosmosDBConnection"),
           databaseName: "CertificateDB"
       )
     );
-}
-
-// ServiceProvider.
-var serviceProvider = builder.Services.BuildServiceProvider();
-
-// Seed database.
-using (var scope = serviceProvider.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
-    var logger = loggerFactory.CreateLogger<Program>();
-
-    try
-    {
-        var applicationContext = services.GetRequiredService<ApplicationContext>();
-        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-        var roleManager = services.GetRequiredService<IRepository>();
-
-        //await IdentityContextSeed.SeedAsync(userManager, roleManager);
-        //await ApplicationContextSeed.SeedAsync(applicationContext, userManager, "/img/example_image.jpg");
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "An error occurred seeding the DB.");
-    }
 }
 
 // Build and run app.
@@ -173,5 +143,25 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Public", action = "Index" });
     endpoints.MapRazorPages();
 });
+
+// Seed database.
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    try
+    {
+        var applicationContext = services.GetRequiredService<ApplicationContext>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<IRepository>();
+
+        //await IdentityContextSeed.SeedAsync(userManager, roleManager);
+        //await ApplicationContextSeed.SeedAsync(applicationContext, userManager, "/img/example_image.jpg");
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "An error occurred seeding the DB.");
+    }
+}
 
 await app.RunAsync();

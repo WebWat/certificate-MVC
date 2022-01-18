@@ -11,6 +11,7 @@ namespace Infrastructure.Data;
 
 public class ApplicationContextSeed
 {
+    // Not tested.
     public static async Task SeedAsync(ApplicationContext context, 
                                        UserManager<ApplicationUser> userManager,
                                        string imagePath)
@@ -30,7 +31,7 @@ public class ApplicationContextSeed
         {
             foreach (var item in await context.Certificates.ToListAsync())
             {
-                //await context.Links.AddRangeAsync(GetLinks(item.Id));
+                await context.Links.AddRangeAsync(GetLinks(item.Id));
                 break;
             }
 
