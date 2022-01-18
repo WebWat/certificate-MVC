@@ -37,7 +37,7 @@ public class PublicController : Controller
             return NotFound();
         }
 
-        return View(_service.GetPublicViewModel(page, year, find, stage, _user));
+        return View(await _service.GetPublicViewModel(page, year, find, stage, _user));
     }
 
 

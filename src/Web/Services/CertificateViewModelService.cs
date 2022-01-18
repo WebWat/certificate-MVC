@@ -113,12 +113,12 @@ public class CertificateViewModelService : ICertificateViewModelService
             cvm.Description,
             cvm.Stage,
             cvm.Date
-        );
+        ).SetId(cvm.Id);
 
         await _repository.UpdateAsync(certificate, cancellationToken);
 
         await _cacheService.SetItemAsync(certificate.Id, userId);
-        _cacheService.SetList(userId);
+        await _cacheService.SetList(userId);
     }
 
 
@@ -130,7 +130,7 @@ public class CertificateViewModelService : ICertificateViewModelService
 
         await _repository.DeleteAsync(certificate, cancellationToken);
 
-        _cacheService.SetList(userId);
+        await _cacheService.SetList(userId);
     }
 
 

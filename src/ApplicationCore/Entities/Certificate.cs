@@ -10,7 +10,7 @@ public class Certificate : BaseEntity
     public string Path { get; private set; }
     public string Description { get; private set; }
     public Stage Stage { get; private set; }
-    public List<Link> Links { get; private set; }
+    public List<Link> Links { get; set; }
     public string UserId { get; private set; }
 
     [DataType(DataType.Date)]
@@ -29,5 +29,11 @@ public class Certificate : BaseEntity
         Description = description;
         Stage = stage;
         Date = date;
+    }
+
+    public Certificate SetId(string id)
+    {
+        Id = id;
+        return this;
     }
 }
