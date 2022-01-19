@@ -109,8 +109,12 @@ if (!builder.Environment.IsEnvironment("Testing"))
     );
 }
 
+builder.Logging.AddAzureWebAppDiagnostics();
+
 // Build and run app.
 var app = builder.Build();
+
+app.UseDeveloperExceptionPage();
 
 if (app.Environment.IsDevelopment())
 {
