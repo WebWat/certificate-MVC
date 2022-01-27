@@ -5,7 +5,7 @@ This web application helps you easily create, store and share your personal achi
 
 ![build and test](https://github.com/WebWat/certificate-MVC/actions/workflows/dotnet.yml/badge.svg)
 
-![docker cd](https://github.com/WebWat/certificate-MVC/actions/workflows/docker.yml/badge.svg)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/webwat/certificate-MVC/Publish%20Docker%20image?label=Publish%20Docker%20image)
 
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/webwat/certificate-MVC)
 
