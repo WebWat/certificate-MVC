@@ -15,6 +15,28 @@ namespace FunctionalTests
 {
     public class WebTestFixture : WebApplicationFactory<IFilterService>
     {
+        //protected override IHost CreateHost(IHostBuilder builder)
+        //{
+        //    builder.UseEnvironment("Testing");
+
+        //    builder.ConfigureServices(services =>
+        //    {
+        //        services.AddIdentity<ApplicationUser, IdentityRole>()
+        //                .AddEntityFrameworkStores<ApplicationContext>();
+
+        //        services.AddScoped(sp =>
+        //        {
+        //            return new DbContextOptionsBuilder<ApplicationContext>()
+        //                        .UseInMemoryDatabase("CertfDBForTests")
+        //                        .UseApplicationServiceProvider(sp)
+        //                        .Options;
+        //        });
+        //    });
+
+        //    return base.CreateHost(builder);
+        //}
+
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Testing");
@@ -29,7 +51,7 @@ namespace FunctionalTests
 
                 services.AddDbContext<ApplicationContext>(options =>
                 {
-                    options.UseInMemoryDatabase("DBForTesting");
+                    options.UseInMemoryDatabase("DBForTesting2");
                     options.UseInternalServiceProvider(provider);
                 });
 
