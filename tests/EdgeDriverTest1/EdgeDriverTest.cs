@@ -4,7 +4,7 @@ using OpenQA.Selenium.Edge;
 
 namespace EdgeDriverTest1
 {
-    [TestClass]
+    //[TestClass]
     public class EdgeDriverTest
     {
         // In order to run the below test(s), 
@@ -13,7 +13,7 @@ namespace EdgeDriverTest1
 
         private EdgeDriver _driver;
 
-        [TestInitialize]
+        //[TestInitialize]
         public void EdgeDriverInitialize()
         {
             // Initialize edge driver 
@@ -24,7 +24,7 @@ namespace EdgeDriverTest1
             _driver = new EdgeDriver(options);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void VerifyPageTitle()
         {
             // Replace with your own test logic
@@ -32,7 +32,7 @@ namespace EdgeDriverTest1
             Assert.AreEqual("Bing", _driver.Title);
         }
 
-        [TestCleanup]
+        //[TestCleanup]
         public void EdgeDriverCleanup()
         {
             _driver.Quit();
