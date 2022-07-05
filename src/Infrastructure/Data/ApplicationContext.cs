@@ -8,13 +8,13 @@ namespace Infrastructure.Data;
 
 public class ApplicationContext : IdentityDbContext<ApplicationUser>
 {
-    public DbSet<Certificate> Certificates { get; set; }
-    public DbSet<Link> Links { get; set; }
+    public DbSet<Certificate> Certificates { get; set; } = default!;
+    public DbSet<Link> Links { get; set; } = default!;
 
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)
     {
-        Database.EnsureCreated();
+        //Database.EnsureCreated();
     }
 
 

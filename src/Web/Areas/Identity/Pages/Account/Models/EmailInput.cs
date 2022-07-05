@@ -6,5 +6,5 @@ public class EmailInput
 {
     [Required(ErrorMessage = "Required")]
     [EmailAddress(ErrorMessage = "EmailEmail")]
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 }

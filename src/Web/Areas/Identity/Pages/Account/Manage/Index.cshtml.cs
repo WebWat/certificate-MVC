@@ -35,10 +35,10 @@ public partial class IndexModel : PageModel
 
 
     [TempData]
-    public string StatusMessage { get; set; }
+    public string StatusMessage { get; set; } = string.Empty;
 
     [BindProperty]
-    public IndexInput Input { get; set; }
+    public IndexInput Input { get; set; } = new();
 
 
     private async Task LoadAsync(ApplicationUser user)

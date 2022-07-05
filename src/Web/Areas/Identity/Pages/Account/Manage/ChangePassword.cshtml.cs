@@ -31,10 +31,10 @@ public class ChangePasswordModel : PageModel
 
 
     [BindProperty]
-    public ChangePasswordInput Input { get; set; }
+    public ChangePasswordInput Input { get; set; } = new();
 
     [TempData]
-    public string StatusMessage { get; set; }
+    public string StatusMessage { get; set; } = string.Empty;
 
 
     public async Task<IActionResult> OnGetAsync()

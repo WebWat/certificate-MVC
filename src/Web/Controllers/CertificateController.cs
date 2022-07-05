@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,8 +49,8 @@ public class CertificateController : Controller
 
 
     public async Task<IActionResult> Index(int page = 1,
-                                           string year = null,
-                                           string find = null,
+                                           string? year = null,
+                                           string? find = null,
                                            Stage? stage = null)
     {
         var _user = await _userManager.GetUserAsync(User);
@@ -97,6 +98,8 @@ public class CertificateController : Controller
 
         if (ModelState.IsValid)
         {
+            ArgumentNullException.ThrowIfNull(cvm.File);
+
             if (cvm.File.CheckFileExtension(_fileSettings.Expansion))
             {
                 ModelState.AddModelError("File", _localizer["FileExtensionError"]);
@@ -224,7 +227,6 @@ public class CertificateController : Controller
     }
 
 
-    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
     public async Task<IActionResult> Share()
     {
         var _user = await _userManager.GetUserAsync(User);

@@ -33,13 +33,13 @@ public class EFCoreRepository<T> : IAsyncRepository<T> where T : BaseEntity
     }
 
 
-    public async Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
 
-    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(predicate, cancellationToken);
     }

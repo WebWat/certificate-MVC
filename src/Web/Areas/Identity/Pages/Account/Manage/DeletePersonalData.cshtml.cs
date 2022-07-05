@@ -36,9 +36,9 @@ public class DeletePersonalDataModel : PageModel
 
 
     [BindProperty]
-    public DeletePersonalDataInput Input { get; set; }
+    public DeletePersonalDataInput Input { get; set; } = new();
 
-    public bool RequirePassword { get; set; }
+    public bool RequirePassword { get; set; } = default;
 
 
     public async Task<IActionResult> OnGet()

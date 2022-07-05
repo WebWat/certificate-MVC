@@ -15,9 +15,9 @@ public class PageLinkTagHelper : TagHelper
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; }
     public PageViewModel PageModel { get; set; }
-    public string PageController { get; set; }
-    public string PageAction { get; set; }
-    public string UniqueUrl { get; set; }
+    public string PageController { get; set; } = string.Empty;
+    public string PageAction { get; set; } = string.Empty;
+    public string UniqueUrl { get; set; } = string.Empty;
 
     public PageLinkTagHelper(IUrlHelperFactory helperFactory)
     {

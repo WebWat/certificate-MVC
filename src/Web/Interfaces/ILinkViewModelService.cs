@@ -10,7 +10,7 @@ public interface ILinkViewModelService
                                string userId,
                                CancellationToken cancellationToken = default);
 
-    Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId,
+    Task<LinkListViewModel?> GetLinkListViewModelAsync(int certificateId,
                                                       string userId,
                                                       CancellationToken cancellationToken = default);
 

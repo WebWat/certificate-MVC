@@ -4,6 +4,7 @@ using ApplicationCore.Entities.Identity;
 using ApplicationCore.Helpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ public class PublicViewModelService : IPublicViewModelService
         _pageService = pageService;
     }
 
-    public PublicViewModel GetPublicViewModel(int page, string year, string find, Stage? stage,
+    public PublicViewModel GetPublicViewModel(int page, string? year, string? find, Stage? stage,
                                               ApplicationUser user)
     {
         page = page <= 0 ? 1 : page;
@@ -91,6 +92,8 @@ public class PublicViewModelService : IPublicViewModelService
     public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page, int id, string userId, string url)
     {
         var certificate = await _cacheService.GetItemAsync(id, userId);
+
+        ArgumentNullException.ThrowIfNull(certificate, nameof(certificate));
 
         return new CertificateViewModel
         {
