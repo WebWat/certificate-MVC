@@ -14,7 +14,7 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser>
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)
     {
-        //Database.EnsureCreated();
+        Database.EnsureCreated();
     }
 
 
@@ -23,8 +23,8 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser>
         // Convert the Stage property of the Certificate entity
         // to store enumeration values as a string.
         modelBuilder.Entity<Certificate>()
-                    .Property(e => e.Stage)
-                    .HasConversion(v => v.ToString(), v => (Stage)Enum.Parse(typeof(Stage), v));
+                        .Property(e => e.Stage)
+                        .HasConversion(v => v.ToString(), v => (Stage)Enum.Parse(typeof(Stage), v));
 
         base.OnModelCreating(modelBuilder);
     }

@@ -18,3 +18,5 @@ public interface ICertificateViewModelService
     Task<CertificateViewModel?> GetCertificateByIdAsync(int id, string userId,
                                                        CancellationToken cancellationToken = default);
 }
+}
+}
