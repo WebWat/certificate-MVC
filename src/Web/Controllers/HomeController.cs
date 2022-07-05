@@ -45,7 +45,7 @@ public class HomeController : Controller
 
 
     [Route("/HttpError")]
-    public IActionResult HttpErrorPage(string code)
+    public IActionResult HttpErrorPage(string? code)
     {
         switch (code)
         {

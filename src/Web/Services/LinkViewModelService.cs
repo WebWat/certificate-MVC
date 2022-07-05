@@ -51,7 +51,7 @@ public class LinkViewModelService : ILinkViewModelService
     }
 
 
-    public async Task<LinkListViewModel> GetLinkListViewModelAsync(int certificateId,
+    public async Task<LinkListViewModel?> GetLinkListViewModelAsync(int certificateId,
                                                                    string userId,
                                                                    CancellationToken cancellationToken = default)
     {

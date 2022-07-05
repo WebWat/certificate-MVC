@@ -14,29 +14,29 @@ public class CertificateViewModel
     [Display(Name = "AwardTitle")]
     [MaxLength(100)]
     [RegularExpression(@"[^&<>\/]*$", ErrorMessage = "RegularExpression")]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Required")]
     [Display(Name = "AwardDescription")]
     [MaxLength(200)]
     [RegularExpression(@"[^&<>\/]*$", ErrorMessage = "RegularExpression")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     [Display(Name = "Date")]
     [DataType(DataType.Date)]
     public DateTime Date { get; set; }
 
-    public List<Link> Links { get; set; }
+    public List<Link>? Links { get; set; }
 
     [Display(Name = "File")]
     [DataType(DataType.Upload)]
-    public IFormFile File { get; set; }
+    public IFormFile? File { get; set; }
 
-    public string Path { get; set; }
+    public string Path { get; set; } = string.Empty;
 
-    public string UniqueUrl { get; set; }
+    public string UniqueUrl { get; set; } = string.Empty;
 
-    public string UserId { get; set; }
+    public string UserId { get; set; } = string.Empty;
 
     [Display(Name = "Stage")]
     public Stage Stage { get; set; }

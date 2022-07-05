@@ -29,7 +29,7 @@ public class ChangeUrlModel : PageModel
 
 
     [TempData]
-    public string StatusMessage { get; set; }
+    public string StatusMessage { get; set; } = string.Empty;
 
 
     public async Task<IActionResult> OnPostAsync()

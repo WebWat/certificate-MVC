@@ -7,8 +7,8 @@ namespace Web.Services;
 
 public class EmailTemplate : IEmailTemplate
 {
-    private string Template { get; set; }
-    private string Subject { get; set; }
+    private string Template { get; set; } = string.Empty;
+    private string Subject { get; set; } = string.Empty;
 
     private readonly IStringLocalizer<SharedResource> _localizer;
 

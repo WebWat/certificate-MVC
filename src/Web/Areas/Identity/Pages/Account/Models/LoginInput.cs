@@ -6,12 +6,12 @@ public class LoginInput
 {
     [Required(ErrorMessage = "Required")]
     [Display(Name = "UserNameOrEmail")]
-    public string UserNameOrEmail { get; set; }
+    public string UserNameOrEmail { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Required")]
     [DataType(DataType.Password)]
     [Display(Name = "Password")]
-    public string Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 
     [Display(Name = "RememberMe")]
     public bool RememberMe { get; set; }

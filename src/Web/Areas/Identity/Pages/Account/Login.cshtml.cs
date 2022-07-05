@@ -32,15 +32,15 @@ public class LoginModel : PageModel
 
 
     [BindProperty]
-    public LoginInput Input { get; set; }
+    public LoginInput Input { get; set; } = new();
 
     public string ReturnUrl { get; set; }
 
     [TempData]
-    public string ErrorMessage { get; set; }
+    public string ErrorMessage { get; set; } = string.Empty;
 
 
-    public async Task<IActionResult> OnGetAsync(string returnUrl = null)
+    public async Task<IActionResult> OnGetAsync(string? returnUrl = null)
     {
         if (!string.IsNullOrEmpty(ErrorMessage))
         {
@@ -57,7 +57,7 @@ public class LoginModel : PageModel
     }
 
 
-    public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+    public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
     {
         returnUrl ??= Url.Content("~/");
 
@@ -89,7 +89,9 @@ public class LoginModel : PageModel
             {
                 _logger.LogInformation($"User {user.Id} is logged in");
 
-                // If returnurl is correct - go to it.
+                var role = await _userManager.GetRolesAsync(user);
+
+                // if returnurl is correct - go to it.
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);

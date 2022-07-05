@@ -2,6 +2,6 @@
 
 public class StageViewModel
 {
-    public string EnumName { get; set; }
-    public string Name { get; set; }
+    public string EnumName { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 }

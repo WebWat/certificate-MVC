@@ -25,10 +25,10 @@ public class ResetPasswordModel : PageModel
 
 
     [BindProperty]
-    public ResetInput Input { get; set; }
+    public ResetInput Input { get; set; } = new();
 
 
-    public IActionResult OnGet(string code = null)
+    public IActionResult OnGet(string? code = null)
     {
         if (code is null)
         {

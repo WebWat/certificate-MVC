@@ -37,7 +37,7 @@ public class CertificateViewModelService : ICertificateViewModelService
     }
 
 
-    public IndexViewModel GetIndexViewModel(int page, string userId, string year, string find, Stage? stage)
+    public IndexViewModel GetIndexViewModel(int page, string userId, string? year, string? find, Stage? stage)
     {
         page = page <= 0 ? 1 : page;
 
@@ -128,13 +128,18 @@ public class CertificateViewModelService : ICertificateViewModelService
     {
         var certificate = await _repository.GetByUserIdAsync(id, userId, cancellationToken);
 
+        if (certificate is null)
+        {
+            return;
+        }
+
         await _repository.DeleteAsync(certificate, cancellationToken);
 
         _cacheService.SetList(userId);
     }
 
 
-    public async Task<CertificateViewModel> GetCertificateByIdIncludeLinksAsync(int page,
+    public async Task<CertificateViewModel?> GetCertificateByIdIncludeLinksAsync(int page,
                                                                                 int id,
                                                                                 string userId,
                                                                                 CancellationToken cancellationToken = default)
@@ -161,7 +166,7 @@ public class CertificateViewModelService : ICertificateViewModelService
     }
 
 
-    public async Task<CertificateViewModel> GetCertificateByIdAsync(int id,
+    public async Task<CertificateViewModel?> GetCertificateByIdAsync(int id,
                                                                     string userId,
                                                                     CancellationToken cancellationToken = default)
     {

@@ -26,7 +26,7 @@ public class UserRepository : IUserRepository
     }
 
 
-    public async Task<ApplicationUser> GetAsync(Func<ApplicationUser, bool> predicate,
+    public async Task<ApplicationUser?> GetAsync(Func<ApplicationUser, bool> predicate,
                                                 CancellationToken cancellationToken = default)
     {
         IEnumerable<ApplicationUser> data = await _context.Users.AsNoTracking().ToListAsync(cancellationToken);

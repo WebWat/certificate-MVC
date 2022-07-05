@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30413.136
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0383A41D-EFA3-48C0-84D5-77418FF3162A}"
 EndProject
@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTest
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0D6107CA-30BB-44AD-8A05-8DABD2724BB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoyoteTests", "tests\CoyoteTests\CoyoteTests.csproj", "{5F9B9B7C-4643-47DE-9C0A-D02B8CBF2BE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoyoteTests", "tests\CoyoteTests\CoyoteTests.csproj", "{5F9B9B7C-4643-47DE-9C0A-D02B8CBF2BE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

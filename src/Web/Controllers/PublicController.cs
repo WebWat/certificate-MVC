@@ -25,8 +25,8 @@ public class PublicController : Controller
     [Route("{uniqueUrl}")]
     public async Task<IActionResult> Index(string uniqueUrl,
                                            CancellationToken cancellationToken,
-                                           string year = null,
-                                           string find = null,
+                                           string? year = null,
+                                           string? find = null,
                                            Stage? stage = null,
                                            int page = 1)
     {

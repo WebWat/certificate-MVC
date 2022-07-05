@@ -9,16 +9,16 @@ public class SearchViewModel
 {
     public Dictionary<string, string> Parameters { get; set; } = new();
 
-    public string Controller { get; set; }
+    public string Controller { get; set; } = string.Empty;
 
-    public SelectList Stages { get; set; }
+    public SelectList Stages { get; set; } = default!;
 
-    public SelectList Years { get; set; }
+    public SelectList Years { get; set; } = default!;
 
     [MaxLength(100)]
-    public string Find { get; set; }
+    public string? Find { get; set; }
 
-    public string Year { get; set; }
+    public string? Year { get; set; }
 
     public Stage? Stage { get; set; }
 }

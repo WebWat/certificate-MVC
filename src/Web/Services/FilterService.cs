@@ -16,7 +16,7 @@ public class FilterService : IFilterService
     }
 
 
-    public IEnumerable<Certificate> FilterOut(IEnumerable<Certificate> list, string year, string find, Stage? stage)
+    public IEnumerable<Certificate> FilterOut(IEnumerable<Certificate> list, string? year, string? find, Stage? stage)
     {
         // Sort by date.
         if (year != null && year != _localizer["All"] && int.TryParse(year, out int result))

@@ -102,6 +102,28 @@ if (!builder.Environment.IsEnvironment("Testing"))
 // ServiceProvider.
 var serviceProvider = builder.Services.BuildServiceProvider();
 
+// Seed database.
+using (var scope = serviceProvider.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+
+    try
+    {
+        var applicationContext = services.GetRequiredService<ApplicationContext>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        await IdentityContextSeed.SeedAsync(userManager, roleManager);
+        await ApplicationContextSeed.SeedAsync(applicationContext, userManager, "/img/example_image.jpg");
+    }
+    catch (Exception ex)
+    {
+        var logger = loggerFactory.CreateLogger<Program>();
+        logger.LogError(ex, "An error occurred seeding the DB.");
+    }
+}
+
 // Build and run app.
 var app = builder.Build();
 
@@ -136,25 +158,5 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Public", action = "Index" });
     endpoints.MapRazorPages();
 });
-
-// Seed database.
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-
-    try
-    {
-        var applicationContext = services.GetRequiredService<ApplicationContext>();
-        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-        await IdentityContextSeed.SeedAsync(userManager, roleManager);
-        await ApplicationContextSeed.SeedAsync(applicationContext, userManager, "/img/example_image.jpg");
-    }
-    catch (Exception ex)
-    {
-        app.Logger.LogError(ex, "An error occurred seeding the DB.");
-    }
-}
 
 await app.RunAsync();

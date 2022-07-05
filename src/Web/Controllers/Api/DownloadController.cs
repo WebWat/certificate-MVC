@@ -42,18 +42,23 @@ public class DownloadController : ControllerBase
 
 
     [HttpGet("{id}")]
-    public async Task<FileResult> Jpg(int id)
+    public async Task<FileResult?> Jpg(int id)
     {
         var _user = await _userManager.GetUserAsync(User);
 
         var certificate = await _repository.GetByUserIdAsync(id, _user.Id);
+
+        if (certificate is null)
+        {
+            return default;
+        }
 
         return File(certificate.Path, MediaTypeNames.Image.Jpeg, certificate.Title + ".jpg");
     }
 
 
     [HttpGet]
-    public async Task<FileResult> Zip()
+    public async Task<FileResult?> Zip()
     {
         var _user = await _userManager.GetUserAsync(User);
 
@@ -66,7 +71,7 @@ public class DownloadController : ControllerBase
 
         // Creating an archive. 
         var compressedFileStream = new MemoryStream();
-        (int count, string lastName) itemInfo = (0, null);
+        (int count, string lastName) itemInfo = (0, string.Empty);
 
         using (var zipArchive = new ZipArchive(compressedFileStream, ZipArchiveMode.Create, false))
         {
@@ -105,11 +110,11 @@ public class DownloadController : ControllerBase
 
 
     [HttpGet]
-    public async Task<FileResult> Excel()
+    public async Task<FileResult?> Excel()
     {
         var _user = await _userManager.GetUserAsync(User);
         var certificates = _repository.ListByUserId(_user.Id);
-        byte[] data = default;
+        byte[]? data = default;
         int column = 2;
         int count = 1;
 
@@ -145,7 +150,7 @@ public class DownloadController : ControllerBase
 
         if (data is null || data.Length == 0)
         {
-            return null;
+            return default;
         }
 
         return File(data,

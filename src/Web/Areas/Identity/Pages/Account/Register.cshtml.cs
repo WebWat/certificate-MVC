@@ -44,18 +44,18 @@ public class RegisterModel : PageModel
 
 
     [BindProperty]
-    public RegisterInput Input { get; set; }
+    public RegisterInput Input { get; set; } = new();
 
-    public string ReturnUrl { get; set; }
+    public string? ReturnUrl { get; set; }
 
 
-    public void OnGet(string returnUrl = null)
+    public void OnGet(string? returnUrl = null)
     {
         ReturnUrl = returnUrl;
     }
 
 
-    public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+    public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
     {
         returnUrl ??= Url.Content("~/");
 
