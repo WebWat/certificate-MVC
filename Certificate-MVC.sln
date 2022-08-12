@@ -24,6 +24,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoyoteTests", "tests\CoyoteTests\CoyoteTests.csproj", "{5F9B9B7C-4643-47DE-9C0A-D02B8CBF2BE0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebDriverTests", "tests\WebDriverTests\WebDriverTests.csproj", "{88DBD02A-0417-4964-AC6D-841BEA86D2CE}"
+=======
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
