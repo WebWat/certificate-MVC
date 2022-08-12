@@ -23,6 +23,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoyoteTests", "tests\CoyoteTests\CoyoteTests.csproj", "{5F9B9B7C-4643-47DE-9C0A-D02B8CBF2BE0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebDriverTests", "tests\WebDriverTests\WebDriverTests.csproj", "{88DBD02A-0417-4964-AC6D-841BEA86D2CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{5F9B9B7C-4643-47DE-9C0A-D02B8CBF2BE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F9B9B7C-4643-47DE-9C0A-D02B8CBF2BE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F9B9B7C-4643-47DE-9C0A-D02B8CBF2BE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88DBD02A-0417-4964-AC6D-841BEA86D2CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88DBD02A-0417-4964-AC6D-841BEA86D2CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88DBD02A-0417-4964-AC6D-841BEA86D2CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88DBD02A-0417-4964-AC6D-841BEA86D2CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{45647BC5-B9E3-4EE9-83FE-9C87B1F99E43} = {901220EA-7332-43CB-B15D-A8580E969AA0}
 		{6FC7824B-0AD7-4479-84B0-E32E006FFC6F} = {901220EA-7332-43CB-B15D-A8580E969AA0}
 		{5F9B9B7C-4643-47DE-9C0A-D02B8CBF2BE0} = {901220EA-7332-43CB-B15D-A8580E969AA0}
+		{88DBD02A-0417-4964-AC6D-841BEA86D2CE} = {901220EA-7332-43CB-B15D-A8580E969AA0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5343FA70-E218-4B66-9425-4B74FF1FD9EE}

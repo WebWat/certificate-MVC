@@ -135,7 +135,10 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
+
+app.UseHttpsRedirection();
 
 app.UseStatusCodePagesWithReExecute("/HttpError", "?code={0}");
 
@@ -159,4 +162,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapRazorPages();
 });
 
-await app.RunAsync();
+app.Run();
