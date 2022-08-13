@@ -16,7 +16,7 @@ namespace WebDriverTests
     {
         private EdgeDriver _driver;
 
-        [TestInitialize]
+        //[TestInitialize]
         public void EdgeDriverInitialize()
         {
             // Initialize edge driver 
@@ -27,7 +27,7 @@ namespace WebDriverTests
             _driver = new EdgeDriver(options);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void CRUD()
         {
             var random = new Random();
@@ -110,7 +110,7 @@ namespace WebDriverTests
         }
 
 
-        [TestCleanup]
+        //[TestCleanup]
         public void EdgeDriverCleanup()
         {
             _driver.Quit();
