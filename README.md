@@ -7,8 +7,6 @@
 
 This web application helps you easily create, store and share your personal achievements such as diplomas or certificates. 
 
-![main](https://github.com/WebWat/certificate-MVC/blob/dev/imgs/main.png)
-
 ## What it consists of
 
 Website was written using the [eShopOnWeb](https://github.com/dotnet-architecture/eShopOnWeb) template and includes technologies, tools such as 
@@ -26,6 +24,9 @@ There is also a [separate branch](https://github.com/WebWat/certificate-MVC/tree
 Here are a few screenshots for an overview.
 
 ### Index page
+![main](https://github.com/WebWat/certificate-MVC/blob/dev/imgs/main.png)
+
+### Work page
 ![index](https://github.com/WebWat/certificate-MVC/blob/dev/imgs/index.png)
 
 ### Certificate details
