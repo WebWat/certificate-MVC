@@ -7,7 +7,7 @@
 
 This web application helps you easily create, store and share your personal achievements such as diplomas or certificates. 
 
-{main}
+![main](https://github.com/WebWat/certificate-MVC/blob/dev/imgs/main.png)
 
 ## What it consists of
 
@@ -25,13 +25,17 @@ There is also a [separate branch](https://github.com/WebWat/certificate-MVC/tree
 
 Here are a few screenshots for an overview.
 
-<p align="center">Index page</p>
+### Index page
+![index](https://github.com/WebWat/certificate-MVC/blob/dev/imgs/index.png)
 
-<p align="center">Certificate details</p>
+### Certificate details
+![details](https://github.com/WebWat/certificate-MVC/blob/dev/imgs/details.png)
 
-<p align="center">Account management</p>
+### Account management
+![manage](https://github.com/WebWat/certificate-MVC/blob/dev/imgs/manage.png)
 
-<p align="center">Public link (share with someone)</p>
+### Public link (share with someone)
+![public](https://github.com/WebWat/certificate-MVC/blob/dev/imgs/public.png)
 
 ## Contributing
 
