@@ -144,6 +144,7 @@ app.UseStatusCodePagesWithReExecute("/HttpError", "?code={0}");
 
 app.UseRequestLocalization();
 app.UseStaticFiles();
+app.UseCookiePolicy();
 
 app.UseRouting();
 
