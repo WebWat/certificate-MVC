@@ -12,7 +12,7 @@ public static class CookieSettings
     {
         services.Configure<CookiePolicyOptions>(options =>
         {
-            //options.CheckConsentNeeded = context => true;
+            options.CheckConsentNeeded = context => true;
             options.MinimumSameSitePolicy = SameSiteMode.Strict;
         });
 
