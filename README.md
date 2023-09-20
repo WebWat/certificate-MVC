@@ -2,7 +2,6 @@
 
 ![build and test](https://github.com/WebWat/certificate-MVC/actions/workflows/dotnet.yml/badge.svg)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/webwat/certificate-MVC/Publish%20Docker%20image?label=Publish%20Docker%20image)
-![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/webwat/certificate-MVC)
 [![CodeFactor](https://www.codefactor.io/repository/github/webwat/certificate-mvc/badge)](https://www.codefactor.io/repository/github/webwat/certificate-mvc)
 
 This web application helps you easily create, store and share your personal achievements such as diplomas or certificates. 
@@ -37,7 +36,3 @@ Here are a few screenshots for an overview.
 
 ### Public link (share with someone)
 ![public](https://github.com/WebWat/certificate-MVC/blob/dev/imgs/public.png)
-
-## Contributing
-
-Feel free to suggest ideas that would improve this project.
